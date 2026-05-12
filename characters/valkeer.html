@@ -201,6 +201,21 @@
     padding: 6px; background: var(--input-bg); resize: vertical;
   }
 
+
+  /* ── Combat tables ── */
+  .combat-tables { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .save-table, .attack-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .save-table th, .attack-table th {
+    background: var(--accent); color: white;
+    padding: 4px 6px; text-align: left; font-size: 11px;
+  }
+  .save-table td, .attack-table td { padding: 4px 6px; border: 1px solid var(--faint); }
+  .save-table tr:nth-child(even) td,
+  .attack-table tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .save-val { font-weight: bold; text-align: center; font-size: 14px; }
+  .thac0-val { font-size: 22px; font-weight: bold; color: var(--accent); }
+  .save-note { font-size: 10px; color: #888; font-style: italic; margin-top: 4px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -291,6 +306,42 @@
 <!-- ── SPELLS (if caster) ── -->
 
 
+
+<!-- ── COMBAT TABLES ── -->
+<div class="combat-tables">
+  <section>
+    <h3>Saving Throws <span style="font-size:10px;color:#888;">(roll d20, need this or higher)</span></h3>
+    <table class="save-table">
+      <thead><tr><th>Category</th><th style="text-align:center;">Target</th></tr></thead>
+      <tbody>
+        <tr><td>Death Ray / Poison</td><td class="save-val">10</td></tr>
+        <tr><td>Magic Wands</td>        <td class="save-val">11</td></tr>
+        <tr><td>Paralysis / Stone</td>  <td class="save-val">12</td></tr>
+        <tr><td>Dragon Breath</td>      <td class="save-val">13</td></tr>
+        <tr><td>Spells / Rods / Staves</td><td class="save-val">14</td></tr>
+      </tbody>
+    </table>
+    
+  </section>
+  <section>
+    <h3>Attack Rolls</h3>
+    <div style="margin-bottom:8px;">
+      <span style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">THAC0</span>
+      <span class="thac0-val" style="margin-left:10px;">17</span>
+      <span style="font-size:11px;color:#888;margin-left:6px;">(roll d20 + AC ≥ THAC0)</span>
+    </div>
+    <table class="attack-table">
+      <thead><tr><th>Target AC</th><th style="text-align:center;">Need (d20)</th></tr></thead>
+      <tbody>
+        <tr><td>AC 5</td> <td class="save-val">12</td></tr>
+        <tr><td>AC 3</td> <td class="save-val">14</td></tr>
+        <tr><td>AC 1</td> <td class="save-val">16</td></tr>
+        <tr><td>AC 0</td> <td class="save-val">17</td></tr>
+        <tr><td>AC −1</td><td class="save-val">18</td></tr>
+      </tbody>
+    </table>
+  </section>
+</div>
 <!-- ── INVENTORY ── -->
 <section style="margin-bottom:12px;">
   <h3>Inventory</h3>

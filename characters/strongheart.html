@@ -216,6 +216,35 @@
   .thac0-val { font-size: 22px; font-weight: bold; color: var(--accent); }
   .save-note { font-size: 10px; color: #888; font-style: italic; margin-top: 4px; }
 
+
+  /* ── Extended class tables ── */
+  .class-tables-wrap { margin-bottom: 12px; }
+  .class-tables-wrap h3 { font-size: 13px; margin: 10px 0 4px; }
+  .thief-tbl, .turn-tbl {
+    width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 8px;
+  }
+  .thief-tbl th, .turn-tbl th {
+    background: var(--accent); color: white;
+    padding: 4px 6px; text-align: left; font-size: 11px;
+  }
+  .thief-tbl td, .turn-tbl td { padding: 4px 6px; border: 1px solid var(--faint); }
+  .thief-tbl tr:nth-child(even) td,
+  .turn-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .skill-val { font-weight: bold; text-align: center; }
+  .turn-result { font-weight: bold; text-align: center; font-size: 15px; }
+  .turn-D { color: #c62828; }
+  .turn-T { color: #1565c0; }
+  .sweep-callout {
+    font-size: 12px; background: rgba(0,0,0,0.04);
+    border-left: 3px solid var(--accent); padding: 6px 10px;
+    margin-bottom: 10px; border-radius: 3px;
+  }
+  .backstab-badge {
+    display: inline-block; background: var(--accent); color: white;
+    font-size: 11px; font-weight: bold; padding: 2px 8px;
+    border-radius: 4px; margin-bottom: 6px;
+  }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -330,17 +359,33 @@
       <span class="thac0-val" style="margin-left:10px;">12</span>
       <span style="font-size:11px;color:#888;margin-left:6px;">(roll d20 + AC ≥ THAC0)</span>
     </div>
-    <table class="attack-table">
+        <table class="attack-table">
       <thead><tr><th>Target AC</th><th style="text-align:center;">Need (d20)</th></tr></thead>
       <tbody>
-        <tr><td>AC 5</td> <td class="save-val">7</td></tr>
-        <tr><td>AC 3</td> <td class="save-val">9</td></tr>
-        <tr><td>AC 1</td> <td class="save-val">11</td></tr>
-        <tr><td>AC 0</td> <td class="save-val">12</td></tr>
+        <tr><td>AC 9</td><td class="save-val">3</td></tr>
+        <tr><td>AC 8</td><td class="save-val">4</td></tr>
+        <tr><td>AC 7</td><td class="save-val">5</td></tr>
+        <tr><td>AC 6</td><td class="save-val">6</td></tr>
+        <tr><td>AC 5</td><td class="save-val">7</td></tr>
+        <tr><td>AC 4</td><td class="save-val">8</td></tr>
+        <tr><td>AC 3</td><td class="save-val">9</td></tr>
+        <tr><td>AC 2</td><td class="save-val">10</td></tr>
+        <tr><td>AC 1</td><td class="save-val">11</td></tr>
+        <tr><td>AC 0</td><td class="save-val">12</td></tr>
         <tr><td>AC −1</td><td class="save-val">13</td></tr>
+        <tr><td>AC −2</td><td class="save-val">14</td></tr>
+        <tr><td>AC −3</td><td class="save-val">15</td></tr>
       </tbody>
     </table>
   </section>
+</div>
+
+<!-- ── CLASS TABLES ── -->
+
+<div class="sweep-callout">
+  <strong>Multiple Attacks (Fighter L8):</strong>
+  Against creatures with 1 HD or fewer, attack <strong>8×</strong> per round (1 per level).
+  Roll each attack separately. Normal 1 attack vs creatures with more than 1 HD.
 </div>
 <!-- ── INVENTORY ── -->
 <section style="margin-bottom:12px;">
@@ -472,5 +517,6 @@
   <textarea class="notes-area" placeholder="Session notes, quest hooks, NPC relationships…"></textarea>
 </section>
 
+<!-- extended-class-tables-done -->
 </body>
 </html>

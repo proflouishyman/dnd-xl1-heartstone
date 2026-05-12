@@ -361,52 +361,30 @@
 
   <!-- ── FIGMA SETUP ── -->
   <section id="figma">
-    <h2>Figma — Shared Live Maps</h2>
+    <h2>Live Shared Maps — Real-Time Fog</h2>
     <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
-      For a shared live view where players see your reveals in real time, use the Figma plugin.
-      One-time setup: run the plugin once and all 6 maps are created with fog tiles automatically.
+      All six maps have built-in real-time sync. Players see your reveals instantly in their browser — no Figma, no account, no install.
     </p>
     <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
 
       <div class="tool-card">
-        <h4>Step 1 — Install the Plugin</h4>
-        <p style="margin-bottom:10px;">
-          In Figma: <em>Main Menu → Plugins → Development → Import plugin from manifest…</em>
-        </p>
-        <p>
-          Download all three plugin files and point Figma at <code>manifest.json</code>:
-        </p>
-        <p style="margin-top:8px;">
-          <a href="figma-fog-plugin/manifest.json" download>manifest.json</a> &nbsp;·&nbsp;
-          <a href="figma-fog-plugin/code.js" download>code.js</a> &nbsp;·&nbsp;
-          <a href="figma-fog-plugin/ui.html" download>ui.html</a>
-        </p>
+        <h4>Step 1 — Open a map above</h4>
+        <p>Click any map in the grid above. You're in DM mode by default — fog tiles are clickable, state saves to your browser automatically.</p>
       </div>
 
       <div class="tool-card">
-        <h4>Step 2 — Create All Maps</h4>
-        <p>
-          Open a new Figma file, run the plugin, and click <strong>"Create All 6 Map Pages"</strong>.
-          The plugin fetches each map from this site and creates a fog-covered page for each one.
-          No manual image uploading needed.
-        </p>
+        <h4>Step 2 — Start a Live Session</h4>
+        <p>Click <strong>"Start Session"</strong> in the toolbar. A share link appears instantly. The link stays stable for that map so you can reuse it every session.</p>
       </div>
 
       <div class="tool-card">
-        <h4>Step 3 — Share with Players</h4>
-        <p>
-          In Figma, click <strong>Share → Anyone with the link → Can view</strong>.
-          Drop that link in Discord. Players open it and see exactly what you reveal as you delete fog tiles live.
-        </p>
+        <h4>Step 3 — Share the Link</h4>
+        <p>Click <strong>"Copy Link"</strong> and drop it in Discord. Players open it in their browser — they're in read-only mode and see exactly what you reveal, live.</p>
       </div>
 
       <div class="tool-card">
         <h4>During Play</h4>
-        <p>
-          Select and delete fog tiles to reveal rooms as players explore.
-          Use <em>Reveal All</em> / <em>Remove Fog</em> buttons in the plugin panel for bulk actions.
-          The plugin also works manually on any image you select.
-        </p>
+        <p>Click or drag tiles to reveal rooms. Players see each reveal the moment you click. Use <strong>Reset</strong> to re-fog everything between sessions. The player count shows who's connected.</p>
       </div>
 
     </div>

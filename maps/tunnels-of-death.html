@@ -4,83 +4,123 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Map 3 — The Tunnels of Death — XL-1</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
   :root {
-    --gold:  #c9a84c;
-    --dark:  #0e0d0b;
-    --panel: #1a1710;
-    --border:#3a3020;
-    --text:  #e8dfc8;
-    --muted: #8a7d60;
-    --fog:   rgba(12,11,9,0.92);
+    --gold:   #c9a84c;
+    --dark:   #0e0d0b;
+    --panel:  #1a1710;
+    --border: #3a3020;
+    --text:   #e8dfc8;
+    --muted:  #8a7d60;
+    --fog:    rgba(12,11,9,0.92);
+    --green:  #27ae60;
+    --red:    #c0392b;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--dark); color: var(--text); font-family: Georgia, serif; min-height: 100vh; }
+  body { background: var(--dark); color: var(--text); font-family: Georgia, serif; }
 
+  /* ── Header ── */
   header {
     background: #111008;
     border-bottom: 1px solid var(--border);
     padding: 10px 16px;
-    display: flex; align-items: center; gap: 16px;
+    display: flex; align-items: center; gap: 14px;
     position: sticky; top: 0; z-index: 200;
+    flex-wrap: wrap;
   }
   .back { color: var(--gold); text-decoration: none; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; white-space: nowrap; }
   .back:hover { text-decoration: underline; }
-  .header-text h1  { font-size: 16px; color: #fff; }
-  .header-text p   { font-size: 11px; color: var(--muted); }
+  .header-text h1 { font-size: 16px; color: #fff; }
+  .header-text p  { font-size: 11px; color: var(--muted); }
 
+  /* ── Toolbar ── */
   .toolbar {
     display: flex; align-items: center; gap: 8px;
     padding: 8px 16px;
     background: #181410;
     border-bottom: 1px solid var(--border);
     flex-wrap: wrap;
+    gap: 6px;
   }
-  .toolbar span { font-size: 11px; color: var(--muted); margin-right: 4px; }
+  .tb-label { font-size: 11px; color: var(--muted); }
   button {
-    padding: 5px 12px; font-size: 11px; border: 1px solid var(--border);
-    border-radius: 4px; cursor: pointer; background: var(--panel); color: var(--text);
+    padding: 5px 11px; font-size: 11px;
+    border: 1px solid var(--border); border-radius: 4px;
+    cursor: pointer; background: var(--panel); color: var(--text);
     transition: border-color 0.15s, background 0.15s;
+    white-space: nowrap;
   }
-  button:hover { border-color: var(--gold); background: #252010; color: var(--gold); }
-  button.active { background: #c0392b; border-color: #c0392b; color: #fff; }
-  #reveal-count { font-size: 11px; color: var(--muted); margin-left: auto; }
+  button:hover  { border-color: var(--gold); background: #252010; color: var(--gold); }
+  button.danger { border-color: var(--red); color: var(--red); }
+  button.danger:hover { background: var(--red); color: #fff; }
+  button.live-on { background: var(--green); border-color: var(--green); color: #fff; }
+  button.live-on:hover { background: #1e8449; border-color: #1e8449; }
+  #reveal-count { font-size: 11px; color: var(--muted); }
 
-  /* map wrapper */
+  /* ── Live session panel ── */
+  .live-bar {
+    display: flex; align-items: center; gap: 8px;
+    padding: 7px 16px;
+    background: #12100d;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: #555; flex-shrink: 0; }
+  .live-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .live-dot.yellow { background: #f39c12; box-shadow: 0 0 6px #f39c12; }
+  .live-dot.red { background: var(--red); }
+  #live-status { color: var(--muted); font-size: 11px; }
+  #share-url {
+    flex: 1; min-width: 200px; max-width: 420px;
+    padding: 4px 8px; font-size: 11px;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: #1f1c14; color: var(--text);
+    cursor: pointer;
+  }
+  #share-url:focus { outline: 1px solid var(--gold); }
+  #conn-count { font-size: 11px; color: var(--muted); margin-left: 4px; }
+
+  /* ── Player banner ── */
+  .player-banner {
+    display: none;
+    align-items: center; gap: 10px;
+    padding: 8px 16px;
+    background: #0d1a12;
+    border-bottom: 1px solid #1a3a22;
+    font-size: 12px; color: #5dade2;
+  }
+
+  /* ── Map + fog ── */
+  .map-outer { overflow: auto; }
   .map-wrapper {
-    position: relative;
-    display: inline-block;
-    margin: 12px;
+    position: relative; display: inline-block;
+    margin: 10px;
   }
   #map-img {
     display: block;
-    max-width: calc(100vw - 24px);
-    height: auto;
-    user-select: none;
+    max-width: calc(100vw - 20px);
+    height: auto; user-select: none;
   }
-
-  /* fog grid — absolutely positioned over the image */
   #fog-grid {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     display: grid;
     grid-template-columns: repeat(26, 1fr);
     grid-template-rows:    repeat(32, 1fr);
-    pointer-events: none; /* tiles get their own events */
   }
   .fog-tile {
     background: var(--fog);
     border: 1px solid rgba(255,255,255,0.03);
     cursor: pointer;
-    pointer-events: all;
-    transition: background 0.12s;
+    transition: background 0.1s;
   }
-  .fog-tile.revealed { background: transparent; border-color: transparent; pointer-events: all; }
-  .fog-tile:hover:not(.revealed) { background: rgba(40,30,10,0.75); }
-  .fog-tile.revealed:hover { background: rgba(200,160,76,0.15); }
-
-  /* DM mode: revealed tiles show a faint re-hide hint */
-  body.dm-mode .fog-tile.revealed { border: 1px dashed rgba(200,160,76,0.2); }
+  .fog-tile.revealed          { background: transparent; border-color: transparent; }
+  .fog-tile:hover:not(.revealed) { background: rgba(40,30,10,0.7); }
+  /* In player mode: tiles aren't interactive */
+  body.player-mode .fog-tile { cursor: default; pointer-events: none; }
+  /* DM mode hint on revealed tiles */
+  body.dm-mode .fog-tile.revealed { border: 1px dashed rgba(200,160,76,0.15); }
 </style>
 </head>
 <body class="dm-mode">
@@ -93,151 +133,310 @@
   </div>
 </header>
 
-<div class="toolbar">
-  <span>DM Controls:</span>
-  <button id="btn-reveal-all" onclick="revealAll()">Reveal All</button>
-  <button id="btn-reset"      onclick="resetFog()">Reset Fog</button>
-  <button id="btn-dm-toggle"  onclick="toggleDM()" class="active">DM Mode ON</button>
-  <span id="reveal-count"></span>
+<!-- DM toolbar (hidden in player mode) -->
+<div class="toolbar" id="dm-toolbar">
+  <span class="tb-label">Fog:</span>
+  <button onclick="revealAll()">Reveal All</button>
+  <button class="danger" onclick="resetFog()">Reset</button>
+  <span style="width:1px; height:16px; background:var(--border); display:inline-block;"></span>
+  <span class="tb-label">Live:</span>
+  <button id="btn-live" onclick="toggleLive()">Start Session</button>
+  <span id="reveal-count" style="margin-left:auto;"></span>
 </div>
 
-<div class="map-wrapper" id="map-wrapper">
-  <img id="map-img" src="tunnels-of-death.jpg" alt="Map 3 — The Tunnels of Death" draggable="false">
-  <div id="fog-grid"></div>
+<!-- Live session bar (shown once session starts) -->
+<div class="live-bar" id="live-bar" style="display:none;">
+  <div class="live-dot" id="live-dot"></div>
+  <span id="live-status">Starting…</span>
+  <input id="share-url" type="text" readonly placeholder="Share link will appear here…"
+         onclick="this.select()" title="Click to select all">
+  <button onclick="copyLink()" style="flex-shrink:0;">Copy Link</button>
+  <span id="conn-count"></span>
+</div>
+
+<!-- Player banner (shown in player mode) -->
+<div class="player-banner" id="player-banner">
+  <div class="live-dot" id="player-dot"></div>
+  <span id="player-status">Connecting to DM…</span>
+  <span style="margin-left:auto; font-size:11px; color:var(--muted);">Player view — DM controls the fog</span>
+</div>
+
+<div class="map-outer">
+  <div class="map-wrapper">
+    <img id="map-img" src="tunnels-of-death.jpg" alt="Map 3 — The Tunnels of Death" draggable="false">
+    <div id="fog-grid"></div>
+  </div>
 </div>
 
 <script>
-  const SLUG    = 'tunnels-of-death';
-  const COLS    = 26;
-  const ROWS    = 32;
-  const TOTAL   = COLS * ROWS;
-  const STORE_KEY = 'fog_' + SLUG;
+  const SLUG  = 'tunnels-of-death';
+  const COLS  = 26;
+  const ROWS  = 32;
+  const TOTAL = COLS * ROWS;
+  const STORE = 'fog_' + SLUG;
+  const PEER_STORE = 'peer_id_' + SLUG;
 
-  let dmMode   = true;
-  let isDragging = false;
-  let dragReveal = true; // reveal or hide during drag
-  let revealed = new Set();
+  // ── State ──────────────────────────────────────────────────────────────────
+  let revealed    = new Set();
+  let isDragging  = false;
+  let dragReveal  = true;
+  let peer        = null;
+  let connections = [];   // DM: player connections
+  let dmConn      = null; // player: connection to DM
+  let liveActive  = false;
 
-  // ── Load saved state ──────────────────────────────────────────────────────
+  const params   = new URLSearchParams(location.search);
+  const ROOM_ID  = params.get('room');   // null → DM mode
+  const IS_PLAYER = !!ROOM_ID;
+
+  // ── Init ───────────────────────────────────────────────────────────────────
+  function init() {
+    loadState();
+    buildGrid();
+    if (IS_PLAYER) enterPlayerMode();
+  }
+
+  // ── Fog state ──────────────────────────────────────────────────────────────
   function loadState() {
+    if (IS_PLAYER) return; // players get state from DM
     try {
-      const saved = JSON.parse(localStorage.getItem(STORE_KEY) || 'null');
-      if (Array.isArray(saved)) revealed = new Set(saved);
+      const s = JSON.parse(localStorage.getItem(STORE) || 'null');
+      if (Array.isArray(s)) revealed = new Set(s);
     } catch(e) {}
   }
   function saveState() {
-    localStorage.setItem(STORE_KEY, JSON.stringify([...revealed]));
+    if (!IS_PLAYER)
+      localStorage.setItem(STORE, JSON.stringify([...revealed]));
   }
 
-  // ── Build grid ────────────────────────────────────────────────────────────
+  // ── Build fog grid ─────────────────────────────────────────────────────────
   function buildGrid() {
     const grid = document.getElementById('fog-grid');
     grid.innerHTML = '';
     for (let i = 0; i < TOTAL; i++) {
-      const tile = document.createElement('div');
-      tile.className = 'fog-tile' + (revealed.has(i) ? ' revealed' : '');
-      tile.dataset.i = i;
-      grid.appendChild(tile);
+      const t = document.createElement('div');
+      t.className = 'fog-tile' + (revealed.has(i) ? ' revealed' : '');
+      t.dataset.i = i;
+      grid.appendChild(t);
     }
     updateCount();
   }
 
-  // ── Tile interaction ──────────────────────────────────────────────────────
-  function toggleTile(tile) {
-    const i = +tile.dataset.i;
-    if (revealed.has(i)) {
-      revealed.delete(i);
-      tile.classList.remove('revealed');
-    } else {
-      revealed.add(i);
-      tile.classList.add('revealed');
-    }
+  function applyState(revealedArr) {
+    revealed = new Set(revealedArr);
+    document.querySelectorAll('.fog-tile').forEach(t => {
+      t.classList.toggle('revealed', revealed.has(+t.dataset.i));
+    });
     updateCount();
+  }
+
+  // ── Tile interaction (DM only) ─────────────────────────────────────────────
+  function setTileState(i, show) {
+    const changed = show ? !revealed.has(i) : revealed.has(i);
+    if (!changed) return;
+    show ? revealed.add(i) : revealed.delete(i);
+    const el = document.querySelector('[data-i="' + i + '"]');
+    if (el) el.classList.toggle('revealed', show);
+    updateCount();
+    broadcastTile(i, show);
+  }
+
+  function toggleTile(i) {
+    setTileState(i, !revealed.has(i));
     saveState();
   }
 
-  function setTile(tile, reveal) {
-    const i = +tile.dataset.i;
-    if (reveal && !revealed.has(i)) {
-      revealed.add(i);
-      tile.classList.add('revealed');
-      updateCount();
-    } else if (!reveal && revealed.has(i)) {
-      revealed.delete(i);
-      tile.classList.remove('revealed');
-      updateCount();
-    }
-  }
-
-  // ── Grid events (click + drag) ────────────────────────────────────────────
+  // Grid mouse/touch events
   const grid = document.getElementById('fog-grid');
 
-  grid.addEventListener('mousedown', (e) => {
-    const tile = e.target.closest('.fog-tile');
-    if (!tile) return;
+  grid.addEventListener('mousedown', e => {
+    if (IS_PLAYER) return;
+    const t = e.target.closest('.fog-tile'); if (!t) return;
+    const i = +t.dataset.i;
     isDragging = true;
-    dragReveal = !revealed.has(+tile.dataset.i); // first tile determines mode
-    toggleTile(tile);
+    dragReveal = !revealed.has(i);
+    setTileState(i, dragReveal);
+    saveState();
     e.preventDefault();
   });
-
-  grid.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    const tile = e.target.closest('.fog-tile');
-    if (tile) setTile(tile, dragReveal);
+  grid.addEventListener('mousemove', e => {
+    if (!isDragging || IS_PLAYER) return;
+    const t = e.target.closest('.fog-tile'); if (!t) return;
+    setTileState(+t.dataset.i, dragReveal);
   });
+  window.addEventListener('mouseup', () => { if (isDragging) { isDragging = false; saveState(); } });
 
-  window.addEventListener('mouseup', () => { isDragging = false; saveState(); });
-
-  // Touch support
-  grid.addEventListener('touchstart', (e) => {
+  grid.addEventListener('touchstart', e => {
+    if (IS_PLAYER) return;
     const touch = e.touches[0];
-    const tile = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
-    if (tile) { toggleTile(tile); e.preventDefault(); }
+    const t = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
+    if (t) { const i = +t.dataset.i; dragReveal = !revealed.has(i); setTileState(i, dragReveal); saveState(); }
+    e.preventDefault();
+  }, { passive: false });
+  grid.addEventListener('touchmove', e => {
+    if (IS_PLAYER) return;
+    const touch = e.touches[0];
+    const t = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
+    if (t) setTileState(+t.dataset.i, dragReveal);
+    e.preventDefault();
   }, { passive: false });
 
-  grid.addEventListener('touchmove', (e) => {
-    const touch = e.touches[0];
-    const tile = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
-    if (tile) { setTile(tile, dragReveal); e.preventDefault(); }
-  }, { passive: false });
-
-  // ── Toolbar buttons ───────────────────────────────────────────────────────
+  // ── DM toolbar actions ─────────────────────────────────────────────────────
   function revealAll() {
     document.querySelectorAll('.fog-tile').forEach(t => {
-      revealed.add(+t.dataset.i);
-      t.classList.add('revealed');
+      const i = +t.dataset.i;
+      if (!revealed.has(i)) { revealed.add(i); t.classList.add('revealed'); broadcastTile(i, true); }
     });
     updateCount(); saveState();
   }
-
   function resetFog() {
-    if (!confirm('Reset all fog? This cannot be undone.')) return;
+    if (!confirm('Reset all fog?')) return;
     revealed.clear();
     document.querySelectorAll('.fog-tile').forEach(t => t.classList.remove('revealed'));
+    connections.forEach(c => { try { c.send({ type: 'state', revealed: [] }); } catch(e) {} });
     updateCount(); saveState();
   }
+  function updateCount() {
+    document.getElementById('reveal-count').textContent =
+      revealed.size + ' / ' + TOTAL + ' revealed';
+  }
 
-  function toggleDM() {
-    dmMode = !dmMode;
-    document.body.classList.toggle('dm-mode', dmMode);
-    const btn = document.getElementById('btn-dm-toggle');
-    btn.textContent = dmMode ? 'DM Mode ON' : 'DM Mode OFF';
-    btn.classList.toggle('active', dmMode);
-    // In player mode, revealed tiles are fully invisible (no hover hints)
-    document.querySelectorAll('.fog-tile.revealed').forEach(t => {
-      t.style.pointerEvents = dmMode ? 'all' : 'none';
+  // ── Live session (DM) ──────────────────────────────────────────────────────
+  function toggleLive() {
+    liveActive ? stopLive() : startLive();
+  }
+
+  function startLive() {
+    liveActive = true;
+    document.getElementById('btn-live').textContent = 'End Session';
+    document.getElementById('btn-live').classList.add('live-on');
+    document.getElementById('live-bar').style.display = 'flex';
+    setDot('yellow'); setStatus('Starting…');
+
+    // Reuse same peer ID per map so the link stays stable across sessions
+    const savedId = localStorage.getItem(PEER_STORE) || undefined;
+    peer = new Peer(savedId, {
+      host: '0.peerjs.com', port: 443, path: '/', secure: true,
+      debug: 0,
+    });
+
+    peer.on('open', id => {
+      localStorage.setItem(PEER_STORE, id);
+      const url = location.origin + location.pathname + '?room=' + encodeURIComponent(id);
+      document.getElementById('share-url').value = url;
+      setDot('green'); setStatus('Session open');
+      updateConnCount();
+    });
+
+    peer.on('connection', conn => {
+      connections.push(conn);
+      updateConnCount();
+      conn.on('open', () => {
+        // Send full current state to the newly joined player
+        conn.send({ type: 'state', revealed: [...revealed] });
+      });
+      conn.on('close', () => {
+        connections = connections.filter(c => c !== conn);
+        updateConnCount();
+      });
+      conn.on('error', () => {
+        connections = connections.filter(c => c !== conn);
+        updateConnCount();
+      });
+    });
+
+    peer.on('error', err => {
+      setDot('red'); setStatus('Error: ' + err.type);
+    });
+    peer.on('disconnected', () => {
+      setDot('yellow'); setStatus('Reconnecting…');
+      peer.reconnect();
     });
   }
 
-  function updateCount() {
-    document.getElementById('reveal-count').textContent =
-      revealed.size + ' / ' + TOTAL + ' tiles revealed';
+  function stopLive() {
+    liveActive = false;
+    document.getElementById('btn-live').textContent = 'Start Session';
+    document.getElementById('btn-live').classList.remove('live-on');
+    document.getElementById('live-bar').style.display = 'none';
+    connections.forEach(c => { try { c.close(); } catch(e) {} });
+    connections = [];
+    if (peer) { peer.destroy(); peer = null; }
   }
 
-  // ── Init ──────────────────────────────────────────────────────────────────
-  loadState();
-  buildGrid();
+  function broadcastTile(i, show) {
+    connections.forEach(c => {
+      try { c.send({ type: 'tile', i, v: show }); } catch(e) {}
+    });
+  }
+
+  function setDot(color) {
+    const d = document.getElementById('live-dot');
+    d.className = 'live-dot ' + color;
+  }
+  function setStatus(msg) {
+    document.getElementById('live-status').textContent = msg;
+  }
+  function updateConnCount() {
+    const n = connections.length;
+    document.getElementById('conn-count').textContent =
+      n === 0 ? 'No players connected' : n + ' player' + (n === 1 ? '' : 's') + ' connected';
+  }
+  function copyLink() {
+    const url = document.getElementById('share-url').value;
+    navigator.clipboard.writeText(url).then(() => {
+      const btn = event.target;
+      const orig = btn.textContent;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = orig, 1500);
+    });
+  }
+
+  // ── Player mode ────────────────────────────────────────────────────────────
+  function enterPlayerMode() {
+    // Restyle for player
+    document.body.classList.replace('dm-mode', 'player-mode');
+    document.getElementById('dm-toolbar').style.display  = 'none';
+    document.getElementById('player-banner').style.display = 'flex';
+
+    const dot    = document.getElementById('player-dot');
+    const status = document.getElementById('player-status');
+
+    peer = new Peer({ host: '0.peerjs.com', port: 443, path: '/', secure: true, debug: 0 });
+    peer.on('open', () => {
+      dot.className = 'live-dot yellow';
+      status.textContent = 'Connecting to DM…';
+      dmConn = peer.connect(ROOM_ID, { reliable: true });
+
+      dmConn.on('open', () => {
+        dot.className = 'live-dot green';
+        status.textContent = 'Connected — DM is revealing the map';
+      });
+
+      dmConn.on('data', data => {
+        if (data.type === 'state') {
+          applyState(data.revealed);
+        } else if (data.type === 'tile') {
+          if (data.v) revealed.add(data.i); else revealed.delete(data.i);
+          const el = document.querySelector('[data-i="' + data.i + '"]');
+          if (el) el.classList.toggle('revealed', data.v);
+          updateCount();
+        }
+      });
+
+      dmConn.on('close', () => {
+        dot.className = 'live-dot red';
+        status.textContent = 'DM disconnected';
+      });
+    });
+
+    peer.on('error', err => {
+      dot.className = 'live-dot red';
+      status.textContent = 'Error: ' + err.type;
+    });
+  }
+
+  init();
 </script>
 </body>
 </html>

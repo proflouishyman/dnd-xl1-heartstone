@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rules Cheatsheet — XL-1 Quest for the Heartstone</title>
+<style>
+  :root {
+    --gold:   #c9a84c;
+    --dark:   #0e0d0b;
+    --panel:  #1a1710;
+    --border: #3a3020;
+    --text:   #e8dfc8;
+    --muted:  #8a7d60;
+    --red:    #c0392b;
+    --green:  #2e7d4f;
+    --blue:   #2a4d7a;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+    line-height: 1.65;
+  }
+
+  /* ── Nav ── */
+  nav {
+    background: #111008;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  nav ul { list-style: none; display: flex; max-width: 1100px; margin: 0 auto; }
+  nav a {
+    display: block; padding: 14px 22px;
+    color: var(--muted); text-decoration: none;
+    font-size: 12px; letter-spacing: 2px; text-transform: uppercase;
+    transition: color 0.2s; border-bottom: 2px solid transparent;
+  }
+  nav a:hover, nav a.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── Header ── */
+  .page-header {
+    padding: 52px 24px 36px;
+    max-width: 1100px; margin: 0 auto;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-tag {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  .page-header h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    color: #fff; letter-spacing: 1px; line-height: 1.1;
+  }
+  .page-header p {
+    margin-top: 12px; max-width: 640px;
+    font-style: italic; color: #bbb; font-size: 14px;
+  }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  .content { padding: 48px 0; }
+  .section { margin-bottom: 52px; }
+  .section-title {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 22px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── 2-col grid ── */
+  .rule-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 720px) { .rule-grid { grid-template-columns: 1fr; } }
+  .rule-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+  @media (max-width: 860px) { .rule-grid-3 { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .rule-grid-3 { grid-template-columns: 1fr; } }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 18px 20px;
+  }
+  .card h3 {
+    font-size: 13px; color: var(--gold);
+    margin-bottom: 10px; letter-spacing: 0.5px;
+  }
+  .card p, .card li { font-size: 12px; color: #ccc; line-height: 1.65; }
+  .card ul { padding-left: 16px; margin-top: 6px; }
+  .card li { margin-bottom: 4px; }
+  .card .note {
+    margin-top: 10px; padding: 7px 10px;
+    background: rgba(201,168,76,0.07);
+    border-left: 2px solid var(--gold);
+    font-size: 11px; color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── Diff card (base vs BECMI) ── */
+  .diff-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .diff-label {
+    font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 5px 14px;
+    font-weight: bold;
+  }
+  .diff-label.other { background: #1e1e1e; color: #666; }
+  .diff-label.becmi { background: rgba(201,168,76,0.12); color: var(--gold); }
+  .diff-body { padding: 12px 14px; font-size: 12px; color: #ccc; line-height: 1.6; }
+  .diff-body strong { color: var(--text); }
+
+  /* ── Callout boxes ── */
+  .callout {
+    padding: 14px 18px;
+    border-radius: 4px;
+    margin-bottom: 16px;
+    font-size: 13px;
+  }
+  .callout-warning {
+    background: rgba(192,57,43,0.12);
+    border-left: 4px solid var(--red);
+    color: #e8bfbb;
+  }
+  .callout-tip {
+    background: rgba(46,125,79,0.12);
+    border-left: 4px solid var(--green);
+    color: #b5d6c3;
+  }
+  .callout strong { font-style: normal; }
+
+  /* ── Reference tables ── */
+  .ref-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+  .ref-table th {
+    background: rgba(201,168,76,0.15); color: var(--gold);
+    padding: 6px 10px; text-align: left; font-size: 11px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ref-table td { padding: 5px 10px; border-bottom: 1px solid #252218; color: #ccc; }
+  .ref-table tr:last-child td { border-bottom: none; }
+  .ref-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .ref-table .hi { color: var(--gold); font-weight: bold; }
+  .ref-table .lo { color: #888; }
+
+  /* ── Sequence list ── */
+  .seq { list-style: none; padding: 0; counter-reset: seq; }
+  .seq li {
+    counter-increment: seq;
+    display: flex; gap: 14px; align-items: flex-start;
+    padding: 10px 0; border-bottom: 1px solid #252218;
+    font-size: 12px; color: #ccc;
+  }
+  .seq li:last-child { border-bottom: none; }
+  .seq li::before {
+    content: counter(seq);
+    min-width: 24px; height: 24px;
+    background: var(--gold); color: #000;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: bold; flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .seq-title { color: var(--text); font-weight: bold; margin-bottom: 2px; font-size: 12px; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center; padding: 32px;
+    font-size: 11px; color: #444; letter-spacing: 1px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── Misc ── */
+  .big-num { font-size: 28px; font-weight: bold; color: var(--gold); }
+  .label-muted { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: bold;
+    padding: 2px 8px; border-radius: 3px; text-transform: uppercase; letter-spacing: 1px;
+  }
+  .tag-red { background: rgba(192,57,43,0.2); color: #e8bfbb; }
+  .tag-green { background: rgba(46,125,79,0.2); color: #b5d6c3; }
+  .tag-gold { background: rgba(201,168,76,0.2); color: var(--gold); }
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <ul>
+    <li><a href="index.html">← Campaign Home</a></li>
+    <li><a href="rules.html" class="active">Rules Cheatsheet</a></li>
+  </ul>
+</nav>
+
+<!-- ── HEADER ── -->
+<div class="page-header">
+  <div class="page-tag">BECMI D&amp;D · Rules Cyclopedia · Quick Reference</div>
+  <h1>Rules Cheatsheet</h1>
+  <p>Key differences between BECMI D&amp;D (this game) and modern systems like D&amp;D 5e.
+     If you've played 5e, Pathfinder, or similar — read this first.</p>
+</div>
+
+<div class="container">
+<div class="content">
+
+<!-- ── TOP WARNINGS ── -->
+<div class="section">
+  <div class="section-title">The Most Important Differences</div>
+
+  <div class="callout callout-warning">
+    <strong>Armor Class goes DOWN.</strong> AC 2 is better than AC 7. Plate Mail = AC 3. A naked person = AC 9.
+    The lower your AC, the harder you are to hit.
+  </div>
+  <div class="callout callout-warning">
+    <strong>0 HP = Dead.</strong> No death saving throws. No stabilization at −1. When you hit 0, you are dead.
+    Some DMs use an optional −10 rule; ask before the session.
+  </div>
+  <div class="callout callout-tip">
+    <strong>The attack table on your character sheet does all the math for you.</strong> Find your target's AC in the left column,
+    read the "Equipped" column — that's the minimum roll you need on a d20 to hit. Natural 1 always misses. Natural 20 always hits.
+  </div>
+
+  <div class="rule-grid" style="margin-top:20px;">
+    <div class="diff-card">
+      <div class="diff-label other">Other games (5e / PF2)</div>
+      <div class="diff-body">AC goes <strong>up</strong>. AC 18 is harder to hit than AC 12. You roll d20 + attack bonus vs. their AC. Lower HP = unconscious with death saves.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label becmi">This game (BECMI D&amp;D)</div>
+      <div class="diff-body">AC goes <strong>down</strong>. AC 2 is harder to hit than AC 7. Roll d20 vs. a target number (from your sheet). 0 HP = dead, full stop.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label other">Other games</div>
+      <div class="diff-body">Saving throws are tied to ability scores (STR save, DEX save, CON save…). Proficiency bonus adds to them.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label becmi">This game</div>
+      <div class="diff-body">Five fixed categories: Death Ray, Wands, Paralysis, Breath, Spells. Each has a target number on your sheet. Roll d20 equal or higher to succeed.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label other">Other games</div>
+      <div class="diff-body">Spells are "slots" — you can cast any memorized spell using a slot. Cantrips are free. Short rest may recover slots.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label becmi">This game</div>
+      <div class="diff-body">Spells are memorized individually and <strong>forgotten when cast</strong>. No cantrips. No short rest recovery. Spellcasters have very few spells per day.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label other">Other games</div>
+      <div class="diff-body">Advantage/Disadvantage: roll 2d20, take higher or lower. Proficiency Bonus on attacks, saves, and skills.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-label becmi">This game</div>
+      <div class="diff-body"><strong>Neither exists.</strong> Situational modifiers are flat +/− numbers decided by the DM. There is no proficiency bonus — your class and level determine what you can do.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ATTACKING ── -->
+<div class="section">
+  <div class="section-title">Attacking & THAC0</div>
+  <div class="rule-grid">
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>How to Attack</h3>
+        <ol style="padding-left:18px; font-size:12px; color:#ccc; line-height:1.8;">
+          <li>Find the target's AC on your attack table (left column).</li>
+          <li>Read the <strong style="color:var(--gold);">Equipped</strong> column — that's your minimum roll.</li>
+          <li>Roll d20. Equal or higher = HIT.</li>
+          <li>Natural 1 = always miss. Natural 20 = always hit.</li>
+          <li>On a hit, roll weapon damage + STR bonus (melee) or DEX bonus (ranged) + magic weapon bonus.</li>
+        </ol>
+        <div class="note">Example: Strongheart has THAC0 12 equipped. Target is AC 3.
+          His table shows he needs a <strong>9</strong> or higher. He rolls a 14 — hit!</div>
+      </div>
+      <div class="card">
+        <h3>What is THAC0?</h3>
+        <p>"To Hit Armor Class 0." It's the roll you'd need to hit an enemy with AC 0 (the hardest to hit).
+        Your sheet pre-calculates every AC for you — you never need to do the math yourself.
+        The "Base" column ignores equipment bonuses; "Equipped" is what you actually roll.</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Attack Modifiers</h3>
+        <table class="ref-table">
+          <thead><tr><th>Situation</th><th>Modifier</th></tr></thead>
+          <tbody>
+            <tr><td>STR bonus (melee &amp; thrown)</td><td class="hi">STR mod to attack &amp; damage</td></tr>
+            <tr><td>DEX bonus (missile weapons)</td><td class="hi">DEX mod to attack only</td></tr>
+            <tr><td>Magic weapon (e.g. +2 sword)</td><td class="hi">+2 to attack &amp; damage</td></tr>
+            <tr><td>Backstab (thief, unseen, melee)</td><td class="hi">+4 to attack; ×2–4 damage</td></tr>
+            <tr><td>Missile: short/medium range</td><td class="hi">No penalty</td></tr>
+            <tr><td>Missile: long range</td><td class="lo">−1 to attack</td></tr>
+            <tr><td>Attacking from behind</td><td class="hi">+2 to attack</td></tr>
+            <tr><td>Target exhausted</td><td class="hi">+2 to attack</td></tr>
+            <tr><td>Attacker exhausted</td><td class="lo">−2 to attack</td></tr>
+            <tr><td>Target has cover (half)</td><td class="lo">−2 to attack</td></tr>
+            <tr><td>Natural 1 (any)</td><td class="lo">Always miss</td></tr>
+            <tr><td>Natural 20 (any)</td><td class="hi">Always hit</td></tr>
+          </tbody>
+        </table>
+        <div class="note">DEX 13–15 gives −1 AC; DEX 16–17 = −2 AC; DEX 18 = −3 AC (lowers your AC, making you harder to hit).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SAVING THROWS ── -->
+<div class="section">
+  <div class="section-title">Saving Throws</div>
+  <div class="rule-grid">
+    <div class="card">
+      <h3>The Five Categories</h3>
+      <p style="margin-bottom:10px;">Roll d20 equal to or <em>higher</em> than your target number (from your sheet) to succeed.</p>
+      <table class="ref-table">
+        <thead><tr><th>Category</th><th>When it applies</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Death Ray / Poison</strong></td><td>Poison, instant-kill effects, death magic</td></tr>
+          <tr><td><strong>Magic Wands</strong></td><td>Wand attacks, some magical devices</td></tr>
+          <tr><td><strong>Paralysis / Stone</strong></td><td>Ghoul paralysis, flesh-to-stone, petrification</td></tr>
+          <tr><td><strong>Dragon Breath</strong></td><td>Any breath weapon (dragon, etc.)</td></tr>
+          <tr><td><strong>Spells / Rods / Staves</strong></td><td>Most spells that allow a save; rods; staves</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Save Bonuses</h3>
+      <ul>
+        <li><strong>Wisdom 13–15</strong> → −1 to Spells/Rods/Staves target only</li>
+        <li><strong>Wisdom 16–17</strong> → −2 to Spells/Rods/Staves target only</li>
+        <li><strong>Ring of Protection +N</strong> → −N to ALL five categories</li>
+        <li><strong>Dwarves &amp; Halflings</strong> → Exceptional saves vs. magic; see table on their sheets</li>
+        <li><strong>Elves</strong> → Immune to Ghoul Paralysis; excellent magic saves at high level</li>
+      </ul>
+      <div class="note">
+        Your sheet shows two columns: <strong>Base</strong> (raw Cyclopedia value) and <strong>Equipped</strong> (with all bonuses applied).
+        Use the <strong style="color:var(--gold);">Equipped</strong> column during play.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── ABILITY SCORES ── -->
+<div class="section">
+  <div class="section-title">Ability Scores &amp; Modifiers</div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3>BECMI Ability Score Modifiers</h3>
+    <table class="ref-table">
+      <thead><tr><th>Score</th><th>Modifier</th><th>STR effect</th><th>DEX effect</th><th>CON effect</th><th>WIS effect</th></tr></thead>
+      <tbody>
+        <tr><td>3</td><td class="lo">−3</td><td>−3 to hit &amp; dmg</td><td>−3 to missile; +3 AC</td><td>−3 HP/die</td><td>−3 to spell saves</td></tr>
+        <tr><td>4–5</td><td class="lo">−2</td><td>−2 to hit &amp; dmg</td><td>−2 to missile; +2 AC</td><td>−2 HP/die</td><td>−2 to spell saves</td></tr>
+        <tr><td>6–8</td><td class="lo">−1</td><td>−1 to hit &amp; dmg</td><td>−1 to missile; +1 AC</td><td>−1 HP/die</td><td>−1 to spell saves</td></tr>
+        <tr><td>9–12</td><td>0</td><td>No bonus</td><td>No bonus</td><td>No bonus</td><td>No bonus</td></tr>
+        <tr><td>13–15</td><td class="hi">+1</td><td>+1 to hit &amp; dmg</td><td>+1 to missile; −1 AC</td><td>+1 HP/die</td><td>−1 to spell saves</td></tr>
+        <tr><td>16–17</td><td class="hi">+2</td><td>+2 to hit &amp; dmg</td><td>+2 to missile; −2 AC</td><td>+2 HP/die</td><td>−2 to spell saves</td></tr>
+        <tr><td>18</td><td class="hi">+3</td><td>+3 to hit &amp; dmg</td><td>+3 to missile; −3 AC</td><td>+3 HP/die</td><td>−3 to spell saves</td></tr>
+      </tbody>
+    </table>
+    <div class="note">INT affects max spell level a MU can learn (INT 16+ = 8th level spells, etc.). CHA sets the maximum number of retainers/hirelings and their morale.</div>
+  </div>
+
+  <div class="rule-grid">
+    <div class="card">
+      <h3>What STR Does</h3>
+      <ul>
+        <li>+/− to <strong>melee attack rolls</strong></li>
+        <li>+/− to <strong>melee and thrown weapon damage</strong></li>
+        <li>Affects ability to force open doors (1–2 in 6 base chance)</li>
+        <li><em>No</em> effect on ranged weapon damage</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>What DEX Does</h3>
+      <ul>
+        <li>+/− to <strong>missile attack rolls only</strong></li>
+        <li>Adjusts <strong>Armor Class</strong> (DEX 13+ lowers your AC)</li>
+        <li>Optional: DEX bonus applies to individual initiative</li>
+        <li><em>No</em> effect on melee attack rolls</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── DEATH & HEALING ── -->
+<div class="section">
+  <div class="section-title">Death &amp; Healing</div>
+
+  <div class="callout callout-warning" style="margin-bottom:16px;">
+    <strong>You die at 0 HP.</strong> There is no "unconscious and stable." There are no death saving throws.
+    If you reach 0, your character is dead. The party must decide whether to flee or press on without you.
+  </div>
+
+  <div class="rule-grid">
+    <div class="card">
+      <h3>Healing Options</h3>
+      <ul>
+        <li><strong>Cleric cure spells</strong> — the primary source; limited per day</li>
+        <li><strong>Full rest</strong> (8+ hours) — some DMs allow 1d3 HP recovery; this is <em>optional</em> — confirm with the DM</li>
+        <li><strong>Cure Light Wounds</strong> — restores 1d6+1 HP; each use consumes the spell for the day</li>
+        <li><strong>Potions of Healing</strong> — typically 1d6+1 HP; check item description</li>
+      </ul>
+      <div class="note">There are NO "short rests," "hit dice spending," or "Second Wind" equivalents. Manage your HP carefully.</div>
+    </div>
+    <div class="card">
+      <h3>Resurrection</h3>
+      <ul>
+        <li><strong>Raise Dead</strong> (5th-level Cleric spell) can revive a dead character if cast within Constitution score in days</li>
+        <li>The character returns with 1 HP and needs a full week of rest</li>
+        <li>Each resurrection may permanently reduce CON by 1 (DM's option)</li>
+        <li>Characters slain by energy drain or certain weapons (e.g., Soulcleaver) <strong>cannot be raised</strong></li>
+        <li>No Revivify at low cost — Raise Dead is a high-level, rare spell</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Level Drain (Energy Drain)</h3>
+      <ul>
+        <li>Certain undead (Wights, Wraiths, Vampires) and some weapons drain <strong>actual experience levels</strong></li>
+        <li>You lose all benefits of the drained level: HP, spells, abilities, to-hit bonus</li>
+        <li>A 1st-level character drained to 0 levels is <strong>dead</strong></li>
+        <li>There is no save. Only magic items or special conditions can protect against it</li>
+      </ul>
+      <div class="note">Grimsword's sword drains 1 level on a hit. No save. Handle with care.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SPELLS ── -->
+<div class="section">
+  <div class="section-title">Spells &amp; Magic</div>
+  <div class="rule-grid">
+    <div class="card">
+      <h3>How Memorization Works</h3>
+      <ul>
+        <li>Spellcasters choose which spells to memorize each morning (8 hours rest + study)</li>
+        <li>When a spell is cast, it is <strong>forgotten</strong> — gone until re-memorized the next day</li>
+        <li>You can memorize the same spell twice to cast it twice</li>
+        <li>Your sheet shows spell slots as inputs — cross off spells as you cast them</li>
+      </ul>
+      <div class="note">No cantrips. No at-will spells. Every casting matters.</div>
+    </div>
+    <div class="card">
+      <h3>Magic-User vs. Cleric</h3>
+      <ul>
+        <li><strong>Magic-Users</strong> keep a spellbook; can only cast what they've found and copied; very few spells per day at low levels</li>
+        <li><strong>Clerics</strong> can access <em>any</em> cleric spell of their level — no spellbook — but still limited daily slots</li>
+        <li><strong>Elves</strong> use the MU spell list; fewer/lower-level slots than a pure MU</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Important Spell Rules</h3>
+      <ul>
+        <li>No "concentration" mechanic — spells run their listed duration automatically</li>
+        <li>Casting in melee: the DM may require you not to move; getting hit during casting may disrupt the spell</li>
+        <li>Scrolls can be used by the appropriate class; 10% chance of backfire for thieves using MU scrolls</li>
+        <li>A MU's Intelligence score determines the maximum level of spells they can learn</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Saving vs. Spells</h3>
+      <ul>
+        <li>The target rolls a save vs. <strong>Spells/Rods/Staves</strong> to resist most spells</li>
+        <li>A successful save often means <em>half damage</em> (e.g., fireball) or <em>no effect</em> (e.g., charm, sleep)</li>
+        <li>Read the spell description — it specifies the category and outcome</li>
+        <li>Some spells (Magic Missile, Cloudkill) allow no save</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── COMBAT ROUND ── -->
+<div class="section">
+  <div class="section-title">Combat Round Sequence (10 seconds)</div>
+  <div class="rule-grid">
+    <div>
+      <div class="card">
+        <h3>Order of Play Each Round</h3>
+        <ol class="seq">
+          <li><div><div class="seq-title">Morale (monsters only)</div>The DM checks whether monsters flee or fight on.</div></li>
+          <li><div><div class="seq-title">Initiative</div>Each side rolls 1d6. Higher roll acts first. Ties = simultaneous.</div></li>
+          <li><div><div class="seq-title">Missile Attacks</div>Archers, slingers, and thrown weapon users fire. Targets can't dodge.</div></li>
+          <li><div><div class="seq-title">Spells</div>Spellcasters declare and resolve spells. Getting hit before your turn may ruin the spell.</div></li>
+          <li><div><div class="seq-title">Movement</div>Characters move up to their full movement rate, or half movement and still attack.</div></li>
+          <li><div><div class="seq-title">Melee Attacks</div>Hand-to-hand attacks resolved. Roll to hit, then roll damage.</div></li>
+        </ol>
+        <div class="note">The side that lost initiative also performs all 6 steps, just after the winning side. Both sides may attack in the same round.</div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px;">
+        <h3>Movement Rates</h3>
+        <table class="ref-table">
+          <thead><tr><th>Encumbrance</th><th>Combat Speed</th><th>Running</th></tr></thead>
+          <tbody>
+            <tr><td>Unencumbered (0–400 cn)</td><td class="hi">120'</td><td>360'</td></tr>
+            <tr><td>Lightly enc. (401–800 cn)</td><td>90'</td><td>270'</td></tr>
+            <tr><td>Heavily enc. (801–1200 cn)</td><td>60'</td><td>180'</td></tr>
+            <tr><td>Max enc. (1201–1600 cn)</td><td class="lo">30'</td><td>90'</td></tr>
+          </tbody>
+        </table>
+        <div class="note">Plate Mail alone weighs ~500 cn. Fighters typically move 60' in combat. 1 coin (cn) ≈ 10 grams.</div>
+      </div>
+      <div class="card">
+        <h3>Retreating From Melee</h3>
+        <ul>
+          <li><strong>Fighting Withdrawal</strong>: move up to half speed backward; enemy does <em>not</em> get a free attack</li>
+          <li><strong>Full Retreat</strong>: move full speed away; enemy gets a free attack at +2; you lose your attack for the round</li>
+          <li>Running characters do NOT get to attack the fleeing character if they are already in melee with someone else</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── CLASS SPECIAL RULES ── -->
+<div class="section">
+  <div class="section-title">Class &amp; Race Special Rules</div>
+  <div class="rule-grid-3">
+
+    <div class="card">
+      <h3>⚔ Fighter / Sweep Attack</h3>
+      <p>Fighters (and demi-human fighters) get <strong>1 attack per level</strong> against creatures with 1 HD or fewer in a single round. Example: a Level 6 Fighter attacks 6 goblins in one round.
+      Against creatures with more than 1 HD: 1 attack per round.</p>
+      <div class="note">This is a massive advantage vs. mobs. Keep it in mind against skeletons, kobolds, and goblins.</div>
+    </div>
+
+    <div class="card">
+      <h3>🗡 Thief / Backstab</h3>
+      <p><strong>Requires:</strong> approaching unseen and attacking with a one-handed melee weapon.</p>
+      <ul>
+        <li>+4 to attack roll</li>
+        <li>×2 damage at levels 1–4</li>
+        <li>×3 damage at levels 5–8 (Molliver &amp; Zarak)</li>
+        <li>×4 damage at levels 9–12</li>
+      </ul>
+      <div class="note">Multiply the weapon damage dice, THEN add STR and magic bonuses. Does not work with missile weapons.</div>
+    </div>
+
+    <div class="card">
+      <h3>🔮 Thief / Skills</h3>
+      <p>Thief skills are <strong>percentage rolls</strong> (roll d100, equal or under = success). Your sheet lists the exact percentages. Notable exceptions:</p>
+      <ul>
+        <li><strong>Hear Noise</strong>: roll 1–3 on d6 (or 1–4 at higher levels)</li>
+        <li><strong>Climb Walls</strong>: very high % but a failed roll means a fall</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>☩ Cleric / Turn Undead</h3>
+      <p>Roll <strong>2d6</strong> and compare to the Turn Undead table on your sheet.</p>
+      <ul>
+        <li><strong>Number</strong>: roll equal or higher to turn 2d6 HD of undead</li>
+        <li><strong>T</strong>: automatic turn (2d6 HD flee)</li>
+        <li><strong>D</strong>: automatic destroy (3d6 HD destroyed)</li>
+      </ul>
+      <div class="note">Chaotic (evil) clerics CONTROL rather than turn or destroy undead.</div>
+    </div>
+
+    <div class="card">
+      <h3>🧝 Elf</h3>
+      <ul>
+        <li>Can fight <strong>and</strong> cast spells — but not in the same round</li>
+        <li>Immune to Ghoul paralysis</li>
+        <li>Detects secret/hidden doors on a 1–2 in 6 when passing</li>
+        <li>Infravision 60'</li>
+        <li>Max level: 10 (Peralay is at max)</li>
+        <li>Spells use the MU list; fewer slots than a pure MU of the same level</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⛏ Dwarf</h3>
+      <ul>
+        <li>Detects sloping passages, new construction, shifting walls (1–2 in 6 when searching)</li>
+        <li>Infravision 60'</li>
+        <li>Takes <strong>half damage</strong> from damage-causing spells at high level (1,400,000 XP)</li>
+        <li>Excellent saves — see Dwarf save table, notably better vs. magic than fighters</li>
+        <li>Max level: 12; uses Fighter attack table</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>🌿 Halfling</h3>
+      <ul>
+        <li><strong>Outdoors:</strong> 90% chance to be unseen (motionless in natural cover)</li>
+        <li><strong>Indoors:</strong> 33% chance to hide motionless in dim light</li>
+        <li>+1 to missile attack rolls; −2 AC vs. creatures larger than man-size</li>
+        <li>Half damage from dragon breath (and spells at 900,000 XP)</li>
+        <li>Excellent saves — equal to Dwarves; best of any class at their level</li>
+        <li>Max level: 8; uses Fighter attack table</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>📜 Magic-User</h3>
+      <ul>
+        <li>Weakest fighter — no armor, one dagger (no shield)</li>
+        <li>Fragile at low HP; protect them in the back of the party</li>
+        <li>THAC0 improves very slowly (stays at 19 through level 10)</li>
+        <li>Use spells strategically — you have very few per day</li>
+        <li>At high levels, become exponentially more powerful</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>⚒ Weapons: What Clerics Can't Use</h3>
+      <p>Clerics cannot use <strong>edged or pointed weapons</strong> — no swords, axes, daggers, spears, arrows.</p>
+      <p style="margin-top:8px;">Clerics can use: maces, war hammers, clubs, staves, flails, and slings.</p>
+      <div class="note">Mercion (Mace +2) and Zargash (Mace +1, Snake Staff) follow this restriction. Their weapons deal 1d6 damage.</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── ARMOR ── -->
+<div class="section">
+  <div class="section-title">Armor &amp; Armor Class Reference</div>
+  <div class="rule-grid">
+    <div class="card">
+      <h3>Standard Armor Values</h3>
+      <table class="ref-table">
+        <thead><tr><th>Armor</th><th>Base AC</th><th>Move</th></tr></thead>
+        <tbody>
+          <tr><td>No armor</td><td>9</td><td>120'</td></tr>
+          <tr><td>Leather</td><td>7</td><td>120'</td></tr>
+          <tr><td>Chain Mail</td><td>5</td><td>90'</td></tr>
+          <tr><td>Plate Mail</td><td>3</td><td>60'</td></tr>
+          <tr><td>Shield (any)</td><td class="hi">−1 to AC</td><td>—</td></tr>
+          <tr><td>Shield +2</td><td class="hi">−3 to AC total</td><td>—</td></tr>
+        </tbody>
+      </table>
+      <div class="note">AC improves (goes lower) with better armor. Plate + Shield = AC 2. With DEX 16: AC 0. Negative AC is possible.</div>
+    </div>
+    <div class="card">
+      <h3>What "As Equipped" AC Means</h3>
+      <p style="margin-bottom:10px;">Several characters have a <strong>Ring of Protection</strong> whose bonus is not yet reflected in the displayed AC stat. Their actual combat AC is noted on their sheet.</p>
+      <table class="ref-table">
+        <thead><tr><th>Character</th><th>Sheet AC</th><th>Equipped AC</th></tr></thead>
+        <tbody>
+          <tr><td>Ringlerun</td><td>9</td><td class="hi">8 <span class="tag tag-gold">Ring+1</span></td></tr>
+          <tr><td>Molliver</td><td>7</td><td class="hi">5 <span class="tag tag-gold">Ring+2</span></td></tr>
+          <tr><td>Bowmarc</td><td>2</td><td class="hi">0 <span class="tag tag-gold">Ring+2</span></td></tr>
+          <tr><td>Valkeer</td><td>6</td><td class="hi">5 <span class="tag tag-gold">Ring+1</span></td></tr>
+          <tr><td>Kelek</td><td>9</td><td class="hi">8 <span class="tag tag-gold">Ring+1</span></td></tr>
+          <tr><td>Warduke</td><td>2</td><td class="hi">0 <span class="tag tag-gold">Ring+2</span></td></tr>
+          <tr><td>Skylla</td><td>9</td><td class="hi">8 <span class="tag tag-gold">Ring+1</span></td></tr>
+          <tr><td>Grimsword</td><td>2</td><td class="hi">0 <span class="tag tag-gold">Shield+2</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ── QUICK REFERENCE ── -->
+<div class="section">
+  <div class="section-title">Quick Reference Numbers</div>
+  <div class="rule-grid-3">
+    <div class="card">
+      <h3>Doors &amp; Objects</h3>
+      <table class="ref-table">
+        <thead><tr><th>Task</th><th>Chance (d6)</th></tr></thead>
+        <tbody>
+          <tr><td>Force open stuck door</td><td>1–2 in 6</td></tr>
+          <tr><td>STR 13–15</td><td>1–3 in 6</td></tr>
+          <tr><td>STR 16–17</td><td>1–4 in 6</td></tr>
+          <tr><td>STR 18 (or Gauntlets)</td><td>1–5 in 6</td></tr>
+          <tr><td>Hear noise (normal)</td><td>1–2 in 6</td></tr>
+          <tr><td>Detect secret door (Elf)</td><td>1–2 in 6</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Damage by Weapon</h3>
+      <table class="ref-table">
+        <thead><tr><th>Weapon type</th><th>Damage</th></tr></thead>
+        <tbody>
+          <tr><td>Dagger, hand axe, sling</td><td>1d4</td></tr>
+          <tr><td>Short sword, mace, war hammer, flail</td><td>1d6</td></tr>
+          <tr><td>Sword (normal), battle axe, pole arm</td><td>1d8</td></tr>
+          <tr><td>Two-handed sword</td><td>1d10</td></tr>
+          <tr><td>Longbow (per arrow)</td><td>1d6</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Common Spell Effects</h3>
+      <table class="ref-table">
+        <thead><tr><th>Spell</th><th>Key fact</th></tr></thead>
+        <tbody>
+          <tr><td>Sleep</td><td>No save; affects 2d8 HD ≤4 HD creatures</td></tr>
+          <tr><td>Charm Person</td><td>Save vs. Spells; acts as loyal friend</td></tr>
+          <tr><td>Magic Missile</td><td>No save; auto-hit; 1d6+1 per missile</td></tr>
+          <tr><td>Fireball</td><td>Save for half; 1d6/level damage, 20' radius</td></tr>
+          <tr><td>Hold Person</td><td>Save vs. Paralysis or frozen 9 turns</td></tr>
+          <tr><td>Lightning Bolt</td><td>Save for half; 1d6/level, bounces off walls</td></tr>
+          <tr><td>Cure Light Wounds</td><td>No roll; heals 1d6+1 HP</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- .content -->
+</div><!-- .container -->
+
+<footer>
+  XL-1 Quest for the Heartstone · BECMI D&amp;D Rules Cyclopedia · This cheatsheet is a play aid, not a substitute for the full rules.
+</footer>
+
+</body>
+</html>

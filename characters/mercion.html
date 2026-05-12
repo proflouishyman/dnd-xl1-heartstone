@@ -278,6 +278,15 @@
   .magic-item-name { font-weight: bold; font-size: 12px; color: #8a6914; margin-bottom: 3px; }
   .magic-item-desc { font-size: 11px; line-height: 1.5; }
 
+
+  /* ── Equipped tables ── */
+  .eq-val { text-align: center; font-weight: bold; color: var(--accent); }
+  .ac-equipped-note {
+    font-size: 11px; margin-top: 6px; padding: 5px 8px;
+    background: rgba(201,168,76,0.08); border-left: 3px solid var(--accent);
+    border-radius: 3px;
+  }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -285,6 +294,20 @@
 </style>
 </head>
 <body>
+<div style="
+  background:#111008;
+  border-bottom:1px solid #3a3020;
+  padding:0 20px;
+  display:flex;
+  gap:0;
+  align-items:center;
+  font-family:Georgia,serif;
+  position:sticky;top:0;z-index:200;
+">
+  <a href="../index.html" style="display:block;padding:12px 18px;color:#8a7d60;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid transparent;transition:color .2s;" onmouseover="this.style.color='#c9a84c';this.style.borderBottomColor='#c9a84c'" onmouseout="this.style.color='#8a7d60';this.style.borderBottomColor='transparent'">← Campaign</a>
+  <a href="../rules.html" style="display:block;padding:12px 18px;color:#8a7d60;text-decoration:none;font-size:11px;letter-spacing:2px;text-transform:uppercase;border-bottom:2px solid transparent;transition:color .2s;" onmouseover="this.style.color='#c9a84c';this.style.borderBottomColor='#c9a84c'" onmouseout="this.style.color='#8a7d60';this.style.borderBottomColor='transparent'">Rules Cheatsheet</a>
+</div>
+
 
 <!-- ── HEADER ── -->
 <div class="sheet-header">
@@ -423,14 +446,14 @@
 <div class="combat-tables">
   <section>
     <h3>Saving Throws <span style="font-size:10px;color:#888;">(roll d20, need this or higher)</span></h3>
-    <table class="save-table">
-      <thead><tr><th>Category</th><th style="text-align:center;">Target</th></tr></thead>
+        <table class="save-table">
+      <thead><tr><th>Category</th><th style="text-align:center;">Base</th><th style="text-align:center;">Equipped</th></tr></thead>
       <tbody>
-        <tr><td>Death Ray / Poison</td><td class="save-val">9</td></tr>
-        <tr><td>Magic Wands</td>        <td class="save-val">10</td></tr>
-        <tr><td>Paralysis / Stone</td>  <td class="save-val">12</td></tr>
-        <tr><td>Dragon Breath</td>      <td class="save-val">14</td></tr>
-        <tr><td>Spells / Rods / Staves</td><td class="save-val">12</td></tr>
+      <tr><td>Death Ray / Poison</td><td class="save-val">9</td><td class="eq-val">9</td></tr>
+      <tr><td>Magic Wands</td><td class="save-val">10</td><td class="eq-val">10</td></tr>
+      <tr><td>Paralysis / Stone</td><td class="save-val">12</td><td class="eq-val">12</td></tr>
+      <tr><td>Dragon Breath</td><td class="save-val">14</td><td class="eq-val">14</td></tr>
+      <tr><td>Spells / Rods / Staves</td><td class="save-val">13</td><td class="eq-val">11</td></tr>
       </tbody>
     </table>
     
@@ -439,25 +462,25 @@
     <h3>Attack Rolls</h3>
     <div style="margin-bottom:8px;">
       <span style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:1px;">THAC0</span>
-      <span class="thac0-val" style="margin-left:10px;">17</span>
+      <span class="thac0-val" style="margin-left:10px;">17</span><span style="font-size:11px;color:var(--accent);margin-left:6px;">/ 15 equipped</span>
       <span style="font-size:11px;color:#888;margin-left:6px;">(roll d20 + AC ≥ THAC0)</span>
     </div>
-        <table class="attack-table">
-      <thead><tr><th>Target AC</th><th style="text-align:center;">Need (d20)</th></tr></thead>
+            <table class="attack-table">
+      <thead><tr><th>Target AC</th><th style="text-align:center;">Base</th><th style="text-align:center;">Equipped</th></tr></thead>
       <tbody>
-        <tr><td>AC 9</td><td class="save-val">8</td></tr>
-        <tr><td>AC 8</td><td class="save-val">9</td></tr>
-        <tr><td>AC 7</td><td class="save-val">10</td></tr>
-        <tr><td>AC 6</td><td class="save-val">11</td></tr>
-        <tr><td>AC 5</td><td class="save-val">12</td></tr>
-        <tr><td>AC 4</td><td class="save-val">13</td></tr>
-        <tr><td>AC 3</td><td class="save-val">14</td></tr>
-        <tr><td>AC 2</td><td class="save-val">15</td></tr>
-        <tr><td>AC 1</td><td class="save-val">16</td></tr>
-        <tr><td>AC 0</td><td class="save-val">17</td></tr>
-        <tr><td>AC −1</td><td class="save-val">18</td></tr>
-        <tr><td>AC −2</td><td class="save-val">19</td></tr>
-        <tr><td>AC −3</td><td class="save-val">20</td></tr>
+        <tr><td>AC 9</td><td class="save-val">8</td><td class="eq-val">6</td></tr>
+        <tr><td>AC 8</td><td class="save-val">9</td><td class="eq-val">7</td></tr>
+        <tr><td>AC 7</td><td class="save-val">10</td><td class="eq-val">8</td></tr>
+        <tr><td>AC 6</td><td class="save-val">11</td><td class="eq-val">9</td></tr>
+        <tr><td>AC 5</td><td class="save-val">12</td><td class="eq-val">10</td></tr>
+        <tr><td>AC 4</td><td class="save-val">13</td><td class="eq-val">11</td></tr>
+        <tr><td>AC 3</td><td class="save-val">14</td><td class="eq-val">12</td></tr>
+        <tr><td>AC 2</td><td class="save-val">15</td><td class="eq-val">13</td></tr>
+        <tr><td>AC 1</td><td class="save-val">16</td><td class="eq-val">14</td></tr>
+        <tr><td>AC 0</td><td class="save-val">17</td><td class="eq-val">15</td></tr>
+        <tr><td>AC −1</td><td class="save-val">18</td><td class="eq-val">16</td></tr>
+        <tr><td>AC −2</td><td class="save-val">19</td><td class="eq-val">17</td></tr>
+        <tr><td>AC −3</td><td class="save-val">20</td><td class="eq-val">18</td></tr>
       </tbody>
     </table>
   </section>
@@ -622,5 +645,6 @@
 </section>
 
 <!-- extended-class-tables-done -->
+<!-- equipped-tables-done -->
 </body>
 </html>

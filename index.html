@@ -154,14 +154,11 @@
     background: var(--panel);
     transition: border-color 0.2s;
   }
-  .map-card:hover { border-color: var(--gold); }
-  .map-card img {
+  .map-thumb {
     width: 100%; height: 180px;
-    object-fit: cover; display: block;
-    filter: brightness(0.8);
-    transition: filter 0.2s;
+    display: flex; align-items: center; justify-content: center;
   }
-  .map-card:hover img { filter: brightness(1); }
+  .map-lock { font-size: 32px; opacity: 0.5; }
   .map-label {
     padding: 10px 12px;
     font-size: 12px;
@@ -303,58 +300,69 @@
   <section id="maps">
     <h2>Maps — Interactive Fog of War</h2>
     <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
-      Click any map to open the fog-of-war viewer. Click or drag tiles to reveal areas. State saves automatically per map.
-      Share your screen in Discord while you reveal — or see <a href="#figma" style="color:var(--gold);">Figma setup</a> for a shared live view.
+      Maps are DM-only — links are disabled for players. Open a map directly in your browser to run fog-of-war.
     </p>
     <div class="maps-grid">
 
-      <a class="map-card" href="maps/northern-marsh.html">
-        <img src="maps/northern-marsh.jpg" alt="Mists of the Northern Marsh">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#1e3d1e,#0e200e);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 1 — Mists of the Northern Marsh</strong>
           <span>Wilderness · Cave Openings 2a–2f · 18×24 fog grid</span>
         </div>
-      </a>
+      </div>
 
-      <a class="map-card" href="maps/icewater-falls.html">
-        <img src="maps/icewater-falls.jpg" alt="Perils of the Icewater Falls">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#1a2e4a,#0c1a2e);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 2 — Perils of the Icewater Falls</strong>
           <span>Wilderness · Cliff Face · 16×22 fog grid</span>
         </div>
-      </a>
+      </div>
 
-      <a class="map-card" href="maps/tunnels-of-death.html">
-        <img src="maps/tunnels-of-death.jpg" alt="Tunnels of Death">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#2a2a2a,#111);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 3 — The Tunnels of Death</strong>
           <span>Dungeon Level I · 26×32 fog grid</span>
         </div>
-      </a>
+      </div>
 
-      <a class="map-card" href="maps/frost-giants-lair.html">
-        <img src="maps/frost-giants-lair.jpg" alt="Frost Giants Lair">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#1a2f44,#0d1a28);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 4 — Frost Giants' Lair</strong>
           <span>Dungeon Level II · 20×26 fog grid</span>
         </div>
-      </a>
+      </div>
 
-      <a class="map-card" href="maps/wizards-home.html">
-        <img src="maps/wizards-home.jpg" alt="The Wizard's Home">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#2a1a44,#150d22);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 5 — The Wizard's Home</strong>
           <span>Dungeon Level III · 22×30 fog grid</span>
         </div>
-      </a>
+      </div>
 
-      <a class="map-card" href="maps/home-of-heartstone.html">
-        <img src="maps/home-of-heartstone.jpg" alt="Home of the Heartstone">
+      <div class="map-card">
+        <div class="map-thumb" style="background: linear-gradient(135deg,#44101a,#220810);">
+          <span class="map-lock">🔒</span>
+        </div>
         <div class="map-label">
           <strong>Map 6 — Home of the Heartstone</strong>
           <span>Dungeon Level IV · 20×26 fog grid</span>
         </div>
-      </a>
+      </div>
 
     </div>
   </section>

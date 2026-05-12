@@ -1,103 +1,134 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <style>
-    body {
-      font-family: Inter, sans-serif;
-      font-size: 12px;
-      padding: 12px;
-      margin: 0;
-      background: #fff;
-      color: #333;
-    }
-    h3 { margin: 0 0 8px; font-size: 13px; }
-    label { display: block; margin-bottom: 4px; color: #555; }
-    input[type=number] {
-      width: 60px;
-      padding: 4px 6px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 12px;
-    }
-    .row { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
-    .field { display: flex; flex-direction: column; }
-    button {
-      width: 100%;
-      padding: 8px;
-      background: #1e1e1e;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    button:hover { background: #444; }
-    button.secondary {
-      background: #e8e8e8;
-      color: #333;
-      margin-top: 6px;
-    }
-    button.secondary:hover { background: #d0d0d0; }
-    button.danger {
-      background: #c0392b;
-      margin-top: 6px;
-    }
-    button.danger:hover { background: #a93226; }
-    .hint {
-      font-size: 11px;
-      color: #888;
-      margin-bottom: 10px;
-      line-height: 1.4;
-    }
-    hr { border: none; border-top: 1px solid #eee; margin: 10px 0; }
-  </style>
+<style>
+  body { font-family: Inter, sans-serif; font-size: 12px; padding: 12px; margin: 0; background: #fff; color: #333; }
+  h3   { margin: 0 0 4px; font-size: 13px; }
+  p    { font-size: 11px; color: #888; margin: 0 0 10px; line-height: 1.4; }
+  hr   { border: none; border-top: 1px solid #eee; margin: 10px 0; }
+  label { display: block; margin-bottom: 3px; color: #555; font-size: 11px; }
+  input[type=number] { width: 58px; padding: 4px 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; }
+  .row { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; }
+  .field { display: flex; flex-direction: column; }
+  button { width: 100%; padding: 8px; border: none; border-radius: 5px; cursor: pointer; font-size: 12px; margin-top: 4px; }
+  .primary   { background: #18a0fb; color: #fff; }
+  .primary:hover { background: #0d8ce6; }
+  .secondary { background: #e8e8e8; color: #333; }
+  .secondary:hover { background: #d0d0d0; }
+  .danger    { background: #f24822; color: #fff; }
+  .danger:hover { background: #d43418; }
+  .primary:disabled { background: #aaa; cursor: default; }
+  #progress { font-size: 11px; color: #666; margin-top: 6px; min-height: 16px; }
+  .section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #aaa; margin: 10px 0 6px; }
+</style>
 </head>
 <body>
-  <h3>D&D Fog of War</h3>
-  <p class="hint">Select the map image on the canvas, then click "Add Fog". Click individual tiles to reveal rooms.</p>
 
-  <div class="row">
-    <div class="field">
-      <label>Columns</label>
-      <input type="number" id="cols" value="20" min="4" max="60">
-    </div>
-    <div class="field">
-      <label>Rows</label>
-      <input type="number" id="rows" value="20" min="4" max="60">
-    </div>
-    <div class="field">
-      <label>Opacity %</label>
-      <input type="number" id="opacity" value="90" min="40" max="100">
-    </div>
-  </div>
+<h3>D&D Fog of War</h3>
 
-  <button id="addFog">Add Fog of War to Selection</button>
-  <button class="secondary" id="revealAll">Reveal All Tiles</button>
-  <button class="danger" id="removeFog">Remove All Fog</button>
+<!-- AUTO SETUP -->
+<div class="section-label">Auto-Setup (XL-1 All Maps)</div>
+<p>Creates one Figma page per map, loads images from GitHub Pages, and covers each with a fog grid.</p>
+<div class="row">
+  <div class="field"><label>Opacity %</label><input type="number" id="setup-opacity" value="90" min="50" max="100"></div>
+</div>
+<button class="primary" id="setupAll">⚙️ Create All 6 Map Pages</button>
+<div id="progress"></div>
 
-  <hr>
-  <p class="hint"><b>Tip:</b> After adding fog, select individual tiles and delete them to reveal areas as players explore.</p>
+<hr>
 
-  <script>
-    document.getElementById('addFog').onclick = () => {
-      parent.postMessage({
-        pluginMessage: {
-          type: 'add-fog',
-          cols: parseInt(document.getElementById('cols').value),
-          rows: parseInt(document.getElementById('rows').value),
-          opacity: parseInt(document.getElementById('opacity').value) / 100
-        }
-      }, '*');
-    };
+<!-- MANUAL -->
+<div class="section-label">Manual — Selected Image</div>
+<p>Select an image you've placed on the canvas, then add a fog grid to it.</p>
+<div class="row">
+  <div class="field"><label>Cols</label><input type="number" id="cols" value="20" min="4" max="60"></div>
+  <div class="field"><label>Rows</label><input type="number" id="rows" value="20" min="4" max="60"></div>
+  <div class="field"><label>Opacity %</label><input type="number" id="opacity" value="90" min="40" max="100"></div>
+</div>
+<button class="secondary" id="addFog">Add Fog to Selection</button>
+<button class="secondary" id="revealAll">Reveal All Tiles</button>
+<button class="danger"    id="removeFog">Remove All Fog</button>
 
-    document.getElementById('revealAll').onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'reveal-all' } }, '*');
-    };
+<script>
+  const BASE = 'https://proflouishyman.github.io/dnd-xl1-heartstone/maps/';
+  let pendingMaps = [];
+  let currentOpacity = 0.9;
 
-    document.getElementById('removeFog').onclick = () => {
-      parent.postMessage({ pluginMessage: { type: 'remove-fog' } }, '*');
-    };
-  </script>
+  document.getElementById('setupAll').onclick = async () => {
+    const btn = document.getElementById('setupAll');
+    btn.disabled = true;
+    currentOpacity = parseInt(document.getElementById('setup-opacity').value) / 100;
+    setProgress('Starting…');
+    parent.postMessage({ pluginMessage: {
+      type: 'setup-all',
+      opacity: currentOpacity
+    }}, '*');
+  };
+
+  document.getElementById('addFog').onclick = () => {
+    parent.postMessage({ pluginMessage: {
+      type: 'add-fog',
+      cols:    parseInt(document.getElementById('cols').value),
+      rows:    parseInt(document.getElementById('rows').value),
+      opacity: parseInt(document.getElementById('opacity').value) / 100
+    }}, '*');
+  };
+
+  document.getElementById('revealAll').onclick = () =>
+    parent.postMessage({ pluginMessage: { type: 'reveal-all' } }, '*');
+
+  document.getElementById('removeFog').onclick = () =>
+    parent.postMessage({ pluginMessage: { type: 'remove-fog' } }, '*');
+
+  // Listen for instructions to fetch maps
+  window.onmessage = async (event) => {
+    const msg = event.data.pluginMessage;
+    if (!msg) return;
+
+    if (msg.type === 'fetch-maps') {
+      pendingMaps = [...msg.maps];
+      currentOpacity = msg.opacity;
+      await fetchNextMap();
+    }
+
+    if (msg.type === 'map-done') {
+      setProgress(`✓ ${msg.slug}`);
+      await fetchNextMap();
+    }
+  };
+
+  async function fetchNextMap() {
+    if (pendingMaps.length === 0) {
+      setProgress('✅ All maps created! Share the file with your players.');
+      document.getElementById('setupAll').disabled = false;
+      return;
+    }
+    const config = pendingMaps.shift();
+    setProgress(`Loading ${config.title}…`);
+    try {
+      const url = BASE + config.slug + '.jpg';
+      const resp = await fetch(url);
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const buf   = await resp.arrayBuffer();
+      const bytes = Array.from(new Uint8Array(buf));
+      parent.postMessage({ pluginMessage: {
+        type: 'image-data',
+        config,
+        bytes,
+        opacity: currentOpacity,
+      }}, '*');
+    } catch (e) {
+      parent.postMessage({ pluginMessage: {
+        type: 'setup-error',
+        slug: config.slug,
+        error: e.message,
+      }}, '*');
+    }
+  }
+
+  function setProgress(text) {
+    document.getElementById('progress').textContent = text;
+  }
+</script>
 </body>
 </html>

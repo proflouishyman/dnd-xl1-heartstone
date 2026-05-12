@@ -217,6 +217,7 @@
   <ul>
     <li><a href="#characters">Characters</a></li>
     <li><a href="#maps">Maps</a></li>
+    <li><a href="#figma">Figma Setup</a></li>
     <li><a href="#tools">DM Tools</a></li>
   </ul>
 </nav>
@@ -300,14 +301,18 @@
 
   <!-- ── MAPS ── -->
   <section id="maps">
-    <h2>Maps</h2>
+    <h2>Maps — Interactive Fog of War</h2>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
+      Click any map to open the fog-of-war viewer. Click or drag tiles to reveal areas. State saves automatically per map.
+      Share your screen in Discord while you reveal — or see <a href="#figma" style="color:var(--gold);">Figma setup</a> for a shared live view.
+    </p>
     <div class="maps-grid">
 
       <a class="map-card" href="maps/northern-marsh.html">
         <img src="maps/northern-marsh.jpg" alt="Mists of the Northern Marsh">
         <div class="map-label">
           <strong>Map 1 — Mists of the Northern Marsh</strong>
-          <span>Wilderness · includes cave openings 2a–2f</span>
+          <span>Wilderness · Cave Openings 2a–2f · 18×24 fog grid</span>
         </div>
       </a>
 
@@ -315,7 +320,7 @@
         <img src="maps/icewater-falls.jpg" alt="Perils of the Icewater Falls">
         <div class="map-label">
           <strong>Map 2 — Perils of the Icewater Falls</strong>
-          <span>Wilderness · cliff face approach</span>
+          <span>Wilderness · Cliff Face · 16×22 fog grid</span>
         </div>
       </a>
 
@@ -323,7 +328,7 @@
         <img src="maps/tunnels-of-death.jpg" alt="Tunnels of Death">
         <div class="map-label">
           <strong>Map 3 — The Tunnels of Death</strong>
-          <span>Dungeon Level I</span>
+          <span>Dungeon Level I · 26×32 fog grid</span>
         </div>
       </a>
 
@@ -331,7 +336,7 @@
         <img src="maps/frost-giants-lair.jpg" alt="Frost Giants Lair">
         <div class="map-label">
           <strong>Map 4 — Frost Giants' Lair</strong>
-          <span>Dungeon Level II</span>
+          <span>Dungeon Level II · 20×26 fog grid</span>
         </div>
       </a>
 
@@ -339,7 +344,7 @@
         <img src="maps/wizards-home.jpg" alt="The Wizard's Home">
         <div class="map-label">
           <strong>Map 5 — The Wizard's Home</strong>
-          <span>Dungeon Level III</span>
+          <span>Dungeon Level III · 22×30 fog grid</span>
         </div>
       </a>
 
@@ -347,9 +352,62 @@
         <img src="maps/home-of-heartstone.jpg" alt="Home of the Heartstone">
         <div class="map-label">
           <strong>Map 6 — Home of the Heartstone</strong>
-          <span>Dungeon Level IV</span>
+          <span>Dungeon Level IV · 20×26 fog grid</span>
         </div>
       </a>
+
+    </div>
+  </section>
+
+  <!-- ── FIGMA SETUP ── -->
+  <section id="figma">
+    <h2>Figma — Shared Live Maps</h2>
+    <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
+      For a shared live view where players see your reveals in real time, use the Figma plugin.
+      One-time setup: run the plugin once and all 6 maps are created with fog tiles automatically.
+    </p>
+    <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
+
+      <div class="tool-card">
+        <h4>Step 1 — Install the Plugin</h4>
+        <p style="margin-bottom:10px;">
+          In Figma: <em>Main Menu → Plugins → Development → Import plugin from manifest…</em>
+        </p>
+        <p>
+          Download all three plugin files and point Figma at <code>manifest.json</code>:
+        </p>
+        <p style="margin-top:8px;">
+          <a href="figma-fog-plugin/manifest.json" download>manifest.json</a> &nbsp;·&nbsp;
+          <a href="figma-fog-plugin/code.js" download>code.js</a> &nbsp;·&nbsp;
+          <a href="figma-fog-plugin/ui.html" download>ui.html</a>
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>Step 2 — Create All Maps</h4>
+        <p>
+          Open a new Figma file, run the plugin, and click <strong>"Create All 6 Map Pages"</strong>.
+          The plugin fetches each map from this site and creates a fog-covered page for each one.
+          No manual image uploading needed.
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>Step 3 — Share with Players</h4>
+        <p>
+          In Figma, click <strong>Share → Anyone with the link → Can view</strong>.
+          Drop that link in Discord. Players open it and see exactly what you reveal as you delete fog tiles live.
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>During Play</h4>
+        <p>
+          Select and delete fog tiles to reveal rooms as players explore.
+          Use <em>Reveal All</em> / <em>Remove Fog</em> buttons in the plugin panel for bulk actions.
+          The plugin also works manually on any image you select.
+        </p>
+      </div>
 
     </div>
   </section>
@@ -360,21 +418,11 @@
     <div class="tools-grid">
 
       <div class="tool-card">
-        <h4>🌫️ Figma Fog-of-War Plugin</h4>
-        <p>
-          Upload any map to Figma, select it, and run this plugin to cover it with a grid of removable fog tiles.
-          Delete tiles as players explore.
-          <a href="figma-fog-plugin/manifest.json" download>Download manifest.json</a> —
-          install via <em>Figma → Plugins → Development → Import from manifest</em>.
-        </p>
-      </div>
-
-      <div class="tool-card">
         <h4>🗺️ Owlbear Rodeo</h4>
         <p>
-          Free browser-based VTT. Download a map image, drag it into a new
-          <a href="https://owlbear.rodeo" target="_blank">Owlbear Rodeo</a> room,
-          and share the room link in Discord. Built-in fog of war, token movement, no accounts needed for players.
+          Free browser-based VTT alternative.
+          <a href="https://owlbear.rodeo" target="_blank">owlbear.rodeo</a> — drag in a map image,
+          share the room link in Discord. Built-in fog of war and token movement. No player accounts needed.
         </p>
       </div>
 

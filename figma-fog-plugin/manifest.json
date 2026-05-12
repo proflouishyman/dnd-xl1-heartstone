@@ -1,0 +1,8 @@
+{
+  "name": "D&D Fog of War",
+  "id": "dnd-fog-of-war",
+  "api": "1.0.0",
+  "main": "code.js",
+  "ui": "ui.html",
+  "editorType": ["figma"]
+}

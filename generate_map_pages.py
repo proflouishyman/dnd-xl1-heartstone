@@ -1,0 +1,149 @@
+#!/usr/bin/env python3
+"""Generate individual map viewer HTML pages."""
+import os
+
+os.makedirs("maps", exist_ok=True)
+
+MAPS = [
+    {
+        "slug":  "northern-marsh",
+        "title": "Map 1 — Mists of the Northern Marsh",
+        "sub":   "Wilderness Area &amp; Cave Openings 2a–2f",
+        "desc":  "The party travels through a fog-shrouded marsh to reach the Mountains of Ice. Watch for quicksand on the trail, wandering monsters every 4 hours, and four stone bridges that mark the route.",
+        "img":   "northern-marsh.jpg",
+    },
+    {
+        "slug":  "icewater-falls",
+        "title": "Map 2 — Perils of the Icewater Falls",
+        "sub":   "Wilderness Encounter Area",
+        "desc":  "A cliff face riddled with cave openings. The party must find the right entrance while hobgoblins flee through the area. Scale: 1 inch = 20 feet.",
+        "img":   "icewater-falls.jpg",
+    },
+    {
+        "slug":  "tunnels-of-death",
+        "title": "Map 3 — The Tunnels of Death",
+        "sub":   "Dungeon Level I",
+        "desc":  "The first dungeon level beneath the cliff. A maze of natural caverns and carved passages. Scale: 1 square = 10 feet.",
+        "img":   "tunnels-of-death.jpg",
+    },
+    {
+        "slug":  "frost-giants-lair",
+        "title": "Map 4 — Frost Giants' Lair",
+        "sub":   "Dungeon Level II",
+        "desc":  "The second level, home to frost giants and their servants. Connected to Level I via Area 11 and to Level III via a trapdoor.",
+        "img":   "frost-giants-lair.jpg",
+    },
+    {
+        "slug":  "wizards-home",
+        "title": "Map 5 — The Wizard's Home",
+        "sub":   "Dungeon Level III",
+        "desc":  "Dahnakriss's wizard tower embedded in the mountain. Area 15 connects to Level II; the lower sections connect to Level IV.",
+        "img":   "wizards-home.jpg",
+    },
+    {
+        "slug":  "home-of-heartstone",
+        "title": "Map 6 — Home of the Heartstone",
+        "sub":   "Dungeon Level IV",
+        "desc":  "The deepest level. The Heartstone lies here — along with Dahnakriss himself. Connects from Level III via Area 54.",
+        "img":   "home-of-heartstone.jpg",
+    },
+]
+
+TEMPLATE = """<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{title} — XL-1 Quest for the Heartstone</title>
+<style>
+  :root {{
+    --gold:  #c9a84c;
+    --dark:  #0e0d0b;
+    --panel: #1a1710;
+    --border:#3a3020;
+    --text:  #e8dfc8;
+    --muted: #8a7d60;
+  }}
+  * {{ box-sizing: border-box; margin: 0; padding: 0; }}
+  body {{
+    background: var(--dark); color: var(--text);
+    font-family: Georgia, serif; font-size: 14px;
+    min-height: 100vh;
+  }}
+  header {{
+    background: #111008;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 20px;
+  }}
+  .back {{
+    color: var(--gold); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    white-space: nowrap;
+  }}
+  .back:hover {{ text-decoration: underline; }}
+  .header-text h1 {{ font-size: 18px; color: #fff; }}
+  .header-text p  {{ font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 1px; }}
+  .map-desc {{
+    max-width: 800px; margin: 16px auto 0;
+    padding: 0 24px;
+    font-size: 13px; font-style: italic; color: var(--muted);
+  }}
+  .map-container {{
+    margin: 16px 24px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    overflow: auto;
+    background: #111;
+    max-height: calc(100vh - 160px);
+    text-align: center;
+  }}
+  .map-container img {{
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    cursor: zoom-in;
+  }}
+  .map-container img.zoomed {{
+    max-width: none;
+    cursor: zoom-out;
+  }}
+  .zoom-hint {{
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 8px;
+    letter-spacing: 1px;
+  }}
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="../index.html">← Hub</a>
+  <div class="header-text">
+    <h1>{title}</h1>
+    <p>{sub}</p>
+  </div>
+</header>
+<p class="map-desc">{desc}</p>
+<div class="zoom-hint">Click map to toggle zoom &nbsp;·&nbsp; Scroll to pan when zoomed</div>
+<div class="map-container" id="mapbox">
+  <img src="{img}" alt="{title}" id="mapimg" onclick="toggleZoom()">
+</div>
+<script>
+  function toggleZoom() {{
+    document.getElementById('mapimg').classList.toggle('zoomed');
+  }}
+</script>
+</body>
+</html>"""
+
+for m in MAPS:
+    html = TEMPLATE.format(**m)
+    path = os.path.join("maps", f"{m['slug']}.html")
+    with open(path, "w") as f:
+        f.write(html)
+    print(f"  {path}")
+
+print("Done")

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XL-1 — Quest for the Heartstone</title>
+<style>
+  :root {
+    --gold:   #c9a84c;
+    --dark:   #0e0d0b;
+    --panel:  #1a1710;
+    --border: #3a3020;
+    --text:   #e8dfc8;
+    --muted:  #8a7d60;
+    --lawful: #3a5c8c;
+    --chaotic:#8c2c2c;
+    --red:    #c0392b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Georgia', serif;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    position: relative;
+    min-height: 480px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute; inset: 0;
+    background: url('img/cover.jpg') center/cover no-repeat;
+    filter: brightness(0.45);
+  }
+  .hero-content {
+    position: relative;
+    padding: 48px 40px 40px;
+    max-width: 900px;
+  }
+  .hero-tag {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+  }
+  h1 {
+    font-size: clamp(32px, 5vw, 56px);
+    line-height: 1.1;
+    color: #fff;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.8);
+    letter-spacing: 1px;
+  }
+  .hero-sub {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #bbb;
+    letter-spacing: 1px;
+  }
+  .hero-desc {
+    margin-top: 16px;
+    max-width: 620px;
+    font-style: italic;
+    color: #ccc;
+    font-size: 14px;
+  }
+
+  /* ── Nav bar ── */
+  nav {
+    background: #111008;
+    border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 100;
+  }
+  nav ul {
+    list-style: none;
+    display: flex;
+    gap: 0;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  nav a {
+    display: block;
+    padding: 14px 22px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    border-bottom: 2px solid transparent;
+  }
+  nav a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* ── Layout ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 52px 0; border-bottom: 1px solid var(--border); }
+  h2 {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 28px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  h2::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* ── Character grid ── */
+  .char-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  @media (max-width: 680px) { .char-columns { grid-template-columns: 1fr; } }
+  .alignment-group h3 {
+    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+    padding: 6px 12px; margin-bottom: 12px; border-radius: 3px;
+    color: #fff;
+  }
+  .lawful-header  { background: var(--lawful); }
+  .chaotic-header { background: var(--chaotic); }
+
+  .char-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    text-decoration: none;
+    color: var(--text);
+    transition: border-color 0.2s, background 0.2s;
+    margin-bottom: 6px;
+  }
+  .char-card:hover { border-color: var(--gold); background: #23200f; }
+  .char-card:hover .char-name { color: var(--gold); }
+  .char-name { font-weight: bold; font-size: 14px; }
+  .char-class { font-size: 11px; color: var(--muted); margin-top: 1px; }
+
+  /* ── Maps grid ── */
+  .maps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+  }
+  .map-card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+    background: var(--panel);
+    transition: border-color 0.2s;
+  }
+  .map-card:hover { border-color: var(--gold); }
+  .map-card img {
+    width: 100%; height: 180px;
+    object-fit: cover; display: block;
+    filter: brightness(0.8);
+    transition: filter 0.2s;
+  }
+  .map-card:hover img { filter: brightness(1); }
+  .map-label {
+    padding: 10px 12px;
+    font-size: 12px;
+    color: var(--text);
+  }
+  .map-label strong { display: block; font-size: 13px; margin-bottom: 2px; }
+  .map-label span { color: var(--muted); font-size: 11px; }
+
+  /* ── DM tools ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .tool-card {
+    padding: 20px;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .tool-card h4 { color: var(--gold); font-size: 14px; margin-bottom: 6px; }
+  .tool-card p  { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tool-card a  { color: var(--gold); }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px;
+    font-size: 11px;
+    color: #444;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-content">
+    <div class="hero-tag">D&amp;D Expert Adventure · TSR 9114 · 1984 · Levels 5–10</div>
+    <h1>Quest for the<br>Heartstone</h1>
+    <div class="hero-sub">by Michael L. Gray &nbsp;·&nbsp; XL-1</div>
+    <p class="hero-desc">
+      The king is dead. A magical stone lies hidden in the frozen mountains — and the Master Thief Dahnakriss may have beaten you to it.
+      A wilderness and dungeon adventure through marsh, glacier, and four dungeon levels deep beneath the Mountains of Ice.
+    </p>
+  </div>
+</div>
+
+<!-- ── NAV ── -->
+<nav>
+  <ul>
+    <li><a href="#characters">Characters</a></li>
+    <li><a href="#maps">Maps</a></li>
+    <li><a href="#tools">DM Tools</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- ── CHARACTERS ── -->
+  <section id="characters">
+    <h2>Player Characters</h2>
+    <div class="char-columns">
+
+      <div class="alignment-group">
+        <h3 class="lawful-header">⚔ Lawful Characters</h3>
+
+        <a class="char-card" href="characters/strongheart.html">
+          <div><div class="char-name">Strongheart</div><div class="char-class">Good Paladin · 10th Level Lord (Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/elkhorn.html">
+          <div><div class="char-name">Elkhorn</div><div class="char-class">Good Dwarf Fighter · Dwarven Champion (7th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/mercion.html">
+          <div><div class="char-name">Mercion</div><div class="char-class">Good Cleric Female · Elder (7th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/ringlerun.html">
+          <div><div class="char-name">Ringlerun</div><div class="char-class">Good Wizard · Sorcerer (7th Level Magic-User)</div></div>
+        </a>
+        <a class="char-card" href="characters/peralay.html">
+          <div><div class="char-name">Peralay</div><div class="char-class">Fighter Mage Elf · 10th Level Lord Wizard</div></div>
+        </a>
+        <a class="char-card" href="characters/figgen.html">
+          <div><div class="char-name">Figgen</div><div class="char-class">Good Halfling · Sheriff (8th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/molliver.html">
+          <div><div class="char-name">Molliver</div><div class="char-class">Good Thief · 8th Level</div></div>
+        </a>
+        <a class="char-card" href="characters/hawkler.html">
+          <div><div class="char-name">Hawkler</div><div class="char-class">Good Ranger · Myrmidon (6th Level Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/deeth.html">
+          <div><div class="char-name">Deeth</div><div class="char-class">Good Fighter · Superhero (8th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/bowmarc.html">
+          <div><div class="char-name">Bowmarc</div><div class="char-class">Good Crusader · Champion (7th Level Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/valkeer.html">
+          <div><div class="char-name">Valkeer</div><div class="char-class">Good Norseman · Swashbuckler (5th Level Fighter)</div></div>
+        </a>
+      </div>
+
+      <div class="alignment-group">
+        <h3 class="chaotic-header">💀 Chaotic Characters</h3>
+
+        <a class="char-card" href="characters/grimsword.html">
+          <div><div class="char-name">Grimsword</div><div class="char-class">Evil Knight · Champion (7th Level Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/zargash.html">
+          <div><div class="char-name">Zargash</div><div class="char-class">Evil Cleric · Bishop (7th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/kelek.html">
+          <div><div class="char-name">Kelek</div><div class="char-class">Evil Sorcerer · Chaotic Sorcerer (7th Level Magic-User)</div></div>
+        </a>
+        <a class="char-card" href="characters/warduke.html">
+          <div><div class="char-name">Warduke</div><div class="char-class">Evil Fighter · Superhero (8th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/skylla.html">
+          <div><div class="char-name">Skylla</div><div class="char-class">Evil Magic-User · Chaotic Warlock (6th Level)</div></div>
+        </a>
+        <a class="char-card" href="characters/zorgar.html">
+          <div><div class="char-name">Zorgar</div><div class="char-class">Evil Barbarian · Swashbuckler (5th Level Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/drex.html">
+          <div><div class="char-name">Drex</div><div class="char-class">Evil Warrior · Myrmidon (6th Level Fighter)</div></div>
+        </a>
+        <a class="char-card" href="characters/zarak.html">
+          <div><div class="char-name">Zarak</div><div class="char-class">Evil Half-Orc Assassin · Cutpurse (5th Level Thief)</div></div>
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── MAPS ── -->
+  <section id="maps">
+    <h2>Maps</h2>
+    <div class="maps-grid">
+
+      <a class="map-card" href="maps/northern-marsh.html">
+        <img src="maps/northern-marsh.jpg" alt="Mists of the Northern Marsh">
+        <div class="map-label">
+          <strong>Map 1 — Mists of the Northern Marsh</strong>
+          <span>Wilderness · includes cave openings 2a–2f</span>
+        </div>
+      </a>
+
+      <a class="map-card" href="maps/icewater-falls.html">
+        <img src="maps/icewater-falls.jpg" alt="Perils of the Icewater Falls">
+        <div class="map-label">
+          <strong>Map 2 — Perils of the Icewater Falls</strong>
+          <span>Wilderness · cliff face approach</span>
+        </div>
+      </a>
+
+      <a class="map-card" href="maps/tunnels-of-death.html">
+        <img src="maps/tunnels-of-death.jpg" alt="Tunnels of Death">
+        <div class="map-label">
+          <strong>Map 3 — The Tunnels of Death</strong>
+          <span>Dungeon Level I</span>
+        </div>
+      </a>
+
+      <a class="map-card" href="maps/frost-giants-lair.html">
+        <img src="maps/frost-giants-lair.jpg" alt="Frost Giants Lair">
+        <div class="map-label">
+          <strong>Map 4 — Frost Giants' Lair</strong>
+          <span>Dungeon Level II</span>
+        </div>
+      </a>
+
+      <a class="map-card" href="maps/wizards-home.html">
+        <img src="maps/wizards-home.jpg" alt="The Wizard's Home">
+        <div class="map-label">
+          <strong>Map 5 — The Wizard's Home</strong>
+          <span>Dungeon Level III</span>
+        </div>
+      </a>
+
+      <a class="map-card" href="maps/home-of-heartstone.html">
+        <img src="maps/home-of-heartstone.jpg" alt="Home of the Heartstone">
+        <div class="map-label">
+          <strong>Map 6 — Home of the Heartstone</strong>
+          <span>Dungeon Level IV</span>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ── DM TOOLS ── -->
+  <section id="tools">
+    <h2>DM Tools</h2>
+    <div class="tools-grid">
+
+      <div class="tool-card">
+        <h4>🌫️ Figma Fog-of-War Plugin</h4>
+        <p>
+          Upload any map to Figma, select it, and run this plugin to cover it with a grid of removable fog tiles.
+          Delete tiles as players explore.
+          <a href="figma-fog-plugin/manifest.json" download>Download manifest.json</a> —
+          install via <em>Figma → Plugins → Development → Import from manifest</em>.
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>🗺️ Owlbear Rodeo</h4>
+        <p>
+          Free browser-based VTT. Download a map image, drag it into a new
+          <a href="https://owlbear.rodeo" target="_blank">Owlbear Rodeo</a> room,
+          and share the room link in Discord. Built-in fog of war, token movement, no accounts needed for players.
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>🎲 Rules Reference</h4>
+        <p>
+          This module uses <strong>BECMI D&amp;D Expert rules</strong> (compatible with Basic/Expert sets).
+          All saving throws and class abilities follow the Expert rulebook.
+          Character level range: 5–10.
+        </p>
+      </div>
+
+      <div class="tool-card">
+        <h4>📋 Character Sheets</h4>
+        <p>
+          All 19 pre-rolled characters have interactive sheets with editable HP, 20-slot inventory, treasure tracker, and spell memorization.
+          Open any sheet in a browser or upload to Google Drive to edit as a Google Doc.
+        </p>
+      </div>
+
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  XL-1 Quest for the Heartstone · TSR Inc., 1984 · by Michael L. Gray
+  &nbsp;·&nbsp; This site is for personal, non-commercial use only.
+</footer>
+
+</body>
+</html>

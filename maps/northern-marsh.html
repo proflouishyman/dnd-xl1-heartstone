@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map 1 — Mists of the Northern Marsh — XL-1 Quest for the Heartstone</title>
+<style>
+  :root {
+    --gold:  #c9a84c;
+    --dark:  #0e0d0b;
+    --panel: #1a1710;
+    --border:#3a3020;
+    --text:  #e8dfc8;
+    --muted: #8a7d60;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--dark); color: var(--text);
+    font-family: Georgia, serif; font-size: 14px;
+    min-height: 100vh;
+  }
+  header {
+    background: #111008;
+    border-bottom: 1px solid var(--border);
+    padding: 14px 24px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .back {
+    color: var(--gold); text-decoration: none;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .back:hover { text-decoration: underline; }
+  .header-text h1 { font-size: 18px; color: #fff; }
+  .header-text p  { font-size: 11px; color: var(--muted); margin-top: 2px; letter-spacing: 1px; }
+  .map-desc {
+    max-width: 800px; margin: 16px auto 0;
+    padding: 0 24px;
+    font-size: 13px; font-style: italic; color: var(--muted);
+  }
+  .map-container {
+    margin: 16px 24px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    overflow: auto;
+    background: #111;
+    max-height: calc(100vh - 160px);
+    text-align: center;
+  }
+  .map-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    cursor: zoom-in;
+  }
+  .map-container img.zoomed {
+    max-width: none;
+    cursor: zoom-out;
+  }
+  .zoom-hint {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    padding: 8px;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <a class="back" href="../index.html">← Hub</a>
+  <div class="header-text">
+    <h1>Map 1 — Mists of the Northern Marsh</h1>
+    <p>Wilderness Area &amp; Cave Openings 2a–2f</p>
+  </div>
+</header>
+<p class="map-desc">The party travels through a fog-shrouded marsh to reach the Mountains of Ice. Watch for quicksand on the trail, wandering monsters every 4 hours, and four stone bridges that mark the route.</p>
+<div class="zoom-hint">Click map to toggle zoom &nbsp;·&nbsp; Scroll to pan when zoomed</div>
+<div class="map-container" id="mapbox">
+  <img src="northern-marsh.jpg" alt="Map 1 — Mists of the Northern Marsh" id="mapimg" onclick="toggleZoom()">
+</div>
+<script>
+  function toggleZoom() {
+    document.getElementById('mapimg').classList.toggle('zoomed');
+  }
+</script>
+</body>
+</html>

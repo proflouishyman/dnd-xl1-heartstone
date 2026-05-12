@@ -266,6 +266,18 @@
   .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
     padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
 
+
+  /* ── Magic items section ── */
+  .magic-items-section { margin-bottom: 14px; }
+  .magic-items-section h3 { font-size: 13px; margin: 0 0 6px;
+    color: var(--accent); border-bottom: 1px solid var(--faint); padding-bottom: 4px; }
+  .magic-item { margin-bottom: 8px; padding: 7px 10px;
+    border: 1px solid #c9a84c55;
+    border-left: 3px solid #c9a84c;
+    border-radius: 3px; background: rgba(201,168,76,0.05); }
+  .magic-item-name { font-weight: bold; font-size: 12px; color: #8a6914; margin-bottom: 3px; }
+  .magic-item-desc { font-size: 11px; line-height: 1.5; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -346,9 +358,9 @@
       <div class="combat-stat"><div class="combat-label">Attacks/Round</div><div class="combat-value">1</div></div>
     </div>
     <h4>Weapons</h4>
-    <ul class="equip-list"><li>Dagger +2</li><li>Short sword</li><li>Sling and 20 stones</li></ul>
+    <ul class="equip-list"><li>Dagger +2</li><li>Short sword</li><li>Sling +2 and 30 stones</li></ul>
     <h4 style="margin-top:8px;">Armor &amp; Protection</h4>
-    <p style="font-size:12px; padding:3px 0;">Plate mail; Shield; Helmet; Elvenscloak</p>
+    <p style="font-size:12px; padding:3px 0;">Plate mail; Shield; Helmet; Elvenscloak; Boots of Elvenkind; Ring of X-Ray Vision; Decanter of Endless Water</p>
     <div class="race-block">
   <h4>Halfling Racial Abilities (L5)</h4>
   <table class="race-tbl">
@@ -421,6 +433,13 @@
   <strong>Multiple Attacks (Halfling L5):</strong>
   Against creatures with 1 HD or fewer, attack <strong>5×</strong> per round (1 per level).
   Roll each attack separately. Normal 1 attack vs creatures with more than 1 HD.
+</div>
+
+<div class="magic-items-section">
+  <h3>Magic Items</h3>
+<div class="magic-item"><div class="magic-item-name">✦ Boots of Elvenkind</div><div class="magic-item-desc">Move Silently 95% in any terrain. Combined with Elvenscloak already worn: effectively undetectable while motionless.</div></div>
+<div class="magic-item"><div class="magic-item-name">✦ Ring of X-Ray Vision</div><div class="magic-item-desc">Concentrate 1 round to see through up to 1' of stone or 3' of wood. 10 minutes/day total use (cumulative; reset each day). Lead of any thickness blocks vision. Overuse (>2 turns continuous) causes headache; −4 to all rolls until rested.</div></div>
+<div class="magic-item"><div class="magic-item-name">✦ Decanter of Endless Water</div><div class="magic-item-desc">Produces fresh water on command word. Three modes: <strong>TRICKLE</strong> — 1 gal/min; <strong>STREAM</strong> — 5 gal/min; <strong>GEYSER</strong> — 30 gal/min, 30' range, 1d4 damage + target must save vs. Stone or be knocked prone.</div></div>
 </div>
 <!-- ── INVENTORY ── -->
 <section style="margin-bottom:12px;">

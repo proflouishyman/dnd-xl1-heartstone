@@ -245,6 +245,18 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Magic items section ── */
+  .magic-items-section { margin-bottom: 14px; }
+  .magic-items-section h3 { font-size: 13px; margin: 0 0 6px;
+    color: var(--accent); border-bottom: 1px solid var(--faint); padding-bottom: 4px; }
+  .magic-item { margin-bottom: 8px; padding: 7px 10px;
+    border: 1px solid #c9a84c55;
+    border-left: 3px solid #c9a84c;
+    border-radius: 3px; background: rgba(201,168,76,0.05); }
+  .magic-item-name { font-weight: bold; font-size: 12px; color: #8a6914; margin-bottom: 3px; }
+  .magic-item-desc { font-size: 11px; line-height: 1.5; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -327,7 +339,7 @@
     <h4>Weapons</h4>
     <ul class="equip-list"><li>Battle axe +1</li><li>Sword +1</li></ul>
     <h4 style="margin-top:8px;">Armor &amp; Protection</h4>
-    <p style="font-size:12px; padding:3px 0;">Plate mail; Shield; Helmet; Gauntlets of Ogre Power</p>
+    <p style="font-size:12px; padding:3px 0;">Plate mail; Shield; Helmet; Gauntlets of Ogre Power; Ring of Protection +2</p>
     <h4 style='margin-top:8px;'>Special Abilities</h4><ul class='equip-list'><li>Gauntlets of Ogre Power: treat STR as 18 for attack/damage rolls</li></ul>
   </section>
 </div>
@@ -386,6 +398,11 @@
   <strong>Multiple Attacks (Fighter L6):</strong>
   Against creatures with 1 HD or fewer, attack <strong>6×</strong> per round (1 per level).
   Roll each attack separately. Normal 1 attack vs creatures with more than 1 HD.
+</div>
+
+<div class="magic-items-section">
+  <h3>Magic Items</h3>
+<div class="magic-item"><div class="magic-item-name">✦ Ring of Protection +2</div><div class="magic-item-desc">+2 bonus to Armor Class and all saving throws. Stacks with armor and shield. With Plate + Shield + Gauntlets already worn, AC drops to 0 (very hard to hit).</div></div>
 </div>
 <!-- ── INVENTORY ── -->
 <section style="margin-bottom:12px;">

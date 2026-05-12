@@ -245,6 +245,27 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Racial ability table ── */
+  .race-block { margin-bottom: 10px; }
+  .race-block h4 { margin: 0 0 4px; font-size: 13px; }
+  .race-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .race-tbl th { background: var(--accent); color: white; padding: 3px 6px; text-align: left; }
+  .race-tbl td { padding: 3px 6px; border: 1px solid var(--faint); vertical-align: top; }
+  .race-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .race-val { font-weight: bold; white-space: nowrap; }
+  /* ── Spell quick-reference table ── */
+  .spell-qref { margin: 8px 0 10px; }
+  .spell-qref h4 { margin: 0 0 4px; font-size: 12px; color: var(--accent); }
+  .qref-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .qref-tbl th { background: var(--accent); color: white; padding: 3px 5px; text-align: left; }
+  .qref-tbl td { padding: 3px 5px; border: 1px solid var(--faint); vertical-align: top; }
+  .qref-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .qref-tbl .sn { font-weight: bold; white-space: nowrap; }
+  .qref-tbl .sr, .qref-tbl .sd { white-space: nowrap; color: #555; }
+  .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
+    padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -356,7 +377,32 @@
           <td>Cure Serious Wounds; Neutralize Poison</td>
         </tr></tbody>
       </table>
-      <h4>Daily Memorized Spells</h4>
+      <div class="spell-qref">
+  <h4>Quick Reference (values at caster level)</h4>
+  <table class="qref-tbl">
+    <thead><tr><th>Spell</th><th>Range</th><th>Duration</th><th>Effect</th></tr></thead>
+    <tbody>
+<tr><td colspan="4" class="qref-lvl">Spell Level 1</td></tr>
+<tr><td class="sn">Cure Light Wounds</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Heals 1d6+1 HP</td></tr>
+<tr><td class="sn">Detect Evil</td><td class="sr">120'</td><td class="sd">6 turns</td><td>Senses evil intent, creatures, or items within range</td></tr>
+<tr><td class="sn">Light</td><td class="sr">120'</td><td class="sd">6 turns</td><td>30'-radius illumination; vs. eyes: blinds (save negates)</td></tr>
+<tr><td class="sn">Protection from Evil</td><td class="sr">Touch</td><td class="sd">12 turns</td><td>+1 AC & saves vs. evil creatures; blocks evil mental control</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 2</td></tr>
+<tr><td class="sn">Bless</td><td class="sr">60'</td><td class="sd">6 turns</td><td>Allies in 25'-sq: +1 attacks & morale checks</td></tr>
+<tr><td class="sn">Find Traps</td><td class="sr">30'</td><td class="sd">3 turns</td><td>All traps within range glow with faint blue light (visible only to caster)</td></tr>
+<tr><td class="sn">Hold Person</td><td class="sr">180'</td><td class="sd">9 turns</td><td>1d4 humanoids paralyzed; 1 target saves at −2; save vs. spells</td></tr>
+<tr><td class="sn">Silence 15' Radius</td><td class="sr">180'</td><td class="sd">12 turns</td><td>No sound in 15' sphere; impossible to cast spells inside</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 3</td></tr>
+<tr><td class="sn">Cure Disease</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Cures any disease; cast within 3 days also cures lycanthropy</td></tr>
+<tr><td class="sn">Remove Curse</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Removes one magical curse from a person or object</td></tr>
+<tr><td class="sn">Striking</td><td class="sr">Touch</td><td class="sd">1 turn</td><td>One weapon deals +1d6 bonus damage for entire duration</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 4</td></tr>
+<tr><td class="sn">Cure Serious Wounds</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Heals 2d6+2 HP</td></tr>
+<tr><td class="sn">Neutralize Poison</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Removes all poison effects; if poisoned death within 10 min, revives at 1 HP</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4>Daily Memorized Spells</h4>
       <div class="memo-grid"><div class="memo-slot"><span class="memo-lvl">Lvl 1</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 2</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 3</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 4</span><input type="text" class="memo-input" placeholder="spell…"></div></div>
     </section>
 

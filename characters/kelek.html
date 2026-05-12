@@ -245,6 +245,27 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Racial ability table ── */
+  .race-block { margin-bottom: 10px; }
+  .race-block h4 { margin: 0 0 4px; font-size: 13px; }
+  .race-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .race-tbl th { background: var(--accent); color: white; padding: 3px 6px; text-align: left; }
+  .race-tbl td { padding: 3px 6px; border: 1px solid var(--faint); vertical-align: top; }
+  .race-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .race-val { font-weight: bold; white-space: nowrap; }
+  /* ── Spell quick-reference table ── */
+  .spell-qref { margin: 8px 0 10px; }
+  .spell-qref h4 { margin: 0 0 4px; font-size: 12px; color: var(--accent); }
+  .qref-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .qref-tbl th { background: var(--accent); color: white; padding: 3px 5px; text-align: left; }
+  .qref-tbl td { padding: 3px 5px; border: 1px solid var(--faint); vertical-align: top; }
+  .qref-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .qref-tbl .sn { font-weight: bold; white-space: nowrap; }
+  .qref-tbl .sr, .qref-tbl .sd { white-space: nowrap; color: #555; }
+  .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
+    padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -356,7 +377,32 @@
           <td>Charm Monsters</td>
         </tr></tbody>
       </table>
-      <h4>Daily Memorized Spells</h4>
+      <div class="spell-qref">
+  <h4>Quick Reference (values at caster level)</h4>
+  <table class="qref-tbl">
+    <thead><tr><th>Spell</th><th>Range</th><th>Duration</th><th>Effect</th></tr></thead>
+    <tbody>
+<tr><td colspan="4" class="qref-lvl">Spell Level 1</td></tr>
+<tr><td class="sn">Charm Person</td><td class="sr">120'</td><td class="sd">Until dispelled</td><td>One humanoid saves vs. spells or treats caster as trusted ally</td></tr>
+<tr><td class="sn">Magic Missile</td><td class="sr">150'</td><td class="sd">Instant</td><td>4 missile(s) × 1d6+1 = 4d6+4 max; unerring, no save</td></tr>
+<tr><td class="sn">Read Magic</td><td class="sr">Self</td><td class="sd">1 turn</td><td>Read magic text/runes; required to use any found scroll</td></tr>
+<tr><td class="sn">Shield</td><td class="sr">Self</td><td class="sd">2 turns</td><td>AC 2 vs. missiles, AC 4 vs. melee; immune to Magic Missile spells</td></tr>
+<tr><td class="sn">Sleep</td><td class="sr">240'</td><td class="sd">Instant</td><td>2d8 HD of creatures sleep (≤4 HD each); no save; wake if slapped</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 2</td></tr>
+<tr><td class="sn">ESP</td><td class="sr">60' line</td><td class="sd">12 turns</td><td>Read surface thoughts of one creature per round; save vs. spells negates</td></tr>
+<tr><td class="sn">Knock</td><td class="sr">60'</td><td class="sd">Instant</td><td>Opens any locked, stuck, barred, or magically-held door or container</td></tr>
+<tr><td class="sn">Mirror Image</td><td class="sr">Self</td><td class="sd">6 turns</td><td>1d4 illusory duplicates; each attack randomly targets an image or caster</td></tr>
+<tr><td class="sn">Web</td><td class="sr">30'</td><td class="sd">48 turns</td><td>10'-cube sticky webs; STR 18+ escapes in 2d4 rounds; fire destroys in 2 rounds</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 3</td></tr>
+<tr><td class="sn">Fireball</td><td class="sr">240'</td><td class="sd">Instant</td><td>7d6 dmg in 20'-radius sphere; save vs. spells for half</td></tr>
+<tr><td class="sn">Fly</td><td class="sr">Touch</td><td class="sd">1d6+7 turns</td><td>Fly 120'/turn; duration rolled secretly; safe landing on expiry</td></tr>
+<tr><td class="sn">Haste</td><td class="sr">240'</td><td class="sd">3 turns</td><td>Up to 24 creatures: double move & attacks; ages each target 1 year</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 4</td></tr>
+<tr><td class="sn">Charm Monsters</td><td class="sr">120'</td><td class="sd">Until dispelled</td><td>Any creature type saves vs. spells or is charmed; monthly save to break</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4>Daily Memorized Spells</h4>
       <div class="memo-grid"><div class="memo-slot"><span class="memo-lvl">Lvl 1</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 2</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 3</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 4</span><input type="text" class="memo-input" placeholder="spell…"></div></div>
     </section>
 

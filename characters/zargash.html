@@ -245,6 +245,27 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Racial ability table ── */
+  .race-block { margin-bottom: 10px; }
+  .race-block h4 { margin: 0 0 4px; font-size: 13px; }
+  .race-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .race-tbl th { background: var(--accent); color: white; padding: 3px 6px; text-align: left; }
+  .race-tbl td { padding: 3px 6px; border: 1px solid var(--faint); vertical-align: top; }
+  .race-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .race-val { font-weight: bold; white-space: nowrap; }
+  /* ── Spell quick-reference table ── */
+  .spell-qref { margin: 8px 0 10px; }
+  .spell-qref h4 { margin: 0 0 4px; font-size: 12px; color: var(--accent); }
+  .qref-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .qref-tbl th { background: var(--accent); color: white; padding: 3px 5px; text-align: left; }
+  .qref-tbl td { padding: 3px 5px; border: 1px solid var(--faint); vertical-align: top; }
+  .qref-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .qref-tbl .sn { font-weight: bold; white-space: nowrap; }
+  .qref-tbl .sr, .qref-tbl .sd { white-space: nowrap; color: #555; }
+  .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
+    padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -356,7 +377,30 @@
           <td>Cause Serious Wounds; Speak with Dead</td>
         </tr></tbody>
       </table>
-      <h4>Daily Memorized Spells</h4>
+      <div class="spell-qref">
+  <h4>Quick Reference (values at caster level)</h4>
+  <table class="qref-tbl">
+    <thead><tr><th>Spell</th><th>Range</th><th>Duration</th><th>Effect</th></tr></thead>
+    <tbody>
+<tr><td colspan="4" class="qref-lvl">Spell Level 1</td></tr>
+<tr><td class="sn">Cause Light Wounds</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Deals 1d6+1 HP; save vs. spells negates</td></tr>
+<tr><td class="sn">Darkness</td><td class="sr">120'</td><td class="sd">6 turns</td><td>30'-radius darkness; reverses Light spells</td></tr>
+<tr><td class="sn">Protection from Good</td><td class="sr">Touch</td><td class="sd">12 turns</td><td>+1 AC & saves vs. good creatures; blocks good mental control</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 2</td></tr>
+<tr><td class="sn">Blight</td><td class="sr">60'</td><td class="sd">6 turns</td><td>Enemies in 25'-sq: −1 attacks & morale (reverse of Bless)</td></tr>
+<tr><td class="sn">Hold Person</td><td class="sr">180'</td><td class="sd">9 turns</td><td>1d4 humanoids paralyzed; 1 target saves at −2; save vs. spells</td></tr>
+<tr><td class="sn">Silence 15' Radius</td><td class="sr">180'</td><td class="sd">12 turns</td><td>No sound in 15' sphere; impossible to cast spells inside</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 3</td></tr>
+<tr><td class="sn">Animate Dead</td><td class="sr">60'</td><td class="sd">Permanent</td><td>Animates 7 HD worth of skeletons/zombies under caster's control</td></tr>
+<tr><td class="sn">Cause Disease</td><td class="sr">Touch</td><td class="sd">Permanent</td><td>Wasting disease: −1d4 to one ability per day until magically cured; save negates</td></tr>
+<tr><td class="sn">Curse</td><td class="sr">25' sq</td><td class="sd">Permanent</td><td>−1 attacks & saves (or DM-chosen penalty); save vs. spells negates</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 4</td></tr>
+<tr><td class="sn">Cause Serious Wounds</td><td class="sr">Touch</td><td class="sd">Instant</td><td>Deals 2d6+2 HP; save vs. spells negates</td></tr>
+<tr><td class="sn">Speak with Dead</td><td class="sr">10'</td><td class="sd">3 questions</td><td>Corpse answers 3 brief factual questions; HD 9+ may resist (save vs. spells)</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4>Daily Memorized Spells</h4>
       <div class="memo-grid"><div class="memo-slot"><span class="memo-lvl">Lvl 1</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 2</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 3</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 4</span><input type="text" class="memo-input" placeholder="spell…"></div></div>
     </section>
 

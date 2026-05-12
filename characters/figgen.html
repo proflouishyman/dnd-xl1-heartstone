@@ -245,6 +245,27 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Racial ability table ── */
+  .race-block { margin-bottom: 10px; }
+  .race-block h4 { margin: 0 0 4px; font-size: 13px; }
+  .race-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .race-tbl th { background: var(--accent); color: white; padding: 3px 6px; text-align: left; }
+  .race-tbl td { padding: 3px 6px; border: 1px solid var(--faint); vertical-align: top; }
+  .race-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .race-val { font-weight: bold; white-space: nowrap; }
+  /* ── Spell quick-reference table ── */
+  .spell-qref { margin: 8px 0 10px; }
+  .spell-qref h4 { margin: 0 0 4px; font-size: 12px; color: var(--accent); }
+  .qref-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .qref-tbl th { background: var(--accent); color: white; padding: 3px 5px; text-align: left; }
+  .qref-tbl td { padding: 3px 5px; border: 1px solid var(--faint); vertical-align: top; }
+  .qref-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .qref-tbl .sn { font-weight: bold; white-space: nowrap; }
+  .qref-tbl .sr, .qref-tbl .sd { white-space: nowrap; color: #555; }
+  .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
+    padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -328,7 +349,21 @@
     <ul class="equip-list"><li>Dagger +2</li><li>Short sword</li><li>Sling and 20 stones</li></ul>
     <h4 style="margin-top:8px;">Armor &amp; Protection</h4>
     <p style="font-size:12px; padding:3px 0;">Plate mail; Shield; Helmet; Elvenscloak</p>
-    <h4 style='margin-top:8px;'>Special Abilities</h4><ul class='equip-list'><li>Halfling racial: +1 to hit with missiles, +2 initiative, hide in undergrowth</li><li>+4 saves vs. magic/dragon breath</li></ul>
+    <div class="race-block">
+  <h4>Halfling Racial Abilities (L5)</h4>
+  <table class="race-tbl">
+    <thead><tr><th>Ability</th><th>Value</th><th>Notes</th></tr></thead>
+    <tbody>
+  <tr><td>Initiative</td><td class="race-val">+1 to initiative</td><td style="color:#888;font-size:10px;">Add +1 to all individual initiative rolls</td></tr>
+  <tr><td>Missile accuracy</td><td class="race-val">+1 to hit</td><td style="color:#888;font-size:10px;">All attacks with ranged/missile weapons</td></tr>
+  <tr><td>Outdoor hide</td><td class="race-val">9-in-10</td><td style="color:#888;font-size:10px;">Hide in natural terrain (woods, fields, undergrowth); 2-in-6 in dungeons</td></tr>
+  <tr><td>Hard to hit</td><td class="race-val">Attackers −4</td><td style="color:#888;font-size:10px;">Man-sized and larger creatures attack Figgen at −4 penalty</td></tr>
+  <tr><td>Save bonus</td><td class="race-val">+4 vs. magic & dragon breath</td><td style="color:#888;font-size:10px;">Already built into saving throw numbers above</td></tr>
+  <tr><td>Languages</td><td class="race-val">Halfling, Common</td><td></td></tr>
+  <tr><td>Max level</td><td class="race-val">8</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
   </section>
 </div>
 

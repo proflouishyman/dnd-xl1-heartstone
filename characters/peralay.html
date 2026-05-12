@@ -245,6 +245,27 @@
     border-radius: 4px; margin-bottom: 6px;
   }
 
+
+  /* ── Racial ability table ── */
+  .race-block { margin-bottom: 10px; }
+  .race-block h4 { margin: 0 0 4px; font-size: 13px; }
+  .race-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .race-tbl th { background: var(--accent); color: white; padding: 3px 6px; text-align: left; }
+  .race-tbl td { padding: 3px 6px; border: 1px solid var(--faint); vertical-align: top; }
+  .race-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .race-val { font-weight: bold; white-space: nowrap; }
+  /* ── Spell quick-reference table ── */
+  .spell-qref { margin: 8px 0 10px; }
+  .spell-qref h4 { margin: 0 0 4px; font-size: 12px; color: var(--accent); }
+  .qref-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+  .qref-tbl th { background: var(--accent); color: white; padding: 3px 5px; text-align: left; }
+  .qref-tbl td { padding: 3px 5px; border: 1px solid var(--faint); vertical-align: top; }
+  .qref-tbl tr:nth-child(even) td { background: rgba(0,0,0,0.03); }
+  .qref-tbl .sn { font-weight: bold; white-space: nowrap; }
+  .qref-tbl .sr, .qref-tbl .sd { white-space: nowrap; color: #555; }
+  .qref-lvl { font-size: 10px; font-weight: bold; color: white; background: var(--accent);
+    padding: 1px 6px; margin: 6px 0 2px; display: inline-block; border-radius: 3px; }
+
   @media print {
     body { padding: 0; }
     input { border-color: #ccc !important; }
@@ -328,7 +349,22 @@
     <ul class="equip-list"><li>Sword +2</li><li>Dagger</li><li>Longbow and 15 arrows</li></ul>
     <h4 style="margin-top:8px;">Armor &amp; Protection</h4>
     <p style="font-size:12px; padding:3px 0;">Chain mail +3; Shield</p>
-    <h4 style='margin-top:8px;'>Special Abilities</h4><ul class='equip-list'><li>Elf racial: detect secret doors, immune to ghoul paralysis</li><li>Additional Language: Ogre</li></ul>
+    <div class="race-block">
+  <h4>Elf Racial Abilities (L10)</h4>
+  <table class="race-tbl">
+    <thead><tr><th>Ability</th><th>Value</th><th>Notes</th></tr></thead>
+    <tbody>
+  <tr><td>Infravision</td><td class="race-val">60'</td><td style="color:#888;font-size:10px;">See in total darkness (no color)</td></tr>
+  <tr><td>Ghoul immunity</td><td class="race-val">Immune</td><td style="color:#888;font-size:10px;">Elf flesh cannot be paralyzed by ghoul touch</td></tr>
+  <tr><td>Detect secret doors</td><td class="race-val">1-in-6 / 2-in-6</td><td style="color:#888;font-size:10px;">Auto-notice within 10' while moving; 2-in-6 when actively searching</td></tr>
+  <tr><td>Surprise</td><td class="race-val">Only on 1 (in 6)</td><td style="color:#888;font-size:10px;">Less likely to be surprised than non-elves (who are surprised on 1–2)</td></tr>
+  <tr><td>Fighter + MU</td><td class="race-val">Both classes</td><td style="color:#888;font-size:10px;">Casts MU spells in any armor; uses any weapon; gains both class abilities</td></tr>
+  <tr><td>Save bonus</td><td class="race-val">+2 vs. wands, paralysis, spells</td><td style="color:#888;font-size:10px;">Already built into saving throw numbers above</td></tr>
+  <tr><td>Languages</td><td class="race-val">Elf, Gnoll, Hobgoblin, Orc, Ogre, Common</td><td></td></tr>
+  <tr><td>Max level</td><td class="race-val">10</td><td></td></tr>
+    </tbody>
+  </table>
+</div>
   </section>
 </div>
 
@@ -360,7 +396,39 @@
           <td>Cloudkill</td>
         </tr></tbody>
       </table>
-      <h4>Daily Memorized Spells</h4>
+      <div class="spell-qref">
+  <h4>Quick Reference (values at caster level)</h4>
+  <table class="qref-tbl">
+    <thead><tr><th>Spell</th><th>Range</th><th>Duration</th><th>Effect</th></tr></thead>
+    <tbody>
+<tr><td colspan="4" class="qref-lvl">Spell Level 1</td></tr>
+<tr><td class="sn">Charm Person</td><td class="sr">120'</td><td class="sd">Until dispelled</td><td>One humanoid saves vs. spells or treats caster as trusted ally</td></tr>
+<tr><td class="sn">Light</td><td class="sr">120'</td><td class="sd">6 turns</td><td>30'-radius illumination; vs. eyes: blinds (save negates)</td></tr>
+<tr><td class="sn">Magic Missile</td><td class="sr">150'</td><td class="sd">Instant</td><td>5 missile(s) × 1d6+1 = 5d6+5 max; unerring, no save</td></tr>
+<tr><td class="sn">Read Languages</td><td class="sr">Self</td><td class="sd">2 turns</td><td>Read any non-magical written language, including treasure maps</td></tr>
+<tr><td class="sn">Read Magic</td><td class="sr">Self</td><td class="sd">1 turn</td><td>Read magic text/runes; required to use any found scroll</td></tr>
+<tr><td class="sn">Shield</td><td class="sr">Self</td><td class="sd">2 turns</td><td>AC 2 vs. missiles, AC 4 vs. melee; immune to Magic Missile spells</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 2</td></tr>
+<tr><td class="sn">Detect Invisible</td><td class="sr">100'</td><td class="sd">6 turns</td><td>See invisible creatures and objects within range</td></tr>
+<tr><td class="sn">Invisibility</td><td class="sr">Touch</td><td class="sd">Until attacks</td><td>Target invisible until it attacks or casts; also breaks if target is hit</td></tr>
+<tr><td class="sn">Mirror Image</td><td class="sr">Self</td><td class="sd">6 turns</td><td>1d4 illusory duplicates; each attack randomly targets an image or caster</td></tr>
+<tr><td class="sn">Web</td><td class="sr">30'</td><td class="sd">48 turns</td><td>10'-cube sticky webs; STR 18+ escapes in 2d4 rounds; fire destroys in 2 rounds</td></tr>
+<tr><td class="sn">Wizard Lock</td><td class="sr">Touch</td><td class="sd">Permanent</td><td>Magically locks door/container; Knock or MU 3+ levels higher can bypass</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 3</td></tr>
+<tr><td class="sn">Dispel Magic</td><td class="sr">120'</td><td class="sd">Instant</td><td>Removes magic: 50% base ±5%/caster level vs. original caster's level</td></tr>
+<tr><td class="sn">Fireball</td><td class="sr">240'</td><td class="sd">Instant</td><td>10d6 dmg in 20'-radius sphere; save vs. spells for half</td></tr>
+<tr><td class="sn">Hold Person</td><td class="sr">120'</td><td class="sd">9 turns</td><td>1d4 humanoids paralyzed; 1 target saves at −2; save vs. spells</td></tr>
+<tr><td class="sn">Lightning Bolt</td><td class="sr">180'</td><td class="sd">Instant</td><td>10d6 dmg in 60'×5' bolt; save vs. spells for half; bounces off solid walls</td></tr>
+<tr><td class="sn">Water Breathing</td><td class="sr">Touch</td><td class="sd">1 day</td><td>Target breathes underwater freely; does not affect air-breathing</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 4</td></tr>
+<tr><td class="sn">Charm Monster</td><td class="sr">120'</td><td class="sd">Until dispelled</td><td>Any creature type saves vs. spells or is charmed; monthly save to break</td></tr>
+<tr><td class="sn">Confusion</td><td class="sr">120'</td><td class="sd">12 rounds</td><td>2d8 creatures ≤5 HD act randomly each round; save vs. spells each round</td></tr>
+<tr><td colspan="4" class="qref-lvl">Spell Level 5</td></tr>
+<tr><td class="sn">Cloudkill</td><td class="sr">30'</td><td class="sd">6 turns</td><td>20'×10' cloud moves 20'/round: ≤4 HD die (no save); 5–6 HD save vs. poison or die; 7+ HD 1d10/round</td></tr>
+    </tbody>
+  </table>
+</div>
+<h4>Daily Memorized Spells</h4>
       <div class="memo-grid"><div class="memo-slot"><span class="memo-lvl">Lvl 1</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 2</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 3</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 4</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 5</span><input type="text" class="memo-input" placeholder="spell…"><input type="text" class="memo-input" placeholder="spell…"></div></div>
     </section>
 

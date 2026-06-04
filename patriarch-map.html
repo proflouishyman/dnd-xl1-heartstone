@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Map to the Mountains of Ice — XL-1</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #1a0f06;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .wrap { max-width: 820px; width: 100%; }
+  svg { width: 100%; height: auto; display: block;
+        filter: drop-shadow(0 12px 40px rgba(0,0,0,0.85)); }
+  a.back {
+    display: inline-block;
+    color: #c9a84c;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 14px;
+    opacity: 0.7;
+  }
+  a.back:hover { opacity: 1; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Back to Hub</a>
+<svg viewBox="0 0 800 1120" xmlns="http://www.w3.org/2000/svg">
+<defs>
+
+  <!-- Parchment texture -->
+  <filter id="ptex" x="0%" y="0%" width="100%" height="100%" color-interpolation-filters="sRGB">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9 0.9" numOctaves="4" seed="3" result="n"/>
+    <feColorMatrix type="matrix" in="n"
+      values="0 0 0 0 0.55  0 0 0 0 0.35  0 0 0 0 0.12  0 0 0 0.18 0" result="cn"/>
+    <feBlend in="SourceGraphic" in2="cn" mode="multiply" result="blend"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.4 0.4" numOctaves="2" seed="9" result="n2"/>
+    <feColorMatrix type="matrix" in="n2"
+      values="0 0 0 0 0.6  0 0 0 0 0.4  0 0 0 0 0.15  0 0 0 0.07 0" result="cn2"/>
+    <feBlend in="blend" in2="cn2" mode="multiply"/>
+  </filter>
+
+  <!-- Hand-drawn wobble — subtle -->
+  <filter id="w1" x="-8%" y="-8%" width="116%" height="116%">
+    <feTurbulence type="turbulence" baseFrequency="0.018" numOctaves="3" seed="7" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="3.5" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  <!-- Hand-drawn wobble — heavier -->
+  <filter id="w2" x="-12%" y="-12%" width="124%" height="124%">
+    <feTurbulence type="turbulence" baseFrequency="0.032" numOctaves="2" seed="13" result="t"/>
+    <feDisplacementMap in="SourceGraphic" in2="t" scale="6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+
+  <!-- Soft blur for stains -->
+  <filter id="blur3"><feGaussianBlur stdDeviation="3"/></filter>
+  <filter id="blur6"><feGaussianBlur stdDeviation="6"/></filter>
+
+  <!-- Torn-edge clip -->
+  <clipPath id="torn">
+    <path d="
+      M18,8 L32,4 L48,9 L62,3 L78,8 L95,2 L112,7 L130,2 L148,6 L165,1 L183,6
+      L200,2 L220,7 L238,2 L255,7 L275,2 L292,7 L312,1 L330,6 L350,2 L368,7
+      L385,1 L403,7 L422,2 L440,7 L460,2 L478,7 L496,2 L515,6 L534,1 L552,7
+      L571,2 L589,7 L608,2 L626,6 L644,1 L662,7 L680,2 L698,6 L716,2 L735,6
+      L752,1 L770,6 L785,2 L797,6
+      L799,22 L796,48 L800,74 L797,100 L800,126 L796,152 L800,178 L797,204
+      L800,230 L796,256 L800,282 L797,308 L800,334 L796,360 L800,386 L797,412
+      L800,438 L796,464 L800,490 L797,516 L800,542 L796,568 L800,594 L797,620
+      L800,646 L796,672 L800,698 L797,724 L800,750 L796,776 L800,802 L797,828
+      L800,854 L796,880 L800,906 L797,932 L800,958 L796,984 L800,1010 L797,1036
+      L800,1062 L797,1088 L795,1108
+      L778,1112 L758,1107 L738,1113 L718,1108 L698,1113 L678,1108 L658,1113
+      L638,1108 L618,1113 L598,1108 L578,1113 L558,1108 L538,1113 L518,1107
+      L498,1113 L478,1108 L458,1113 L438,1107 L418,1113 L398,1108 L378,1113
+      L358,1107 L338,1113 L318,1108 L298,1113 L278,1107 L258,1113 L238,1108
+      L218,1113 L198,1107 L178,1113 L158,1107 L138,1113 L118,1107 L98,1113
+      L78,1107 L58,1113 L38,1107 L18,1112 L4,1108
+      L1,1090 L4,1064 L1,1038 L4,1012 L1,986 L4,960 L1,934 L4,908
+      L1,882 L4,856 L1,830 L4,804 L1,778 L4,752 L1,726 L4,700
+      L1,674 L4,648 L1,622 L4,596 L1,570 L4,544 L1,518 L4,492
+      L1,466 L4,440 L1,414 L4,388 L1,362 L4,336 L1,310 L4,284
+      L1,258 L4,232 L1,206 L4,180 L1,154 L4,128 L1,102 L4,76
+      L1,50 L4,24 Z"/>
+  </clipPath>
+
+  <!-- Vignette -->
+  <radialGradient id="vig" cx="50%" cy="50%" r="72%">
+    <stop offset="0%" stop-color="transparent"/>
+    <stop offset="100%" stop-color="#5a2e00" stop-opacity="0.38"/>
+  </radialGradient>
+
+</defs>
+
+<g clip-path="url(#torn)">
+
+  <!-- ═══ BASE PARCHMENT ═══ -->
+  <rect width="800" height="1120" fill="#eedcaa"/>
+  <rect width="800" height="1120" filter="url(#ptex)" fill="#f2dfa8" opacity="1"/>
+  <!-- Warmer centre -->
+  <radialGradient id="warm" cx="48%" cy="52%" r="55%">
+    <stop offset="0%" stop-color="#f8eabb" stop-opacity="0.6"/>
+    <stop offset="100%" stop-color="transparent"/>
+  </radialGradient>
+  <rect width="800" height="1120" fill="url(#warm)"/>
+
+  <!-- Edge vignette -->
+  <rect width="800" height="1120" fill="url(#vig)"/>
+
+  <!-- Fold lines -->
+  <line x1="400" y1="0" x2="400" y2="1120" stroke="#8b6220" stroke-width="0.6" opacity="0.13"/>
+  <line x1="0" y1="560" x2="800" y2="560" stroke="#8b6220" stroke-width="0.6" opacity="0.13"/>
+
+  <!-- ═══ INK STAINS / AGEING ═══ -->
+  <ellipse cx="110" cy="310" rx="48" ry="28" fill="#6b3d08" opacity="0.06" filter="url(#blur6)"/>
+  <ellipse cx="660" cy="680" rx="60" ry="32" fill="#6b3d08" opacity="0.07" filter="url(#blur6)"/>
+  <ellipse cx="190" cy="870" rx="32" ry="22" fill="#6b3d08" opacity="0.05" filter="url(#blur3)"/>
+  <ellipse cx="590" cy="175" rx="50" ry="30" fill="#6b3d08" opacity="0.06" filter="url(#blur6)"/>
+  <ellipse cx="720" cy="430" rx="35" ry="20" fill="#6b3d08" opacity="0.05" filter="url(#blur3)"/>
+  <ellipse cx="80"  cy="700" rx="28" ry="18" fill="#6b3d08" opacity="0.06" filter="url(#blur3)"/>
+
+  <!-- ═══ DOUBLE BORDER ═══ -->
+  <rect x="22" y="18" width="756" height="1084" rx="6" fill="none"
+        stroke="#7a4a0a" stroke-width="2.2" opacity="0.55" filter="url(#w1)"/>
+  <rect x="30" y="26" width="740" height="1068" rx="5" fill="none"
+        stroke="#7a4a0a" stroke-width="1" opacity="0.35" filter="url(#w1)"/>
+  <!-- Corner flourishes -->
+  <g stroke="#7a4a0a" stroke-width="1.8" fill="none" opacity="0.55" filter="url(#w2)">
+    <path d="M22,55 L22,18 L60,18"/><path d="M778,55 L778,18 L740,18"/>
+    <path d="M22,1047 L22,1085 L60,1085"/><path d="M778,1047 L778,1085 L740,1085"/>
+  </g>
+
+  <!-- ═══ TITLE BANNER ═══ -->
+  <rect x="68" y="30" width="664" height="80" rx="5"
+        fill="#d4a84a" fill-opacity="0.28" stroke="#4a2200" stroke-width="2"
+        filter="url(#w1)"/>
+  <rect x="74" y="36" width="652" height="68" rx="4"
+        fill="none" stroke="#4a2200" stroke-width="0.8" opacity="0.45" filter="url(#w1)"/>
+  <text x="400" y="62" font-family="Caveat,cursive" font-size="26" font-weight="700"
+        fill="#1e0800" text-anchor="middle" filter="url(#w1)">To the Mountains of Ice</text>
+  <text x="400" y="93" font-family="Caveat,cursive" font-size="18"
+        fill="#3a1800" text-anchor="middle" font-style="italic" filter="url(#w1)">
+    — may the gods protect you on this road —
+  </text>
+
+  <!-- ═══ MOUNTAINS OF ICE ═══ -->
+  <!-- Snow field behind peaks -->
+  <path d="M55,255 Q400,240 745,255 L745,130 Q400,118 55,130 Z"
+        fill="#ddeeff" fill-opacity="0.30"/>
+  <!-- Peaks — layer 1 (back, lighter) -->
+  <g fill="#c8bfaa" stroke="#4a2a00" stroke-width="1.2" stroke-linejoin="round"
+     fill-opacity="0.6" filter="url(#w1)">
+    <polygon points="75,252 130,170 185,252"/>
+    <polygon points="160,252 230,155 300,252"/>
+    <polygon points="490,252 555,162 620,252"/>
+    <polygon points="590,252 650,178 710,252"/>
+    <polygon points="680,252 730,185 780,252"/>
+  </g>
+  <!-- Peaks — layer 2 (front, darker) -->
+  <g fill="#b8aa92" stroke="#3d1f00" stroke-width="2" stroke-linejoin="round"
+     fill-opacity="0.8" filter="url(#w1)">
+    <polygon points="118,252 190,130 260,252"/>
+    <polygon points="230,252 320,95  410,252"/>
+    <polygon points="360,252 430,75  500,252"/>
+    <polygon points="460,252 545,108 630,252"/>
+    <polygon points="605,252 665,152 725,252"/>
+  </g>
+  <!-- Snow caps -->
+  <g fill="#eef4ff" stroke="none" filter="url(#w1)">
+    <path d="M183,148 Q190,130 197,148 Z"/>
+    <path d="M312,112 Q320,95  328,112 Z"/>
+    <path d="M422,92  Q430,75  438,92  Z"/>
+    <path d="M537,125 Q545,108 553,125 Z"/>
+    <path d="M657,169 Q665,152 673,169 Z"/>
+  </g>
+  <!-- Ground line -->
+  <path d="M55,253 Q250,244 400,248 Q550,244 745,253"
+        stroke="#3d1f00" stroke-width="2" fill="none" filter="url(#w1)"/>
+
+  <!-- X marks the spot -->
+  <g filter="url(#w2)">
+    <line x1="421" y1="198" x2="441" y2="218" stroke="#8b0000" stroke-width="3.5"/>
+    <line x1="441" y1="198" x2="421" y2="218" stroke="#8b0000" stroke-width="3.5"/>
+    <circle cx="431" cy="208" r="12" fill="none" stroke="#8b0000" stroke-width="1.8"/>
+  </g>
+
+  <text x="400" y="278" font-family="Caveat,cursive" font-size="21" font-weight="700"
+        fill="#1a0800" text-anchor="middle" filter="url(#w1)">~ Mountains of Ice ~</text>
+  <text x="400" y="300" font-family="Caveat,cursive" font-size="13.5" font-style="italic"
+        fill="#4a2800" text-anchor="middle" filter="url(#w1)">"The Heartstone lies beneath"</text>
+
+  <!-- ═══ GLACIER ═══ -->
+  <path d="M95,328 Q200,314 320,320 Q400,312 480,320 Q600,314 705,328
+           Q722,352 705,372 Q600,380 480,374 Q400,380 320,374 Q200,380 95,372 Q78,352 95,328 Z"
+        fill="#d8ecff" fill-opacity="0.52" stroke="#3d4a6a" stroke-width="1.5" filter="url(#w1)"/>
+  <!-- Crevasse hatch -->
+  <g stroke="#3d4a6a" stroke-width="0.9" opacity="0.45" filter="url(#w1)">
+    <line x1="155" y1="332" x2="165" y2="366"/>
+    <line x1="210" y1="320" x2="220" y2="370"/>
+    <line x1="268" y1="316" x2="278" y2="372"/>
+    <line x1="328" y1="313" x2="338" y2="378"/>
+    <line x1="388" y1="313" x2="398" y2="379"/>
+    <line x1="448" y1="315" x2="458" y2="377"/>
+    <line x1="510" y1="318" x2="520" y2="374"/>
+    <line x1="568" y1="322" x2="578" y2="370"/>
+    <line x1="626" y1="326" x2="636" y2="365"/>
+    <line x1="678" y1="330" x2="688" y2="363"/>
+  </g>
+  <text x="400" y="400" font-family="Caveat,cursive" font-size="14" font-style="italic"
+        fill="#3a4a6a" text-anchor="middle" filter="url(#w1)">~ the great glacier ~</text>
+
+  <!-- ═══ ROAD: GLACIER → FALLS ═══ -->
+  <path d="M382,378 Q379,406 381,424" stroke="#5a3808" stroke-width="14"
+        fill="none" stroke-linecap="round" opacity="0.22" filter="url(#w1)"/>
+  <path d="M378,378 Q375,406 377,424" stroke="#3d1f00" stroke-width="1.4" fill="none"
+        stroke-dasharray="9,5" filter="url(#w1)"/>
+  <path d="M416,378 Q419,406 417,424" stroke="#3d1f00" stroke-width="1.4" fill="none"
+        stroke-dasharray="9,5" filter="url(#w1)"/>
+
+  <!-- ═══ ICEWATER FALLS ═══ -->
+  <!-- Label above cliff -->
+  <text x="400" y="432" font-family="Caveat,cursive" font-size="19" font-weight="700"
+        fill="#1a0800" text-anchor="middle" filter="url(#w1)">The Perils of Icewater Falls</text>
+  <!-- Cliff edge -->
+  <path d="M75,452 Q200,440 320,446 Q400,438 480,446 Q600,440 725,452"
+        stroke="#3d1f00" stroke-width="3.2" fill="none" filter="url(#w2)"/>
+  <!-- Cliff face hatching -->
+  <g stroke="#3d1f00" stroke-width="1" opacity="0.5" filter="url(#w1)">
+    <line x1="130" y1="444" x2="134" y2="474"/>
+    <line x1="175" y1="442" x2="179" y2="474"/>
+    <line x1="230" y1="441" x2="234" y2="473"/>
+    <line x1="285" y1="443" x2="289" y2="475"/>
+    <line x1="340" y1="441" x2="344" y2="473"/>
+    <line x1="400" y1="439" x2="404" y2="472"/>
+    <line x1="458" y1="441" x2="462" y2="473"/>
+    <line x1="514" y1="442" x2="518" y2="474"/>
+    <line x1="568" y1="441" x2="572" y2="473"/>
+    <line x1="624" y1="442" x2="628" y2="473"/>
+    <line x1="678" y1="444" x2="682" y2="474"/>
+  </g>
+  <!-- Falls streams -->
+  <g stroke="#4d78aa" stroke-width="3" fill="none" opacity="0.75" filter="url(#w2)">
+    <path d="M292,446 Q289,464 293,482 Q290,498 294,514"/>
+    <path d="M395,439 Q392,458 396,478 Q393,495 397,514"/>
+    <path d="M498,446 Q495,465 499,484 Q496,501 500,514"/>
+  </g>
+  <!-- Mist pool -->
+  <ellipse cx="396" cy="522" rx="130" ry="19"
+           fill="#88aacc" opacity="0.28" filter="url(#blur6)"/>
+  <text x="400" y="548" font-family="Caveat,cursive" font-size="13" font-style="italic"
+        fill="#3a4060" text-anchor="middle" filter="url(#w1)">~ the path winds down through mist ~</text>
+
+  <!-- ═══ ROAD: FALLS → MARSH ═══ -->
+  <path d="M382,520 Q379,548 381,568" stroke="#5a3808" stroke-width="14"
+        fill="none" stroke-linecap="round" opacity="0.22" filter="url(#w1)"/>
+  <path d="M378,520 Q375,548 377,568" stroke="#3d1f00" stroke-width="1.4" fill="none"
+        stroke-dasharray="9,5" filter="url(#w1)"/>
+  <path d="M416,520 Q419,548 417,568" stroke="#3d1f00" stroke-width="1.4" fill="none"
+        stroke-dasharray="9,5" filter="url(#w1)"/>
+
+  <!-- ═══ NORTHERN MARSH ═══ -->
+  <!-- Marsh body -->
+  <path d="M68,590 Q130,570 230,576 Q320,566 400,574 Q480,566 570,576
+           Q668,570 732,590 Q748,630 732,668 Q668,688 570,682
+           Q480,690 400,682 Q320,690 230,682 Q132,688 68,668 Q52,630 68,590 Z"
+        fill="#7a9940" fill-opacity="0.22" stroke="#3a4808" stroke-width="1.8" filter="url(#w1)"/>
+
+  <!-- Water patches -->
+  <ellipse cx="190" cy="628" rx="42" ry="24" fill="#507888" opacity="0.38" filter="url(#w1)"/>
+  <ellipse cx="398" cy="618" rx="52" ry="26" fill="#507888" opacity="0.38" filter="url(#w1)"/>
+  <ellipse cx="590" cy="632" rx="44" ry="22" fill="#507888" opacity="0.38" filter="url(#w1)"/>
+  <!-- Ripples on water -->
+  <g stroke="#3a5868" stroke-width="0.8" fill="none" opacity="0.5" filter="url(#w1)">
+    <ellipse cx="190" cy="628" rx="30" ry="14"/>
+    <ellipse cx="398" cy="618" rx="38" ry="17"/>
+    <ellipse cx="590" cy="632" rx="32" ry="13"/>
+  </g>
+
+  <!-- Reed clusters -->
+  <g stroke="#3a4808" stroke-width="1.8" filter="url(#w2)">
+    <line x1="132" y1="658" x2="132" y2="628"/><line x1="140" y1="660" x2="143" y2="626"/>
+    <line x1="148" y1="658" x2="145" y2="626"/>
+    <circle cx="132" cy="627" r="3.5" fill="#3a4808"/>
+    <circle cx="141" cy="624" r="3.5" fill="#3a4808"/>
+    <circle cx="146" cy="624" r="3"   fill="#3a4808"/>
+
+    <line x1="270" y1="668" x2="270" y2="636"/><line x1="278" y1="670" x2="281" y2="633"/>
+    <line x1="286" y1="668" x2="283" y2="634"/>
+    <circle cx="270" cy="635" r="3.5" fill="#3a4808"/>
+    <circle cx="279" cy="631" r="3.5" fill="#3a4808"/>
+
+    <line x1="448" y1="668" x2="448" y2="636"/><line x1="456" y1="670" x2="459" y2="633"/>
+    <line x1="464" y1="668" x2="461" y2="634"/>
+    <circle cx="448" cy="635" r="3.5" fill="#3a4808"/>
+    <circle cx="457" cy="631" r="3.5" fill="#3a4808"/>
+
+    <line x1="618" y1="660" x2="618" y2="628"/><line x1="626" y1="662" x2="629" y2="625"/>
+    <line x1="634" y1="660" x2="631" y2="626"/>
+    <circle cx="618" cy="627" r="3.5" fill="#3a4808"/>
+    <circle cx="627" cy="623" r="3.5" fill="#3a4808"/>
+  </g>
+
+  <!-- SKULL -->
+  <g transform="translate(672,562)" filter="url(#w2)">
+    <circle cx="0" cy="-9" r="13" fill="none" stroke="#8b0000" stroke-width="2.2"/>
+    <circle cx="-4.5" cy="-11" r="2.8" fill="#8b0000"/>
+    <circle cx="4.5"  cy="-11" r="2.8" fill="#8b0000"/>
+    <path d="M-7,-2 L-4,7 L4,7 L7,-2" fill="none" stroke="#8b0000" stroke-width="1.8"/>
+    <line x1="-1.5" y1="2" x2="-1.5" y2="7" stroke="#8b0000" stroke-width="1.2"/>
+    <line x1="1.5"  y1="2" x2="1.5"  y2="7" stroke="#8b0000" stroke-width="1.2"/>
+  </g>
+
+  <!-- Marsh labels -->
+  <text x="400" y="578" font-family="Caveat,cursive" font-size="20" font-weight="700"
+        fill="#223005" text-anchor="middle" filter="url(#w1)">The Mists of the Northern Marsh</text>
+  <text x="400" y="706" font-family="Caveat,cursive" font-size="13.5" font-style="italic"
+        fill="#3a2808" text-anchor="middle" filter="url(#w1)">"beware the dead that walk"</text>
+
+  <!-- ═══ ROAD: MARSH → THRESHOLD ═══ -->
+  <!-- Road fill -->
+  <path d="M378,682 Q373,735 370,790 Q366,848 370,908 Q373,962 370,1008 L416,1008
+           Q419,962 416,908 Q420,848 424,790 Q427,735 422,682 Z"
+        fill="#c8983a" fill-opacity="0.25" filter="url(#w1)"/>
+  <!-- Road edges -->
+  <path d="M378,682 Q373,735 370,790 Q366,848 370,908 Q373,962 370,1008"
+        stroke="#3d1f00" stroke-width="1.5" fill="none" stroke-dasharray="10,5" filter="url(#w1)"/>
+  <path d="M422,682 Q427,735 424,790 Q428,848 424,908 Q427,962 424,1008"
+        stroke="#3d1f00" stroke-width="1.5" fill="none" stroke-dasharray="10,5" filter="url(#w1)"/>
+  <!-- Road label -->
+  <text x="460" y="860" font-family="Caveat,cursive" font-size="13" font-style="italic"
+        fill="#5a3010" text-anchor="start" transform="rotate(-2,460,860)" filter="url(#w1)">
+    the old north road
+  </text>
+
+  <!-- ═══ THRESHOLD TOWN ═══ -->
+  <!-- Town name label (above) -->
+  <text x="400" y="945" font-family="Caveat,cursive" font-size="13" font-style="italic"
+        fill="#4a2808" text-anchor="middle" filter="url(#w1)">~ you are here ~</text>
+
+  <!-- Buildings -->
+  <g fill="#c09048" stroke="#3d1f00" stroke-width="1.8" filter="url(#w1)">
+    <!-- Central inn / main hall -->
+    <rect x="352" y="1008" width="50" height="40"/>
+    <polygon points="348,1008 377,980 406,1008"/>
+    <!-- Left house -->
+    <rect x="290" y="1018" width="38" height="32"/>
+    <polygon points="286,1018 309,995 332,1018"/>
+    <!-- Right house -->
+    <rect x="422" y="1014" width="40" height="34"/>
+    <polygon points="418,1014 442,990 466,1014"/>
+    <!-- Small left -->
+    <rect x="242" y="1026" width="32" height="26"/>
+    <polygon points="238,1026 258,1006 278,1026"/>
+    <!-- Small right -->
+    <rect x="480" y="1022" width="34" height="28"/>
+    <polygon points="476,1022 493,1003 514,1022"/>
+    <!-- Church spire -->
+    <rect x="368" y="958" width="16" height="50"/>
+    <polygon points="364,958 376,933 388,958"/>
+    <line x1="365" y1="933" x2="387" y2="933" stroke-width="1"/>
+    <!-- Windows -->
+    <rect x="358" y="1016" width="8" height="9" fill="#7a4a20"/>
+    <rect x="371" y="1016" width="8" height="9" fill="#7a4a20"/>
+    <rect x="384" y="1016" width="8" height="9" fill="#7a4a20"/>
+    <rect x="296" y="1024" width="6" height="7" fill="#7a4a20"/>
+    <rect x="428" y="1020" width="7" height="8" fill="#7a4a20"/>
+    <!-- Church window -->
+    <ellipse cx="376" cy="968" rx="4" ry="5" fill="none" stroke="#7a4a20" stroke-width="1"/>
+  </g>
+  <!-- Town palisade base -->
+  <path d="M218,1055 Q218,1050 228,1050 L572,1050 Q582,1050 582,1055 L578,1064
+           Q400,1070 222,1064 Z"
+        fill="#b88838" fill-opacity="0.28" stroke="#3d1f00" stroke-width="1.2" filter="url(#w1)"/>
+
+  <!-- THRESHOLD label -->
+  <text x="400" y="1090" font-family="Caveat,cursive" font-size="26" font-weight="700"
+        fill="#1a0800" text-anchor="middle" filter="url(#w1)">Threshold</text>
+
+  <!-- ═══ COMPASS ROSE ═══ -->
+  <g transform="translate(680,940)" filter="url(#w1)">
+    <circle cx="0" cy="0" r="48" fill="#d4a84a" fill-opacity="0.25" stroke="#3d1f00" stroke-width="1.6"/>
+    <line x1="0" y1="-44" x2="0" y2="44"   stroke="#3d1f00" stroke-width="1.6"/>
+    <line x1="-44" y1="0" x2="44" y2="0"   stroke="#3d1f00" stroke-width="1.6"/>
+    <line x1="-31" y1="-31" x2="31" y2="31" stroke="#3d1f00" stroke-width="0.8" opacity="0.5"/>
+    <line x1="31"  y1="-31" x2="-31" y2="31" stroke="#3d1f00" stroke-width="0.8" opacity="0.5"/>
+    <!-- N arrow -->
+    <polygon points="0,-44 -7,-28 0,-36 7,-28" fill="#2a0800"/>
+    <!-- Cardinal labels -->
+    <text x="0"   y="-50" font-family="Caveat,cursive" font-size="17" font-weight="700"
+          fill="#1a0800" text-anchor="middle">N</text>
+    <text x="0"   y="64"  font-family="Caveat,cursive" font-size="15"
+          fill="#3d1f00" text-anchor="middle">S</text>
+    <text x="-56" y="5"   font-family="Caveat,cursive" font-size="15"
+          fill="#3d1f00" text-anchor="middle">W</text>
+    <text x="56"  y="5"   font-family="Caveat,cursive" font-size="15"
+          fill="#3d1f00" text-anchor="middle">E</text>
+    <circle cx="0" cy="0" r="4.5" fill="#2a0800"/>
+  </g>
+
+  <!-- ═══ SCALE / FOOTNOTE ═══ -->
+  <!-- Left margin note rotated -->
+  <text x="52" y="680" font-family="Caveat,cursive" font-size="12" font-style="italic"
+        fill="#5a3010" text-anchor="middle"
+        transform="rotate(-90,52,680)" filter="url(#w1)">three days' journey north</text>
+
+  <!-- Patriarch signature -->
+  <text x="668" y="1098" font-family="Caveat,cursive" font-size="13" font-style="italic"
+        fill="#4a2808" text-anchor="end" filter="url(#w1)">— Patriarch Dorian, 984 AC</text>
+
+</g>
+</svg>
+</div>
+</body>
+</html>

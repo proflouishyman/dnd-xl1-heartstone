@@ -119,6 +119,8 @@
   .fog-tile:hover:not(.revealed) { background: rgba(40,30,10,0.7); }
   /* In player mode: tiles aren't interactive */
   body.player-mode .fog-tile { cursor: default; pointer-events: none; }
+  /* Player view: fully opaque fog so nothing bleeds through */
+  body.player-mode .fog-tile:not(.revealed) { background: rgba(12,11,9,1); }
   /* DM mode hint on revealed tiles */
   body.dm-mode .fog-tile.revealed { border: 1px dashed rgba(200,160,76,0.15); }
 </style>

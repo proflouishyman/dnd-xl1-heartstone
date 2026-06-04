@@ -621,5 +621,30 @@
 
 <!-- extended-class-tables-done -->
 <!-- equipped-tables-done -->
+
+<script>
+(function(){
+  var KEY = 'sheet_skylla';
+  function save(){
+    var d = {};
+    document.querySelectorAll('input,textarea').forEach(function(el,i){
+      d[i] = el.type==='checkbox' ? el.checked : el.value;
+    });
+    localStorage.setItem(KEY, JSON.stringify(d));
+  }
+  function load(){
+    try{
+      var d = JSON.parse(localStorage.getItem(KEY));
+      if(!d) return;
+      document.querySelectorAll('input,textarea').forEach(function(el,i){
+        if(d[i]!==undefined){ if(el.type==='checkbox') el.checked=d[i]; else el.value=d[i]; }
+      });
+    }catch(e){}
+  }
+  load();
+  document.addEventListener('input', save);
+  document.addEventListener('change', save);
+})();
+</script>
 </body>
 </html>

@@ -313,10 +313,18 @@
     document.getElementById('btn-live').textContent = 'End Session';
     document.getElementById('btn-live').classList.add('live-on');
     document.getElementById('live-bar').style.display = 'flex';
-    setDot('yellow'); setStatus('Starting…');
+    setDot('yellow'); setStatus('Connecting…');
 
     // Reuse same peer ID per map so the link stays stable across sessions
     const savedId = localStorage.getItem(PEER_STORE) || undefined;
+
+    // Pre-fill share URL immediately from saved ID so it's visible during reconnection
+    if (savedId) {
+      const url = location.origin + location.pathname + '?room=' + encodeURIComponent(savedId);
+      document.getElementById('share-url').value = url;
+      setStatus('Reconnecting — link still valid');
+    }
+
     peer = new Peer(savedId, {
       host: '0.peerjs.com', port: 443, path: '/', secure: true,
       debug: 0,
@@ -326,7 +334,7 @@
       localStorage.setItem(PEER_STORE, id);
       const url = location.origin + location.pathname + '?room=' + encodeURIComponent(id);
       document.getElementById('share-url').value = url;
-      setDot('green'); setStatus('Session open');
+      setDot('green'); setStatus('Session open — players can join');
       updateConnCount();
     });
 

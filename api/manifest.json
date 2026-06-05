@@ -1,0 +1,192 @@
+{
+  "strongheart": {
+    "id": "strongheart",
+    "name": "Strongheart",
+    "epithet": "Good Paladin",
+    "class_level": "10th Level Lord (Fighter)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Fighter 10",
+    "languages": "Common, Lawful"
+  },
+  "elkhorn": {
+    "id": "elkhorn",
+    "name": "Elkhorn",
+    "epithet": "Good Dwarf Fighter",
+    "class_level": "Dwarven Champion (7th Level Fighter)",
+    "race": "Dwarf",
+    "alignment": "Lawful",
+    "save_as": "Fighter 7",
+    "languages": "Common, Dwarvish, Gnomish, Goblin, Kobold"
+  },
+  "mercion": {
+    "id": "mercion",
+    "name": "Mercion",
+    "epithet": "Good Cleric Female",
+    "class_level": "Elder (7th Level Cleric)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Cleric 7",
+    "languages": "Common, Lawful"
+  },
+  "ringlerun": {
+    "id": "ringlerun",
+    "name": "Ringlerun",
+    "epithet": "Good Wizard",
+    "class_level": "Sorcerer (7th Level Magic-User)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Magic-User 7",
+    "languages": "Common, Lawful, Hobgoblin"
+  },
+  "peralay": {
+    "id": "peralay",
+    "name": "Peralay",
+    "epithet": "Fighter Mage Elf",
+    "class_level": "10th Level Lord Wizard (Elf)",
+    "race": "Elf",
+    "alignment": "Lawful",
+    "save_as": "Elf 10",
+    "languages": "Common, Lawful, Elvish, Gnoll, Hobgoblin, Ogre, Orcish"
+  },
+  "figgen": {
+    "id": "figgen",
+    "name": "Figgen",
+    "epithet": "Good Halfling",
+    "class_level": "Sheriff (8th Level Halfling)",
+    "race": "Halfling",
+    "alignment": "Lawful",
+    "save_as": "Fighter 8",
+    "languages": "Common, Lawful, Halfling"
+  },
+  "molliver": {
+    "id": "molliver",
+    "name": "Molliver",
+    "epithet": "Good Thief",
+    "class_level": "8th Level Thief",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Thief 8",
+    "languages": "Common, Lawful"
+  },
+  "hawkler": {
+    "id": "hawkler",
+    "name": "Hawkler",
+    "epithet": "Good Ranger",
+    "class_level": "Myrmidon (6th Level Fighter)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Fighter 6",
+    "languages": "Common, Lawful"
+  },
+  "deeth": {
+    "id": "deeth",
+    "name": "Deeth",
+    "epithet": "Good Fighter",
+    "class_level": "Superhero (8th Level Fighter)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Fighter 8",
+    "languages": "Common, Lawful"
+  },
+  "bowmarc": {
+    "id": "bowmarc",
+    "name": "Bowmarc",
+    "epithet": "Good Crusader",
+    "class_level": "Champion (7th Level Fighter)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Fighter 7",
+    "languages": "Common, Lawful"
+  },
+  "valkeer": {
+    "id": "valkeer",
+    "name": "Valkeer",
+    "epithet": "Good Norseman",
+    "class_level": "Swashbuckler (5th Level Fighter)",
+    "race": "Human",
+    "alignment": "Lawful",
+    "save_as": "Fighter 5",
+    "languages": "Common, Lawful"
+  },
+  "grimsword": {
+    "id": "grimsword",
+    "name": "Grimsword",
+    "epithet": "Evil Knight",
+    "class_level": "Champion (7th Level Fighter)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Fighter 7",
+    "languages": "Common, Chaotic"
+  },
+  "zargash": {
+    "id": "zargash",
+    "name": "Zargash",
+    "epithet": "Evil Cleric",
+    "class_level": "Bishop (7th Level Cleric)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Cleric 7",
+    "languages": "Common, Chaotic"
+  },
+  "kelek": {
+    "id": "kelek",
+    "name": "Kelek",
+    "epithet": "Evil Sorcerer",
+    "class_level": "Chaotic Sorcerer (7th Level Magic-User)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Magic-User 7",
+    "languages": "Common, Chaotic, Orc"
+  },
+  "warduke": {
+    "id": "warduke",
+    "name": "Warduke",
+    "epithet": "Evil Fighter",
+    "class_level": "Superhero (8th Level Fighter)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Fighter 8",
+    "languages": "Common, Chaotic"
+  },
+  "skylla": {
+    "id": "skylla",
+    "name": "Skylla",
+    "epithet": "Evil Magic-User",
+    "class_level": "Chaotic Warlock (6th Level Magic-User)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Magic-User 6",
+    "languages": "Common, Chaotic"
+  },
+  "zorgar": {
+    "id": "zorgar",
+    "name": "Zorgar",
+    "epithet": "Evil Barbarian",
+    "class_level": "Swashbuckler (5th Level Fighter)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Fighter 5",
+    "languages": "Common, Chaotic"
+  },
+  "drex": {
+    "id": "drex",
+    "name": "Drex",
+    "epithet": "Evil Warrior",
+    "class_level": "Myrmidon (6th Level Fighter)",
+    "race": "Human",
+    "alignment": "Chaotic",
+    "save_as": "Fighter 6",
+    "languages": "Common, Chaotic"
+  },
+  "zarak": {
+    "id": "zarak",
+    "name": "Zarak",
+    "epithet": "Evil Half-Orc Assassin",
+    "class_level": "Chaotic Cutpurse (5th Level Thief)",
+    "race": "Half-Orc",
+    "alignment": "Chaotic",
+    "save_as": "Thief 5",
+    "languages": "Common, Chaotic, Orcish"
+  }
+}

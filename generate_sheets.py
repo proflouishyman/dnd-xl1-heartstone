@@ -10,7 +10,6 @@ from PIL import Image
 
 CHARS_DIR = "extracted/characters"
 OUT_DIR   = "extracted/character_sheets"
-os.makedirs(OUT_DIR, exist_ok=True)
 
 # ── Source page filenames (1-indexed) ────────────────────────────────────────
 PAGES = {
@@ -810,14 +809,19 @@ def make_html(char):
 </html>"""
 
 # ── Main ─────────────────────────────────────────────────────────────────────
-for char in CHARACTERS:
-    name = char["name"].lower()
-    print(f"  Generating {char['name']}…", end="", flush=True)
-    html = make_html(char)
-    out  = os.path.join(OUT_DIR, f"{name}.html")
-    with open(out, "w", encoding="utf-8") as f:
-        f.write(html)
-    size = os.path.getsize(out) // 1024
-    print(f" {size} KB")
+def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
+    for char in CHARACTERS:
+        name = char["name"].lower()
+        print(f"  Generating {char['name']}…", end="", flush=True)
+        html = make_html(char)
+        out  = os.path.join(OUT_DIR, f"{name}.html")
+        with open(out, "w", encoding="utf-8") as f:
+            f.write(html)
+        size = os.path.getsize(out) // 1024
+        print(f" {size} KB")
+    print(f"\nDone — {len(CHARACTERS)} sheets in {OUT_DIR}/")
 
-print(f"\nDone — {len(CHARACTERS)} sheets in {OUT_DIR}/")
+
+if __name__ == "__main__":
+    main()

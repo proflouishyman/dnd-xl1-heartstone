@@ -1,79 +1,95 @@
-/* edit.css — affordances for sheet-sync.js edit mode + the floating toolbar. */
+/* edit.css — always-on click-to-edit affordances + the live-sync status dot.
+ * No edit mode: every tagged value is directly editable; these styles just hint
+ * that, and never alter print/layout of the underlying sheet. */
 
-#sync-toolbar {
+/* ── Live-sync status dot (top-right, non-interactive) ── */
+#sync-status {
   position: fixed;
   top: 12px;
   right: 12px;
   z-index: 1000;
+  width: 16px;
+  height: 16px;
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--paper, #faf7f0);
-  border: 2px solid var(--border, #8b6914);
-  border-radius: 22px;
-  padding: 4px 8px 4px 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  justify-content: center;
+  pointer-events: none;
 }
 .sync-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
   background: #c0392b; /* disconnected */
-  flex: 0 0 auto;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
+  transition: background 0.2s, transform 0.2s;
 }
 .sync-dot.on {
   background: #2ecc71; /* live */
 }
-.sync-pencil {
-  font-family: inherit;
-  font-size: 16px;
-  line-height: 1;
-  cursor: pointer;
-  border: 1px solid var(--faint, #b8a878);
-  background: var(--input-bg, #fff8e8);
-  color: var(--accent, #2c4a7c);
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  padding: 0;
-}
-.sync-pencil:hover {
-  background: #fff;
-}
-.sync-pencil.active {
-  background: var(--accent, #2c4a7c);
-  color: #fff;
-  border-color: var(--accent, #2c4a7c);
+.sync-dot.saving {
+  transform: scale(1.6);
+  background: #f1c40f; /* brief pulse on save */
 }
 
-/* ── Edit-mode affordances ── */
-body.edit-mode [data-editable] {
-  outline: 1px dashed var(--accent, #2c4a7c);
-  outline-offset: 1px;
+/* ── Editable display values (contenteditable leaves) ── */
+[data-editable] {
   cursor: text;
-  min-width: 8px;
-  min-height: 1em;
+  border-radius: 3px;
+  transition: background 0.12s, box-shadow 0.12s;
 }
-body.edit-mode [data-editable]:hover,
-body.edit-mode [data-editable]:focus {
+[data-editable]:hover {
+  background: rgba(124, 44, 44, 0.07);
+  box-shadow: inset 0 -1px 0 rgba(124, 44, 44, 0.4);
+}
+[data-editable]:focus {
   background: rgba(255, 235, 150, 0.5);
-  outline-style: solid;
+  outline: 1px solid var(--accent, #7c2c2c);
+  outline-offset: 1px;
 }
-body.edit-mode input:not([readonly]),
-body.edit-mode textarea:not([readonly]) {
-  box-shadow: 0 0 0 1px var(--accent, #2c4a7c) inset;
+
+/* Editable inputs/textarea: a gentle focus ring so they read as live fields */
+input:hover,
+textarea:hover {
+  background: #fffdf5;
 }
-body.edit-mode .portrait {
+input:focus,
+textarea:focus {
+  box-shadow: 0 0 0 1px var(--accent, #7c2c2c) inset;
+  outline: none;
+}
+
+/* Player-claim placeholder when unclaimed */
+.player-claim {
+  display: inline-block;
+  min-width: 70px;
+}
+.player-claim:empty::before {
+  content: "+ claim";
+  color: var(--accent, #7c2c2c);
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Portrait: click to replace */
+.portrait {
   cursor: pointer;
-  outline: 2px dashed var(--accent, #2c4a7c);
+}
+.portrait:hover {
+  outline: 2px dashed var(--accent, #7c2c2c);
   outline-offset: 2px;
 }
 
 @media print {
-  #sync-toolbar {
+  #sync-status {
     display: none !important;
   }
-  body.edit-mode [data-editable] {
+  [data-editable]:hover,
+  .portrait:hover {
+    background: none;
     outline: none;
+    box-shadow: none;
+  }
+  .player-claim:empty::before {
+    content: "";
   }
 }

@@ -1,14 +1,17 @@
 /* sheet-sync.js — shared, persisted, realtime character-sheet editing.
  *
- * Loads per-character overrides from dnd-api, streams field-level edits over a
- * WebSocket so every viewer sees changes live (last-write-wins), and gates all
- * editing behind a pencil "edit mode" toggle. The same fields are read/written
- * by the clanker bot through the REST API, so this is just one more client.
+ * Every tagged field (data-field) is directly click-to-edit — no edit mode. Edits
+ * stream field-level over a WebSocket so every viewer sees them live (last-write-
+ * wins), persist in dnd-api, and are the same fields the clanker bot reads/writes.
  *
- * Field identity: every editable element carries data-field="<id>". Inputs and
- * textareas store their value in .value; tagged display leaves (data-editable)
- * store it in .textContent; the portrait <img data-field="portrait"> stores a
- * URL in .src.
+ * Field identity: data-field="<id>". Inputs/textarea store their value in .value;
+ * tagged display leaves (data-editable) are contenteditable and store .textContent;
+ * the portrait <img data-field="portrait"> stores a URL in .src (replaced via upload).
+ *
+ * Renaming: when the character's `name` changes, the page rewrites its own URL to
+ * /characters/<slug-of-name>.html (reload-safe — nginx + dnd-api resolve the vanity
+ * slug back to this sheet) and updates the title. The immutable id (data-char) never
+ * changes; it stays the storage key and WS channel.
  */
 (function () {
   "use strict";
@@ -20,26 +23,6 @@
   if (!CHAR) return;
 
   var API = "/api/characters/" + encodeURIComponent(CHAR);
-
-  // ── Generic tagging: every text-leaf element that the injector didn't already
-  //    give a semantic data-field gets a deterministic cell_<N> id from a
-  //    document-order walk. The baked HTML is identical for every viewer, so the
-  //    ids line up across clients and reloads — this is what makes "every
-  //    element" editable (incl. the THAC0 / saving-throw / thief / turn-undead
-  //    reference tables) without a build-time DOM parser. ──
-  function autoTag() {
-    var sel = "td,th,li,p,span,div,h1,h2,h3,h4,h5,h6,b,i,em,strong,caption,dt,dd";
-    var n = 0;
-    document.body.querySelectorAll(sel).forEach(function (el) {
-      if (el.hasAttribute("data-field")) return; // already semantic
-      if (el.children.length > 0) return; // not a pure text leaf
-      if (el.closest("#sync-toolbar")) return; // our own chrome
-      if (!el.textContent || !el.textContent.trim()) return; // empty
-      el.setAttribute("data-field", "cell_" + n++);
-      el.setAttribute("data-editable", "");
-    });
-  }
-  autoTag();
 
   // field_id -> element
   var fields = {};
@@ -64,8 +47,34 @@
     else el.textContent = v == null ? "" : v;
   }
 
-  // ── Apply remote changes (with a focus-guard so we never yank a field
-  //    the local user is actively typing in; queued values land on blur) ──
+  // ── Vanity URL (mirror of the backend slugify) ──
+  function slugify(s) {
+    return String(s == null ? "" : s)
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^-|-$/g, "");
+  }
+  var knownIds = null; // Set of all character ids, for vanity-slug collision guard
+  function reconcileURL() {
+    var nameEl = fields["name"];
+    if (!nameEl) return;
+    var slug = slugify(getValue(nameEl));
+    if (!slug) return;
+    // Don't claim a vanity slug that is a *different* character's id (its static file).
+    if (knownIds && knownIds.has(slug) && slug !== CHAR) slug = CHAR;
+    var want = "/characters/" + slug + ".html";
+    if (location.pathname !== want) {
+      try {
+        history.replaceState(null, "", want + location.search + location.hash);
+      } catch (e) {}
+    }
+    var nm = getValue(nameEl);
+    if (nm) document.title = nm + " — XL-1 Quest for the Heartstone";
+  }
+
+  // ── Apply remote changes (focus-guard: never yank a field being typed in;
+  //    queued values land on blur) ──
   var pending = {};
   function applyRemote(field, value) {
     var el = fields[field];
@@ -75,12 +84,14 @@
       return;
     }
     setValue(el, value);
+    if (field === "name") reconcileURL();
   }
   function applySnapshot(data) {
-    if (!data) return;
-    Object.keys(data).forEach(function (f) {
-      applyRemote(f, data[f]);
-    });
+    if (data)
+      Object.keys(data).forEach(function (f) {
+        applyRemote(f, data[f]);
+      });
+    reconcileURL();
   }
   document.addEventListener("focusout", function (e) {
     var t = e.target;
@@ -88,6 +99,9 @@
     if (f && f in pending) {
       setValue(fields[f], pending[f]);
       delete pending[f];
+      if (f === "name") reconcileURL();
+    } else if (f === "name") {
+      reconcileURL(); // settle the URL after a local rename
     }
   });
 
@@ -137,6 +151,7 @@
     backoff = Math.min(backoff * 2, 15000);
   }
   function send(field, value) {
+    pulse();
     if (ws && wsReady) {
       try {
         ws.send(JSON.stringify({ field: field, value: value }));
@@ -162,9 +177,12 @@
       send(f, getValue(el));
     }, 200);
   }
+
+  // ── Make fields editable (always — no mode toggle) and wire emit ──
   Object.keys(fields).forEach(function (f) {
     var el = fields[f];
     if (el.tagName === "IMG") return; // portrait uses upload, below
+    if (el.hasAttribute("data-editable") && !isFormField(el)) el.contentEditable = "true";
     el.addEventListener("input", function () {
       onEdit(el);
     });
@@ -173,59 +191,47 @@
     });
   });
 
-  // ── Toolbar (pencil edit-mode toggle + connection dot) ──
-  var dot, pencil, editing = false;
+  // ── Tiny live-sync status dot (non-interactive) ──
+  var dot;
   function setDot(on) {
     if (dot) dot.className = "sync-dot" + (on ? " on" : "");
   }
-  function setEditing(on) {
-    editing = on;
-    body.classList.toggle("edit-mode", on);
-    document.querySelectorAll("[data-field]").forEach(function (el) {
-      if (isFormField(el)) el.readOnly = !on;
-      else if (el.hasAttribute("data-editable")) el.contentEditable = on ? "true" : "false";
-    });
-    if (pencil) {
-      pencil.textContent = on ? "✓" : "✎";
-      pencil.title = on ? "Apply & exit edit mode" : "Edit this sheet";
-      pencil.classList.toggle("active", on);
-    }
+  var pulseT;
+  function pulse() {
+    if (!dot) return;
+    dot.classList.add("saving");
+    clearTimeout(pulseT);
+    pulseT = setTimeout(function () {
+      dot.classList.remove("saving");
+    }, 400);
   }
-  function buildToolbar() {
+  function buildStatus() {
     var bar = document.createElement("div");
-    bar.id = "sync-toolbar";
+    bar.id = "sync-status";
+    bar.title = "Live edits — changes save and sync to everyone automatically";
     dot = document.createElement("span");
     dot.className = "sync-dot";
-    dot.title = "Live-sync connection";
-    pencil = document.createElement("button");
-    pencil.type = "button";
-    pencil.className = "sync-pencil";
-    pencil.textContent = "✎";
-    pencil.title = "Edit this sheet";
-    pencil.addEventListener("click", function () {
-      setEditing(!editing);
-    });
     bar.appendChild(dot);
-    bar.appendChild(pencil);
     body.appendChild(bar);
   }
 
-  // ── Portrait replacement (edit mode → file picker → upload) ──
+  // ── Portrait replacement (click → file picker → upload) ──
   function wirePortrait() {
     var img = fields["portrait"];
     if (!img) return;
-    img.title = "Click to change portrait (in edit mode)";
+    img.title = "Click to change portrait";
     var picker = document.createElement("input");
     picker.type = "file";
     picker.accept = "image/*";
     picker.style.display = "none";
     body.appendChild(picker);
     img.addEventListener("click", function () {
-      if (editing) picker.click();
+      picker.click();
     });
     picker.addEventListener("change", function () {
       var f = picker.files && picker.files[0];
       if (!f) return;
+      pulse();
       var fd = new FormData();
       fd.append("file", f);
       fetch(API + "/portrait", { method: "PUT", body: fd })
@@ -241,9 +247,24 @@
   }
 
   // ── Boot ──
-  buildToolbar();
+  buildStatus();
   wirePortrait();
-  setEditing(false); // start locked (view mode)
+  // Learn all character ids (vanity-slug collision guard), then settle the URL.
+  fetch("/api/characters")
+    .then(function (r) {
+      return r.ok ? r.json() : null;
+    })
+    .then(function (d) {
+      if (d && d.characters) {
+        knownIds = new Set(
+          d.characters.map(function (c) {
+            return c.id;
+          })
+        );
+        reconcileURL();
+      }
+    })
+    .catch(function () {});
   fetch(API)
     .then(function (r) {
       return r.ok ? r.json() : {};

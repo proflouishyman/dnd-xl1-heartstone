@@ -20,13 +20,30 @@ from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request, UploadFile, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, Response
 
 DATA_DIR = Path(os.environ.get("DND_DATA_DIR", "/data"))
 PORTRAIT_DIR = DATA_DIR / "portraits"
 NAME_RE = re.compile(r"^[a-z0-9_-]{1,64}$")
 FLUSH_DELAY = 0.25  # seconds — debounce window for write-behind
 ALLOWED_IMG = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif"}
+
+# Base (pre-rolled) character values, baked next to this module by gen_manifest.py.
+# Player overrides merge on top; this is what lets the roster show class/race even
+# for an untouched sheet, and lets /resolve map a renamed character back to its id.
+try:
+    MANIFEST = json.loads((Path(__file__).resolve().parent / "manifest.json").read_text(encoding="utf-8"))
+except Exception:
+    MANIFEST = {}
+
+# Fields that affect the homepage roster — changes to these ping the global channel.
+SUMMARY_FIELDS = {"name", "epithet", "class_level", "race", "alignment", "player"}
+
+
+def slugify(s) -> str:
+    s = re.sub(r"[^a-z0-9_-]+", "-", str(s).lower())
+    return re.sub(r"-+", "-", s).strip("-")
+
 
 app = FastAPI(title="dnd-api", version="1.0")
 
@@ -43,6 +60,9 @@ _state: dict[str, dict] = {}          # name -> {field_id: value}
 _loaded: set[str] = set()             # names whose JSON has been read from disk
 _subs: dict[str, set[WebSocket]] = {} # name -> connected websockets
 _flush_tasks: dict[str, asyncio.Task] = {}
+_global_subs: set[WebSocket] = set()  # homepage roster listeners (global /ws)
+_name_index: dict[str, str] = {}      # vanity name-slug -> character id
+_name_index_ready = False
 
 
 def _valid(name: str) -> str:
@@ -53,6 +73,38 @@ def _valid(name: str) -> str:
 
 def _path(name: str) -> Path:
     return DATA_DIR / f"{name}.json"
+
+
+def _index_name(name, cid: str) -> None:
+    sl = slugify(name)
+    if sl:
+        _name_index[sl] = cid
+
+
+def _ensure_name_index() -> None:
+    """Build the vanity-slug → id map once: manifest base names + persisted renames."""
+    global _name_index_ready
+    if _name_index_ready:
+        return
+    for cid, base in MANIFEST.items():
+        _index_name(base.get("name", cid), cid)
+    if DATA_DIR.exists():
+        for p in DATA_DIR.glob("*.json"):
+            try:
+                ov = json.loads(p.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError):
+                continue
+            if ov.get("name"):
+                _index_name(ov["name"], p.stem)
+    _name_index_ready = True
+
+
+def _resolve_id(slug: str):
+    """Map a URL slug to a character id: a real id wins; else a renamed character."""
+    if slug in MANIFEST:
+        return slug
+    _ensure_name_index()
+    return _name_index.get(slug)
 
 
 def _overrides(name: str) -> dict:
@@ -109,15 +161,32 @@ def _apply(name: str, updates: dict, *, exclude: WebSocket | None = None) -> Non
             ov.pop(field, None)
         else:
             ov[field] = value
+            if field == "name":
+                _index_name(value, name)
     if updates:
         _schedule_flush(name)
 
 
+async def _broadcast_summary(cid: str) -> None:
+    """Tell homepage-roster listeners that a character's summary fields changed."""
+    msg = {"type": "summary-changed", "id": cid}
+    for ws in list(_global_subs):
+        try:
+            await ws.send_json(msg)
+        except Exception:
+            _global_subs.discard(ws)
+
+
 async def _apply_and_broadcast(name: str, updates: dict, *, exclude: WebSocket | None = None) -> None:
     _apply(name, updates)
+    touched_summary = False
     for field, value in updates.items():
         if isinstance(field, str):
             await _broadcast(name, field, value, exclude=exclude)
+            if field in SUMMARY_FIELDS:
+                touched_summary = True
+    if touched_summary:
+        await _broadcast_summary(name)
 
 
 # ── REST ─────────────────────────────────────────────────────────────────────
@@ -128,8 +197,39 @@ async def healthz():
 
 @app.get("/characters")
 async def list_characters():
-    names = sorted(p.stem for p in DATA_DIR.glob("*.json")) if DATA_DIR.exists() else []
-    return {"characters": names}
+    """Homepage roster: each character's current summary (manifest base + overrides)."""
+    out = []
+    for cid, base in MANIFEST.items():
+        ov = _overrides(cid)
+
+        def val(key, default=""):
+            v = ov.get(key)
+            return v if v not in (None, "") else base.get(key, default)
+
+        name = val("name", cid)
+        out.append({
+            "id": cid,
+            "name": name,
+            "epithet": val("epithet"),
+            "class_level": val("class_level"),
+            "race": val("race"),
+            "alignment": val("alignment"),
+            "player": ov.get("player") or "",
+            "url": f"/characters/{slugify(name) or cid}.html",
+        })
+    return {"characters": out}
+
+
+@app.get("/resolve/characters/{slug}.html")
+async def resolve_sheet(slug: str):
+    """Map a vanity URL slug back to its static sheet via nginx X-Accel-Redirect.
+
+    Static id files (e.g. /characters/kelek.html) are served directly by nginx and
+    never reach here; only renamed characters' vanity URLs do."""
+    cid = _resolve_id(slug.lower())
+    if not cid:
+        raise HTTPException(status_code=404, detail="unknown character")
+    return Response(status_code=200, headers={"X-Accel-Redirect": f"/_sheet/{cid}.html"})
 
 
 @app.get("/characters/{name}")
@@ -197,6 +297,23 @@ async def ws_character(ws: WebSocket, name: str):
         pass
     finally:
         _subs.get(name, set()).discard(ws)
+
+
+@app.websocket("/ws")
+async def ws_global(ws: WebSocket):
+    """Homepage roster channel: pushes {"type":"summary-changed","id":…} so the
+    index refetches when any character's name/class/alignment/player changes."""
+    await ws.accept()
+    _global_subs.add(ws)
+    try:
+        while True:
+            await ws.receive_text()  # clients don't send; keep the socket open
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
+    finally:
+        _global_subs.discard(ws)
 
 
 @app.exception_handler(HTTPException)

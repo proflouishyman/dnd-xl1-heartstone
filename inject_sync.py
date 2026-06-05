@@ -7,15 +7,18 @@ every characters/*.html it:
   1. Removes the legacy localStorage save block (so server state isn't clobbered
      on load).
   2. Tags the clanker-relevant fields with stable, semantic ``data-field`` ids
-     (name, ability scores, AC/HP/XP, inventory, treasure, notes, portrait …).
-     The long tail of "every other cell" is tagged generically at runtime by
-     sheet-sync.js (a deterministic DOM walk), so we only need clean keys here.
-  3. Marks display fields ``data-editable`` (edit-mode toggles contenteditable).
+     (name, ability scores, AC/HP/XP, inventory, treasure, notes, portrait, plus
+     the header meta — race/class/alignment/save-as/languages — and a Player
+     "claim" field). Only genuine *values* are tagged; labels and the derived
+     reference tables (THAC0/saves/thief/turn-undead) stay read-only.
+  3. Marks display fields ``data-editable`` (sheet-sync.js makes them editable).
   4. Injects /assets/edit.css, a data-char hook, and /assets/sheet-sync.js.
 
-Idempotent: re-running is a no-op once the marker is present (and the pipeline
-regenerates files from scratch anyway). Plain-string/regex like the sibling
-inject scripts — no extra dependencies.
+Idempotent and re-runnable on already-injected files: the heavy semantic tagging
+(steps 1–4, some of whose search prefixes survive tagging) is guarded by the
+``sync-injected`` marker, while the header-meta + Player tagging is written to be
+naturally idempotent so a second pass only adds what's missing. Plain-string/regex
+like the sibling inject scripts — no extra dependencies.
 """
 import glob
 import os
@@ -30,6 +33,16 @@ BODY_INJECT = '\n<script src="/assets/sheet-sync.js" defer></script>\n' + MARKER
 COMBAT = {"Armor Class": "ac", "Movement": "mv", "HP Maximum": "hp_max", "Attacks/Round": "attacks"}
 COINS = {"PP": "coin_pp", "GP": "coin_gp", "EP": "coin_ep", "SP": "coin_sp", "CP": "coin_cp"}
 
+# Header meta values rendered as "<b>Label:</b> value" — wrap the value editable.
+META = [("Race", "race"), ("Class", "class_level"), ("Languages", "languages")]
+
+# New "Player" claim line, inserted just above the Race/Class meta row.
+PLAYER_LINE = (
+    '<div class="char-meta" style="margin-top:6px;">'
+    '<span><b>Player:</b> <span class="player-claim" data-field="player" data-editable></span></span>'
+    "</div>\n      "
+)
+
 
 def strip_legacy(h):
     h = re.sub(r"\s*<div id=\"save-status\">.*?</div>", "", h, flags=re.S, count=1)
@@ -41,6 +54,7 @@ def strip_legacy(h):
 
 
 def tag(h, slug):
+    """Semantic tagging that is NOT naturally idempotent — guarded by MARKER."""
     # ── header ──
     h = h.replace('<div class="char-name">',
                   '<div class="char-name" data-field="name" data-editable>', 1)
@@ -115,13 +129,32 @@ def tag(h, slug):
     return h
 
 
+def tag_meta(h):
+    """Tag the header-meta values + add the Player claim line. Naturally idempotent
+    (once a value is wrapped, the unwrapped pattern no longer matches), so this can
+    run on both fresh and already-injected sheets."""
+    for label, key in META:
+        h = re.sub(r'(<span><b>%s:</b> )([^<]*)(</span>)' % label,
+                   r'\1<span data-field="%s" data-editable>\2</span>\3' % key, h, count=1)
+    h = h.replace('<span class="badge">',
+                  '<span class="badge" data-field="alignment" data-editable>', 1)
+    h = re.sub(r'(Save As: )([^<]*)(</span>)',
+               r'\1<span data-field="save_as" data-editable>\2</span>\3', h, count=1)
+    if 'data-field="player"' not in h:
+        h = h.replace('<div class="char-meta" style="margin-top:8px;">',
+                      PLAYER_LINE + '<div class="char-meta" style="margin-top:8px;">', 1)
+    return h
+
+
 def process(path):
     slug = os.path.splitext(os.path.basename(path))[0].lower()
-    h = open(path, encoding="utf-8").read()
-    if MARKER in h:
-        return "skip (already injected)"
-    h = strip_legacy(h)
-    h = tag(h, slug)
+    h = before = open(path, encoding="utf-8").read()
+    if MARKER not in h:                     # first pass: heavy (non-idempotent) tagging
+        h = strip_legacy(h)
+        h = tag(h, slug)
+    h = tag_meta(h)                         # always: idempotent meta + player tagging
+    if h == before:
+        return "unchanged"
     with open(path, "w", encoding="utf-8") as f:
         f.write(h)
     return "ok"

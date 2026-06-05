@@ -3,6 +3,7 @@ FROM python:3.12-slim
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY manifest.json .
 COPY app.py .
 
 # State lives in the dnd_data volume mounted here (persisted, not in the image).

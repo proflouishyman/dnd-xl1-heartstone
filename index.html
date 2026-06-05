@@ -142,6 +142,32 @@
   .char-name { font-weight: bold; font-size: 14px; }
   .char-class { font-size: 11px; color: var(--muted); margin-top: 1px; }
 
+  /* ── Roster (flat list + claim dropdown) ── */
+  .roster-controls {
+    display: flex; align-items: center; gap: 12px;
+    flex-wrap: wrap; margin-bottom: 22px;
+  }
+  .roster-controls label {
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted);
+  }
+  #char-picker {
+    background: var(--panel); color: var(--text);
+    border: 1px solid var(--border); border-radius: 4px;
+    padding: 9px 12px; font-family: inherit; font-size: 14px;
+    min-width: 300px; cursor: pointer;
+  }
+  #char-picker:hover { border-color: var(--gold); }
+  .roster-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 8px;
+  }
+  .claimed-by {
+    font-size: 11px; color: var(--gold); white-space: nowrap;
+    align-self: center; letter-spacing: 1px;
+  }
+  .roster-empty { color: var(--muted); font-style: italic; font-size: 13px; }
+
   /* ── Maps grid ── */
   .maps-grid {
     display: grid;
@@ -229,11 +255,13 @@
   <!-- ── CHARACTERS ── -->
   <section id="characters">
     <h2>Player Characters</h2>
-    <div class="char-columns">
-
-      <div class="alignment-group">
-        <h3 class="lawful-header">⚔ Lawful Characters</h3>
-
+    <div class="roster-controls">
+      <label for="char-picker">Play an available character</label>
+      <select id="char-picker"><option value="">— choose an available character —</option></select>
+    </div>
+    <div id="roster" class="roster-list">
+      <!-- Live roster from dnd-api (assets/roster.js). The cards below are a static
+           fallback shown only if the API is unreachable. -->
         <a class="char-card" href="characters/strongheart.html">
           <div><div class="char-name">Strongheart</div><div class="char-class">Good Paladin · 10th Level Lord (Fighter)</div></div>
         </a>
@@ -267,11 +295,6 @@
         <a class="char-card" href="characters/valkeer.html">
           <div><div class="char-name">Valkeer</div><div class="char-class">Good Norseman · Swashbuckler (5th Level Fighter)</div></div>
         </a>
-      </div>
-
-      <div class="alignment-group">
-        <h3 class="chaotic-header">💀 Chaotic Characters</h3>
-
         <a class="char-card" href="characters/grimsword.html">
           <div><div class="char-name">Grimsword</div><div class="char-class">Evil Knight · Champion (7th Level Fighter)</div></div>
         </a>
@@ -296,8 +319,6 @@
         <a class="char-card" href="characters/zarak.html">
           <div><div class="char-name">Zarak</div><div class="char-class">Evil Half-Orc Assassin · Cutpurse (5th Level Thief)</div></div>
         </a>
-      </div>
-
     </div>
   </section>
 
@@ -450,6 +471,8 @@
   XL-1 Quest for the Heartstone · TSR Inc., 1984 · by Michael L. Gray
   &nbsp;·&nbsp; This site is for personal, non-commercial use only.
 </footer>
+
+<script src="/assets/roster.js" defer></script>
 
 </body>
 </html>

@@ -7,7 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Map 5 — The Wizard's Home — XL-1</title>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="/assets/vendor/peerjs.min.js"></script>
 <style>
   :root {
     --gold:   #c9a84c;
@@ -329,7 +329,7 @@
     }
 
     peer = new Peer(savedId, {
-      host: '0.peerjs.com', port: 443, path: '/', secure: true,
+      host: 'peer.haldo.org', port: 443, path: '/', secure: true,
       debug: 0,
     });
 
@@ -415,7 +415,7 @@
     const dot    = document.getElementById('player-dot');
     const status = document.getElementById('player-status');
 
-    peer = new Peer({ host: '0.peerjs.com', port: 443, path: '/', secure: true, debug: 0 });
+    peer = new Peer({ host: 'peer.haldo.org', port: 443, path: '/', secure: true, debug: 0 });
     peer.on('open', () => {
       dot.className = 'live-dot yellow';
       status.textContent = 'Connecting to DM…';

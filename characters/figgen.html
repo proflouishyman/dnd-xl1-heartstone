@@ -291,6 +291,25 @@
     body { padding: 0; }
     input { border-color: #ccc !important; }
   }
+
+  /* ── Save indicator ── */
+  #save-status {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: #2a6e2a;
+    color: #fff;
+    font-family: Georgia, serif;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 999;
+    letter-spacing: 1px;
+  }
+  #save-status.visible { opacity: 1; }
 </style>
 </head>
 <body>
@@ -597,15 +616,24 @@
 <!-- extended-class-tables-done -->
 <!-- equipped-tables-done -->
 
+<div id="save-status">✓ Saved</div>
 <script>
 (function(){
   var KEY = 'sheet_figgen';
+  var timer = null;
+  function showSaved(){
+    var el = document.getElementById('save-status');
+    el.classList.add('visible');
+    clearTimeout(timer);
+    timer = setTimeout(function(){ el.classList.remove('visible'); }, 1800);
+  }
   function save(){
     var d = {};
     document.querySelectorAll('input,textarea').forEach(function(el,i){
       d[i] = el.type==='checkbox' ? el.checked : el.value;
     });
     localStorage.setItem(KEY, JSON.stringify(d));
+    showSaved();
   }
   function load(){
     try{

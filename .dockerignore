@@ -1,0 +1,8 @@
+.git
+.gitignore
+*.py
+*.md
+figma-fog-plugin
+Dockerfile
+.dockerignore
+docker-compose.yml

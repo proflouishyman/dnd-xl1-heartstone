@@ -237,6 +237,98 @@ async def get_character(name: str):
     return _overrides(_valid(name))
 
 
+# ── Enriched read for clanker: base (manifest) merged with overrides ──────────
+_ABILITY_FIELD = {"STR": "str_score", "DEX": "dex_score", "INT": "int_score",
+                  "CON": "con_score", "WIS": "wis_score", "CHA": "cha_score"}
+_COIN_KEYS = ("pp", "gp", "ep", "sp", "cp")
+
+
+def _as_int(value, default=None):
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return default
+
+
+@app.get("/characters/{name}/full")
+async def get_character_full(name: str):
+    """Base (enriched manifest) merged with live overrides, normalized for clanker.
+
+    GET /characters/{name} returns *only* overrides; the bot also needs the
+    pre-rolled base (stats, thac0, saves, weapons, hp_max…). This merges them and
+    resolves the common mutable fields (hp_current, ac, coins, inventory,
+    memorized spells) into one authoritative 'current sheet'.
+    """
+    name = _valid(name)
+    base = MANIFEST.get(name, {})
+    ov = _overrides(name)
+
+    stats = dict(base.get("stats", {}))
+    for ab, fid in _ABILITY_FIELD.items():
+        if fid in ov:
+            stats[ab] = _as_int(ov[fid], stats.get(ab))
+
+    hp_max = _as_int(ov.get("hp_max"), _as_int(base.get("hp_max")))
+    ac = _as_int(ov.get("ac"), _as_int(base.get("ac")))
+    coins = {k: _as_int(ov.get(f"coin_{k}"), 0) for k in _COIN_KEYS}
+
+    inv_rows = _as_int(base.get("inv_rows"), 20)
+    inventory = []
+    for n in range(1, inv_rows + 1):
+        item = ov.get(f"inv_item_{n}")
+        if item:
+            inventory.append({
+                "slot": n,
+                "item": item,
+                "qty": _as_int(ov.get(f"inv_qty_{n}"), 1),
+                "notes": ov.get(f"inv_notes_{n}", ""),
+            })
+
+    memo_slots = _as_int(base.get("memo_slots"), 0)
+    memorized = {n: ov[f"memo_{n}"] for n in range(1, memo_slots + 1)
+                 if f"memo_{n}" in ov}
+
+    def pick(field, default=None):
+        v = ov.get(field)
+        return v if v not in (None, "") else base.get(field, default)
+
+    return {
+        "id": name,
+        "name": ov.get("name") or base.get("name", name),
+        "class": base.get("class"),
+        "level": base.get("level"),
+        "class_level": pick("class_level", ""),
+        "race": pick("race", ""),
+        "alignment": pick("alignment", ""),
+        "save_as": base.get("save_as", ""),
+        "stats": stats,
+        "ac": ac,
+        "hp_max": hp_max,
+        "hp_current": _as_int(ov.get("hp_current"), hp_max),
+        "mv": _as_int(ov.get("mv"), _as_int(base.get("mv"))),
+        "attacks": _as_int(ov.get("attacks"), _as_int(base.get("attacks"))),
+        "thac0": base.get("thac0"),
+        "saves": base.get("saves", {}),
+        "to_hit": base.get("to_hit", {}),
+        "save_note": base.get("save_note", ""),
+        "weapons": base.get("weapons", []),
+        "armor": base.get("armor", ""),
+        "special": base.get("special", []),
+        "spells": base.get("spells", {}),
+        "spell_slots": base.get("spell_slots"),
+        "thief_skills": base.get("thief_skills"),
+        "backstab": base.get("backstab"),
+        "sweep": base.get("sweep", 0),
+        "coins": coins,
+        "inventory": inventory,
+        "memorized": memorized,
+        "inv_rows": inv_rows,
+        "memo_slots": memo_slots,
+        "player": ov.get("player", ""),
+        "overrides": ov,
+    }
+
+
 @app.patch("/characters/{name}")
 async def patch_character(name: str, request: Request):
     name = _valid(name)

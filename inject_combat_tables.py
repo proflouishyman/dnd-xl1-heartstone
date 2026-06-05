@@ -168,28 +168,35 @@ def combat_html(name, data):
 """
 
 # ── Patch each character sheet ───────────────────────────────────────────────
-updated = 0
-for name, data in COMBAT_TABLES.items():
-    path = os.path.join(CHARS_DIR, f"{name}.html")
-    if not os.path.exists(path):
-        print(f"  SKIP {name} (file not found)")
-        continue
+# Guarded so this module can be imported for its data (COMBAT_TABLES) without
+# rewriting the HTML sheets — see gen_manifest.py.
+def main():
+    updated = 0
+    for name, data in COMBAT_TABLES.items():
+        path = os.path.join(CHARS_DIR, f"{name}.html")
+        if not os.path.exists(path):
+            print(f"  SKIP {name} (file not found)")
+            continue
 
-    html = open(path, encoding="utf-8").read()
+        html = open(path, encoding="utf-8").read()
 
-    # 1. Inject CSS into <style> block (only once)
-    if "combat-tables" not in html:
-        html = html.replace("  @media print {", SECTION_CSS + "\n  @media print {", 1)
+        # 1. Inject CSS into <style> block (only once)
+        if "combat-tables" not in html:
+            html = html.replace("  @media print {", SECTION_CSS + "\n  @media print {", 1)
 
-    # 2. Inject the combat section right before <!-- ── INVENTORY ── -->
-    marker = "<!-- ── INVENTORY ── -->"
-    if marker in html and "Saving Throws" not in html:
-        html = html.replace(marker, combat_html(name, data) + marker, 1)
+        # 2. Inject the combat section right before <!-- ── INVENTORY ── -->
+        marker = "<!-- ── INVENTORY ── -->"
+        if marker in html and "Saving Throws" not in html:
+            html = html.replace(marker, combat_html(name, data) + marker, 1)
 
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(html)
 
-    updated += 1
-    print(f"  ✓ {name}")
+        updated += 1
+        print(f"  ✓ {name}")
 
-print(f"\nUpdated {updated} / {len(COMBAT_TABLES)} sheets")
+    print(f"\nUpdated {updated} / {len(COMBAT_TABLES)} sheets")
+
+
+if __name__ == "__main__":
+    main()

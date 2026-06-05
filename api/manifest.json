@@ -7,7 +7,50 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Fighter 10",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "fighter",
+    "level": 8,
+    "sweep": 8,
+    "stats": {
+      "STR": 13,
+      "DEX": 12,
+      "INT": 12,
+      "CON": 11,
+      "WIS": 13,
+      "CHA": 17
+    },
+    "ac": 2,
+    "hp_max": 68,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 12,
+    "saves": {
+      "death_poison": 6,
+      "magic_wands": 7,
+      "paralysis_stone": 8,
+      "dragon_breath": 8,
+      "spells": 10
+    },
+    "to_hit": {
+      "ac5": 7,
+      "ac3": 9,
+      "ac1": 11,
+      "ac0": 12,
+      "acm1": 13
+    },
+    "save_note": "",
+    "weapons": [
+      "Dagger",
+      "Sword +2 — intelligent, lawful; Intelligence 8; detects evil; heals 6 HP/day"
+    ],
+    "armor": "Plate mail; Shield; Helmet",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "elkhorn": {
     "id": "elkhorn",
@@ -17,7 +60,53 @@
     "race": "Dwarf",
     "alignment": "Lawful",
     "save_as": "Fighter 7",
-    "languages": "Common, Dwarvish, Gnomish, Goblin, Kobold"
+    "languages": "Common, Dwarvish, Gnomish, Goblin, Kobold",
+    "class": "dwarf",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 9,
+      "DEX": 13,
+      "INT": 9,
+      "CON": 16,
+      "WIS": 10,
+      "CHA": 11
+    },
+    "ac": 2,
+    "hp_max": 67,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 4,
+      "magic_wands": 5,
+      "paralysis_stone": 6,
+      "dragon_breath": 10,
+      "spells": 8
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "Dwarf: −4 to death/poison, wands, paralysis, spells; no dragon breath bonus",
+    "weapons": [
+      "Sword +1",
+      "Hand axe",
+      "Dagger"
+    ],
+    "armor": "Plate mail; Shield; Helmet",
+    "special": [
+      "Dwarf racial bonuses vs. giants/kobolds; +4 saves vs. magic/poison"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "mercion": {
     "id": "mercion",
@@ -27,7 +116,76 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Cleric 7",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "cleric",
+    "level": 7,
+    "sweep": 0,
+    "stats": {
+      "STR": 10,
+      "DEX": 9,
+      "INT": 12,
+      "CON": 9,
+      "WIS": 17,
+      "CHA": 14
+    },
+    "ac": 2,
+    "hp_max": 35,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 9,
+      "magic_wands": 10,
+      "paralysis_stone": 12,
+      "dragon_breath": 14,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Mace +1"
+    ],
+    "armor": "Plate mail; Shield",
+    "special": [],
+    "spells": {
+      "1": [
+        "Cure Light Wounds ×2",
+        "Detect Evil",
+        "Light",
+        "Protection from Evil"
+      ],
+      "2": [
+        "Bless",
+        "Find Traps",
+        "Hold Person",
+        "Silence 15' Radius"
+      ],
+      "3": [
+        "Cure Disease",
+        "Remove Curse",
+        "Striking"
+      ],
+      "4": [
+        "Cure Serious Wounds",
+        "Neutralize Poison"
+      ]
+    },
+    "spell_slots": [
+      2,
+      2,
+      2,
+      1
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 7
   },
   "ringlerun": {
     "id": "ringlerun",
@@ -37,7 +195,79 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Magic-User 7",
-    "languages": "Common, Lawful, Hobgoblin"
+    "languages": "Common, Lawful, Hobgoblin",
+    "class": "mage",
+    "level": 10,
+    "sweep": 0,
+    "stats": {
+      "STR": 9,
+      "DEX": 10,
+      "INT": 14,
+      "CON": 9,
+      "WIS": 13,
+      "CHA": 11
+    },
+    "ac": 9,
+    "hp_max": 23,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 19,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 8,
+      "dragon_breath": 11,
+      "spells": 8
+    },
+    "to_hit": {
+      "ac5": 14,
+      "ac3": 16,
+      "ac1": 18,
+      "ac0": 19,
+      "acm1": 20
+    },
+    "save_note": "",
+    "weapons": [
+      "Dagger +1",
+      "Staff of Power (21 charges)"
+    ],
+    "armor": "Ring of Protection +1",
+    "special": [
+      "Additional Language: Hobgoblin"
+    ],
+    "spells": {
+      "1": [
+        "Charm Person",
+        "Detect Magic",
+        "Magic Missile",
+        "Read Magic",
+        "Sleep"
+      ],
+      "2": [
+        "ESP",
+        "Knock",
+        "Levitate",
+        "Web"
+      ],
+      "3": [
+        "Dispel Magic",
+        "Fireball",
+        "Haste"
+      ],
+      "4": [
+        "Ice Storm / Wall of Ice"
+      ]
+    },
+    "spell_slots": [
+      3,
+      2,
+      2,
+      1
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 8
   },
   "peralay": {
     "id": "peralay",
@@ -47,7 +277,90 @@
     "race": "Elf",
     "alignment": "Lawful",
     "save_as": "Elf 10",
-    "languages": "Common, Lawful, Elvish, Gnoll, Hobgoblin, Ogre, Orcish"
+    "languages": "Common, Lawful, Elvish, Gnoll, Hobgoblin, Ogre, Orcish",
+    "class": "elf",
+    "level": 10,
+    "sweep": 10,
+    "stats": {
+      "STR": 14,
+      "DEX": 14,
+      "INT": 15,
+      "CON": 17,
+      "WIS": 10,
+      "CHA": 14
+    },
+    "ac": 1,
+    "hp_max": 72,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 12,
+    "saves": {
+      "death_poison": 6,
+      "magic_wands": 5,
+      "paralysis_stone": 6,
+      "dragon_breath": 8,
+      "spells": 8
+    },
+    "to_hit": {
+      "ac5": 7,
+      "ac3": 9,
+      "ac1": 11,
+      "ac0": 12,
+      "acm1": 13
+    },
+    "save_note": "Elf: −2 to wands, paralysis/stone, spells",
+    "weapons": [
+      "Sword +2",
+      "Dagger",
+      "Longbow and 15 arrows"
+    ],
+    "armor": "Chain mail +3; Shield",
+    "special": [
+      "Elf racial: detect secret doors, immune to ghoul paralysis",
+      "Additional Language: Ogre"
+    ],
+    "spells": {
+      "1": [
+        "Charm Person",
+        "Light",
+        "Magic Missile",
+        "Read Languages",
+        "Read Magic",
+        "Shield"
+      ],
+      "2": [
+        "Detect Invisible",
+        "Invisibility",
+        "Mirror Image",
+        "Web",
+        "Wizard Lock"
+      ],
+      "3": [
+        "Dispel Magic",
+        "Fireball",
+        "Hold Person",
+        "Lightning Bolt",
+        "Water Breathing"
+      ],
+      "4": [
+        "Charm Monster",
+        "Confusion"
+      ],
+      "5": [
+        "Cloudkill"
+      ]
+    },
+    "spell_slots": [
+      3,
+      3,
+      3,
+      3,
+      2
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 14
   },
   "figgen": {
     "id": "figgen",
@@ -57,7 +370,54 @@
     "race": "Halfling",
     "alignment": "Lawful",
     "save_as": "Fighter 8",
-    "languages": "Common, Lawful, Halfling"
+    "languages": "Common, Lawful, Halfling",
+    "class": "halfling",
+    "level": 5,
+    "sweep": 5,
+    "stats": {
+      "STR": 13,
+      "DEX": 13,
+      "INT": 10,
+      "CON": 12,
+      "WIS": 9,
+      "CHA": 10
+    },
+    "ac": 2,
+    "hp_max": 45,
+    "mv": 90,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 5,
+      "paralysis_stone": 6,
+      "dragon_breath": 6,
+      "spells": 8
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "Halfling: −4 to wands, paralysis/stone, dragon breath, spells",
+    "weapons": [
+      "Dagger +2",
+      "Short sword",
+      "Sling and 20 stones"
+    ],
+    "armor": "Plate mail; Shield; Helmet; Elvenscloak",
+    "special": [
+      "Halfling racial: +1 to hit with missiles, +2 initiative, hide in undergrowth",
+      "+4 saves vs. magic/dragon breath"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "molliver": {
     "id": "molliver",
@@ -67,7 +427,83 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Thief 8",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "thief",
+    "level": 8,
+    "sweep": 0,
+    "stats": {
+      "STR": 9,
+      "DEX": 16,
+      "INT": 10,
+      "CON": 16,
+      "WIS": 9,
+      "CHA": 17
+    },
+    "ac": 7,
+    "hp_max": 40,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 12,
+      "magic_wands": 13,
+      "paralysis_stone": 11,
+      "dragon_breath": 14,
+      "spells": 13
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Sword +2",
+      "Dagger ×2"
+    ],
+    "armor": "Leather +1; Boots of Levitation",
+    "special": [
+      "Thief skills: Pick Locks 50%, Find/Remove Traps 40%, Pick Pockets 50%, Move Silently 55%, Climb Walls 93%, Hide in Shadows 37%, Hear Noise 1–3",
+      "Backstab: ×3 damage",
+      "Boots of Levitation: float up/down 10'/round, duration indefinite"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": [
+      [
+        "Open Locks",
+        "60%"
+      ],
+      [
+        "Find/Remove Traps",
+        "45%"
+      ],
+      [
+        "Pick Pockets",
+        "55%"
+      ],
+      [
+        "Move Silently",
+        "55%"
+      ],
+      [
+        "Climb Walls",
+        "94%"
+      ],
+      [
+        "Hide in Shadows",
+        "37%"
+      ],
+      [
+        "Hear Noise",
+        "1–4 on d6"
+      ]
+    ],
+    "backstab": "×3",
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "hawkler": {
     "id": "hawkler",
@@ -77,7 +513,52 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Fighter 6",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 13,
+      "DEX": 16,
+      "INT": 11,
+      "CON": 13,
+      "WIS": 10,
+      "CHA": 12
+    },
+    "ac": 7,
+    "hp_max": 45,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 10,
+      "magic_wands": 11,
+      "paralysis_stone": 12,
+      "dragon_breath": 13,
+      "spells": 14
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Long bow",
+      "12 arrows +1",
+      "Sword +1",
+      "Dagger"
+    ],
+    "armor": "Leather",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "deeth": {
     "id": "deeth",
@@ -87,7 +568,52 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Fighter 8",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 12,
+      "DEX": 13,
+      "INT": 11,
+      "CON": 16,
+      "WIS": 13,
+      "CHA": 14
+    },
+    "ac": 2,
+    "hp_max": 58,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 10,
+      "dragon_breath": 10,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "",
+    "weapons": [
+      "Flail +2 (1d8+2 damage)",
+      "Sword +2"
+    ],
+    "armor": "Plate mail; Shield; Helmet; Scarab of Protection",
+    "special": [
+      "Scarab of Protection: grants 2 additional saves vs. death magic; absorbs up to 12 levels of energy drain"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "bowmarc": {
     "id": "bowmarc",
@@ -97,7 +623,52 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Fighter 7",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 11,
+      "DEX": 12,
+      "INT": 9,
+      "CON": 13,
+      "WIS": 10,
+      "CHA": 12
+    },
+    "ac": 2,
+    "hp_max": 45,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 10,
+      "dragon_breath": 10,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "",
+    "weapons": [
+      "Battle axe +1",
+      "Sword +1"
+    ],
+    "armor": "Plate mail; Shield; Helmet; Gauntlets of Ogre Power",
+    "special": [
+      "Gauntlets of Ogre Power: treat STR as 18 for attack/damage rolls"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "valkeer": {
     "id": "valkeer",
@@ -107,7 +678,51 @@
     "race": "Human",
     "alignment": "Lawful",
     "save_as": "Fighter 5",
-    "languages": "Common, Lawful"
+    "languages": "Common, Lawful",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 16,
+      "DEX": 16,
+      "INT": 12,
+      "CON": 12,
+      "WIS": 11,
+      "CHA": 12
+    },
+    "ac": 6,
+    "hp_max": 39,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 10,
+      "magic_wands": 11,
+      "paralysis_stone": 12,
+      "dragon_breath": 13,
+      "spells": 14
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Sword +1",
+      "War hammer",
+      "Hand axe"
+    ],
+    "armor": "Leather; Shield; Helmet",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "grimsword": {
     "id": "grimsword",
@@ -117,7 +732,50 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Fighter 7",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 15,
+      "DEX": 13,
+      "INT": 10,
+      "CON": 12,
+      "WIS": 9,
+      "CHA": 7
+    },
+    "ac": 2,
+    "hp_max": 52,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 10,
+      "dragon_breath": 10,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "",
+    "weapons": [
+      "Sword +1 (energy drain — victim loses 1 level on hit, no save)",
+      "Flail"
+    ],
+    "armor": "Plate mail; Chain mail; Shield; Helmet",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "zargash": {
     "id": "zargash",
@@ -127,7 +785,78 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Cleric 7",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "cleric",
+    "level": 7,
+    "sweep": 0,
+    "stats": {
+      "STR": 8,
+      "DEX": 10,
+      "INT": 10,
+      "CON": 10,
+      "WIS": 15,
+      "CHA": 16
+    },
+    "ac": 2,
+    "hp_max": 38,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 9,
+      "magic_wands": 10,
+      "paralysis_stone": 12,
+      "dragon_breath": 14,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Mace +1",
+      "War hammer",
+      "Snake staff"
+    ],
+    "armor": "Plate mail; Shield; Helmet",
+    "special": [
+      "Snake staff: acts as quarterstaff +1; once per day can be thrown to become a real snake (HD 3, AC 6, damage 1d4 + poison) for 1 turn"
+    ],
+    "spells": {
+      "1": [
+        "Cause Light Wounds ×2",
+        "Darkness",
+        "Protection from Good"
+      ],
+      "2": [
+        "Blight",
+        "Hold Person ×2",
+        "Silence 15' Radius"
+      ],
+      "3": [
+        "Animate Dead",
+        "Cause Disease",
+        "Curse"
+      ],
+      "4": [
+        "Cause Serious Wounds",
+        "Speak with Dead"
+      ]
+    },
+    "spell_slots": [
+      2,
+      2,
+      2,
+      1
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 7
   },
   "kelek": {
     "id": "kelek",
@@ -137,7 +866,80 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Magic-User 7",
-    "languages": "Common, Chaotic, Orc"
+    "languages": "Common, Chaotic, Orc",
+    "class": "mage",
+    "level": 7,
+    "sweep": 0,
+    "stats": {
+      "STR": 15,
+      "DEX": 10,
+      "INT": 15,
+      "CON": 14,
+      "WIS": 13,
+      "CHA": 7
+    },
+    "ac": 9,
+    "hp_max": 33,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 19,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 8,
+      "dragon_breath": 11,
+      "spells": 8
+    },
+    "to_hit": {
+      "ac5": 14,
+      "ac3": 16,
+      "ac1": 18,
+      "ac0": 19,
+      "acm1": 20
+    },
+    "save_note": "",
+    "weapons": [
+      "Dagger +1",
+      "Wand of Cold (5 charges — 6d6 cold damage, 60' range, save for half)",
+      "Staff of Striking (12 charges — +2 to hit, 2d6+2 damage per charge)"
+    ],
+    "armor": "Ring of Protection +1",
+    "special": [
+      "Additional Language: Orc"
+    ],
+    "spells": {
+      "1": [
+        "Charm Person",
+        "Magic Missile",
+        "Read Magic",
+        "Shield",
+        "Sleep"
+      ],
+      "2": [
+        "ESP",
+        "Knock",
+        "Mirror Image",
+        "Web"
+      ],
+      "3": [
+        "Fireball",
+        "Fly",
+        "Haste"
+      ],
+      "4": [
+        "Charm Monsters"
+      ]
+    },
+    "spell_slots": [
+      3,
+      2,
+      2,
+      1
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 8
   },
   "warduke": {
     "id": "warduke",
@@ -147,7 +949,53 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Fighter 8",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "fighter",
+    "level": 9,
+    "sweep": 9,
+    "stats": {
+      "STR": 16,
+      "DEX": 11,
+      "INT": 9,
+      "CON": 14,
+      "WIS": 11,
+      "CHA": 11
+    },
+    "ac": 2,
+    "hp_max": 59,
+    "mv": 60,
+    "attacks": 1,
+    "thac0": 14,
+    "saves": {
+      "death_poison": 8,
+      "magic_wands": 9,
+      "paralysis_stone": 10,
+      "dragon_breath": 10,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 9,
+      "ac3": 11,
+      "ac1": 13,
+      "ac0": 14,
+      "acm1": 15
+    },
+    "save_note": "",
+    "weapons": [
+      "Sword +1 (flames on command — deals extra 1d6 fire damage when ignited)",
+      "Battle axe",
+      "Dagger"
+    ],
+    "armor": "Plate mail; Magical helmet (infravision 60 ft; wearer's eyes glow red)",
+    "special": [
+      "Magical Helmet: grants infravision 60 ft; cosmetic: eyes glow red in darkness"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "skylla": {
     "id": "skylla",
@@ -157,7 +1005,72 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Magic-User 6",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "mage",
+    "level": 6,
+    "sweep": 0,
+    "stats": {
+      "STR": 9,
+      "DEX": 11,
+      "INT": 12,
+      "CON": 10,
+      "WIS": 15,
+      "CHA": 11
+    },
+    "ac": 9,
+    "hp_max": 22,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 19,
+    "saves": {
+      "death_poison": 11,
+      "magic_wands": 12,
+      "paralysis_stone": 11,
+      "dragon_breath": 14,
+      "spells": 12
+    },
+    "to_hit": {
+      "ac5": 14,
+      "ac3": 16,
+      "ac1": 18,
+      "ac0": 19,
+      "acm1": 20
+    },
+    "save_note": "",
+    "weapons": [
+      "Dagger +1",
+      "Staff of Commanding (10 charges — command any single creature, WIS save negates)"
+    ],
+    "armor": "Ring of Protection +1",
+    "special": [],
+    "spells": {
+      "1": [
+        "Charm Person",
+        "Floating Disc",
+        "Light",
+        "Magic Missile",
+        "Read Magic"
+      ],
+      "2": [
+        "Detect Invisible",
+        "Knock",
+        "Levitate",
+        "Wizard Lock"
+      ],
+      "3": [
+        "Hold Person",
+        "Lightning Bolt"
+      ]
+    },
+    "spell_slots": [
+      2,
+      2,
+      2
+    ],
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 6
   },
   "zorgar": {
     "id": "zorgar",
@@ -167,7 +1080,50 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Fighter 5",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 18,
+      "DEX": 13,
+      "INT": 10,
+      "CON": 16,
+      "WIS": 9,
+      "CHA": 12
+    },
+    "ac": 5,
+    "hp_max": 37,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 10,
+      "magic_wands": 11,
+      "paralysis_stone": 12,
+      "dragon_breath": 13,
+      "spells": 14
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Dagger +1",
+      "Club"
+    ],
+    "armor": "Chain mail",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "drex": {
     "id": "drex",
@@ -177,7 +1133,50 @@
     "race": "Human",
     "alignment": "Chaotic",
     "save_as": "Fighter 6",
-    "languages": "Common, Chaotic"
+    "languages": "Common, Chaotic",
+    "class": "fighter",
+    "level": 6,
+    "sweep": 6,
+    "stats": {
+      "STR": 15,
+      "DEX": 14,
+      "INT": 9,
+      "CON": 11,
+      "WIS": 10,
+      "CHA": 10
+    },
+    "ac": 6,
+    "hp_max": 39,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 10,
+      "magic_wands": 11,
+      "paralysis_stone": 12,
+      "dragon_breath": 13,
+      "spells": 14
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Sword +1",
+      "Dagger"
+    ],
+    "armor": "Leather +1; Shield; Helmet",
+    "special": [],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": null,
+    "backstab": null,
+    "inv_rows": 20,
+    "memo_slots": 0
   },
   "zarak": {
     "id": "zarak",
@@ -187,6 +1186,81 @@
     "race": "Half-Orc",
     "alignment": "Chaotic",
     "save_as": "Thief 5",
-    "languages": "Common, Chaotic, Orcish"
+    "languages": "Common, Chaotic, Orcish",
+    "class": "thief",
+    "level": 5,
+    "sweep": 0,
+    "stats": {
+      "STR": 13,
+      "DEX": 12,
+      "INT": 11,
+      "CON": 16,
+      "WIS": 15,
+      "CHA": 6
+    },
+    "ac": 7,
+    "hp_max": 27,
+    "mv": 120,
+    "attacks": 1,
+    "thac0": 17,
+    "saves": {
+      "death_poison": 12,
+      "magic_wands": 13,
+      "paralysis_stone": 11,
+      "dragon_breath": 14,
+      "spells": 13
+    },
+    "to_hit": {
+      "ac5": 12,
+      "ac3": 14,
+      "ac1": 16,
+      "ac0": 17,
+      "acm1": 18
+    },
+    "save_note": "",
+    "weapons": [
+      "Throwing dagger +1 (returns like a boomerang after each throw)"
+    ],
+    "armor": "Leather; Potion of Invisibility",
+    "special": [
+      "Thief skills: Pick Locks 35%, Find/Remove Traps 25%, Pick Pockets 35%, Move Silently 40%, Climb Walls 91%, Hide in Shadows 28%, Hear Noise 1–3",
+      "Backstab: ×2 damage",
+      "Potion of Invisibility: one use, lasts until attacking or casting"
+    ],
+    "spells": {},
+    "spell_slots": null,
+    "thief_skills": [
+      [
+        "Open Locks",
+        "35%"
+      ],
+      [
+        "Find/Remove Traps",
+        "30%"
+      ],
+      [
+        "Pick Pockets",
+        "40%"
+      ],
+      [
+        "Move Silently",
+        "40%"
+      ],
+      [
+        "Climb Walls",
+        "91%"
+      ],
+      [
+        "Hide in Shadows",
+        "28%"
+      ],
+      [
+        "Hear Noise",
+        "1–3 on d6"
+      ]
+    ],
+    "backstab": "×3",
+    "inv_rows": 20,
+    "memo_slots": 0
   }
 }

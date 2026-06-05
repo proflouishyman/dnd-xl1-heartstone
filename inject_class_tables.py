@@ -230,72 +230,79 @@ def sweep_html(cls, level):
 
 
 # ── Main patching loop ────────────────────────────────────────────────────────
-updated = 0
-for name, info in CHAR_INFO.items():
-    path = os.path.join(CHARS_DIR, f"{name}.html")
-    if not os.path.exists(path):
-        print(f"  SKIP {name} (file not found)")
-        continue
+# Guarded so this module can be imported for its data (CHAR_INFO, THIEF_SKILLS,
+# SPELL_SLOTS, THAC0) without rewriting the HTML sheets — see gen_manifest.py.
+def main():
+    updated = 0
+    for name, info in CHAR_INFO.items():
+        path = os.path.join(CHARS_DIR, f"{name}.html")
+        if not os.path.exists(path):
+            print(f"  SKIP {name} (file not found)")
+            continue
 
-    html = open(path, encoding="utf-8").read()
+        html = open(path, encoding="utf-8").read()
 
-    # Idempotency: skip if already patched
-    if "class-tables-wrap" in html or "extended-class-tables-done" in html:
-        print(f"  SKIP {name} (already patched)")
-        continue
+        # Idempotency: skip if already patched
+        if "class-tables-wrap" in html or "extended-class-tables-done" in html:
+            print(f"  SKIP {name} (already patched)")
+            continue
 
-    # 1. Inject additional CSS (before @media print block)
-    if "thief-tbl" not in html:
-        html = html.replace("  @media print {", EXTRA_CSS + "\n  @media print {", 1)
+        # 1. Inject additional CSS (before @media print block)
+        if "thief-tbl" not in html:
+            html = html.replace("  @media print {", EXTRA_CSS + "\n  @media print {", 1)
 
-    # 2. Replace the 5-row attack table with full AC 9→−3 matrix
-    new_atk = extended_attack_table(THAC0[name])
-    html = re.sub(
-        r'<table class="attack-table">.*?</table>',
-        new_atk,
-        html,
-        flags=re.DOTALL,
-    )
+        # 2. Replace the 5-row attack table with full AC 9→−3 matrix
+        new_atk = extended_attack_table(THAC0[name])
+        html = re.sub(
+            r'<table class="attack-table">.*?</table>',
+            new_atk,
+            html,
+            flags=re.DOTALL,
+        )
 
-    # 3. Fix memo-grid slot counts for spellcasters
-    if name in SPELL_SLOTS:
-        slots = SPELL_SLOTS[name]["slots"]
-        new_grid = memo_grid_html(slots)
-        # memo-grid is on one line; greedy .* matches the full outer div
-        html = re.sub(r'<div class="memo-grid">.*</div>', new_grid, html)
+        # 3. Fix memo-grid slot counts for spellcasters
+        if name in SPELL_SLOTS:
+            slots = SPELL_SLOTS[name]["slots"]
+            new_grid = memo_grid_html(slots)
+            # memo-grid is on one line; greedy .* matches the full outer div
+            html = re.sub(r'<div class="memo-grid">.*</div>', new_grid, html)
 
-    # 4. Build class-specific section to insert before INVENTORY
-    extra = ""
-    if name in SPELL_SLOTS:
-        si = SPELL_SLOTS[name]
-        slot_display = "/".join(str(s) for s in si["slots"])
-        extra += f'\n<p style="font-size:11px;color:#888;margin:0 0 6px;">Daily spell slots: <strong>{slot_display}</strong> ({si["type"]} L{si["level"]})</p>'
+        # 4. Build class-specific section to insert before INVENTORY
+        extra = ""
+        if name in SPELL_SLOTS:
+            si = SPELL_SLOTS[name]
+            slot_display = "/".join(str(s) for s in si["slots"])
+            extra += f'\n<p style="font-size:11px;color:#888;margin:0 0 6px;">Daily spell slots: <strong>{slot_display}</strong> ({si["type"]} L{si["level"]})</p>'
 
-    if name in THIEF_SKILLS:
-        extra += thief_html(THIEF_SKILLS[name])
+        if name in THIEF_SKILLS:
+            extra += thief_html(THIEF_SKILLS[name])
 
-    if name in ("mercion", "zargash"):
-        extra += turn_undead_html(is_chaotic=(name == "zargash"))
+        if name in ("mercion", "zargash"):
+            extra += turn_undead_html(is_chaotic=(name == "zargash"))
 
-    if info["sweep"] > 0:
-        extra += sweep_html(info["cls"], info["sweep"])
+        if info["sweep"] > 0:
+            extra += sweep_html(info["cls"], info["sweep"])
 
-    if extra:
-        marker = "<!-- ── INVENTORY ── -->"
-        if marker in html:
-            html = html.replace(
-                marker,
-                f"\n<!-- ── CLASS TABLES ── -->\n{extra}\n{marker}",
-                1,
-            )
+        if extra:
+            marker = "<!-- ── INVENTORY ── -->"
+            if marker in html:
+                html = html.replace(
+                    marker,
+                    f"\n<!-- ── CLASS TABLES ── -->\n{extra}\n{marker}",
+                    1,
+                )
 
-    # 5. Mark as patched
-    html = html.replace("</body>", "<!-- extended-class-tables-done -->\n</body>", 1)
+        # 5. Mark as patched
+        html = html.replace("</body>", "<!-- extended-class-tables-done -->\n</body>", 1)
 
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(html)
+        with open(path, "w", encoding="utf-8") as f:
+            f.write(html)
 
-    updated += 1
-    print(f"  ✓ {name}")
+        updated += 1
+        print(f"  ✓ {name}")
 
-print(f"\nUpdated {updated} / {len(CHAR_INFO)} sheets")
+    print(f"\nUpdated {updated} / {len(CHAR_INFO)} sheets")
+
+
+if __name__ == "__main__":
+    main()

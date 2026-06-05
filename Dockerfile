@@ -3,6 +3,7 @@ FROM nginx:alpine
 # Static site baked into the image (immutable; rebuild to update content).
 COPY . /usr/share/nginx/html/
 
-# /data is provided by a named docker volume (see docker-compose.yml) and is
-# reserved for future mutable state (e.g. player character renames) that must
-# persist across rebuilds and is intentionally NOT part of the repo/image.
+# Proxy /api/ and the realtime WebSocket to the dnd-api sidecar; everything else
+# is served as static files. Persistent character-sheet state lives in dnd-api +
+# the dnd_data volume, never in this image.
+COPY deploy/default.conf /etc/nginx/conf.d/default.conf

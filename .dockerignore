@@ -3,6 +3,7 @@
 *.py
 *.md
 figma-fog-plugin
+api
 Dockerfile
 .dockerignore
 docker-compose.yml

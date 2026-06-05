@@ -1,0 +1,79 @@
+/* edit.css — affordances for sheet-sync.js edit mode + the floating toolbar. */
+
+#sync-toolbar {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper, #faf7f0);
+  border: 2px solid var(--border, #8b6914);
+  border-radius: 22px;
+  padding: 4px 8px 4px 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+.sync-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #c0392b; /* disconnected */
+  flex: 0 0 auto;
+}
+.sync-dot.on {
+  background: #2ecc71; /* live */
+}
+.sync-pencil {
+  font-family: inherit;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  border: 1px solid var(--faint, #b8a878);
+  background: var(--input-bg, #fff8e8);
+  color: var(--accent, #2c4a7c);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+.sync-pencil:hover {
+  background: #fff;
+}
+.sync-pencil.active {
+  background: var(--accent, #2c4a7c);
+  color: #fff;
+  border-color: var(--accent, #2c4a7c);
+}
+
+/* ── Edit-mode affordances ── */
+body.edit-mode [data-editable] {
+  outline: 1px dashed var(--accent, #2c4a7c);
+  outline-offset: 1px;
+  cursor: text;
+  min-width: 8px;
+  min-height: 1em;
+}
+body.edit-mode [data-editable]:hover,
+body.edit-mode [data-editable]:focus {
+  background: rgba(255, 235, 150, 0.5);
+  outline-style: solid;
+}
+body.edit-mode input:not([readonly]),
+body.edit-mode textarea:not([readonly]) {
+  box-shadow: 0 0 0 1px var(--accent, #2c4a7c) inset;
+}
+body.edit-mode .portrait {
+  cursor: pointer;
+  outline: 2px dashed var(--accent, #2c4a7c);
+  outline-offset: 2px;
+}
+
+@media print {
+  #sync-toolbar {
+    display: none !important;
+  }
+  body.edit-mode [data-editable] {
+    outline: none;
+  }
+}

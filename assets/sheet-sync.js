@@ -33,8 +33,12 @@
   function isFormField(el) {
     return el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA");
   }
+  function isSlotTrack(el) {
+    return el && el.classList && el.classList.contains("slot-track");
+  }
   function getValue(el) {
     if (el.tagName === "IMG") return el.getAttribute("src");
+    if (isSlotTrack(el)) return el._used || [];
     return isFormField(el) ? el.value : el.textContent;
   }
   // Programmatic sets here never fire 'input'/'change', so remote applies don't echo.
@@ -43,8 +47,67 @@
       if (v) el.src = v;
       return;
     }
+    if (isSlotTrack(el)) {
+      renderSlots(el, v);
+      return;
+    }
     if (isFormField(el)) el.value = v == null ? "" : v;
     else el.textContent = v == null ? "" : v;
+  }
+
+  // ── Spell-slot pip readout (data-field="spell_slots_used") ──
+  // Maxima are static (data-max="3,2,2,1"); `used` arrives live over the same WS
+  // channel as every other field. remaining = max − used, recomputed client-side.
+  function _ints(v) {
+    if (Array.isArray(v)) return v.map(function (x) { return parseInt(x, 10) || 0; });
+    if (typeof v === "string" && v) {
+      try {
+        var j = JSON.parse(v);
+        if (Array.isArray(j)) return j.map(function (x) { return parseInt(x, 10) || 0; });
+      } catch (e) {}
+      return v.split(/[,/]/).map(function (x) { return parseInt(x, 10) || 0; });
+    }
+    return [];
+  }
+  function renderSlots(el, used) {
+    var max = _ints(el.getAttribute("data-max"));
+    var u = _ints(used);
+    // Clamp + remember the authoritative used vector for click math.
+    el._used = max.map(function (m, i) { return Math.max(0, Math.min(u[i] || 0, m)); });
+    var rows = el.querySelector(".slot-rows") || el;
+    var html = "";
+    for (var i = 0; i < max.length; i++) {
+      var m = max[i] || 0;
+      if (m <= 0) continue;
+      var remain = m - el._used[i];
+      var pips = "";
+      for (var k = 0; k < m; k++) {
+        var on = k < remain;
+        pips +=
+          '<span class="pip' + (on ? " on" : "") + '" data-lvl="' + i + '">' +
+          (on ? "●" : "○") + "</span>";
+      }
+      html +=
+        '<div class="slot-row"><span class="slot-lvl">L' + (i + 1) + "</span>" +
+        '<span class="pips">' + pips + "</span>" +
+        '<span class="slot-num">' + remain + "/" + m + "</span></div>";
+    }
+    rows.innerHTML = html;
+  }
+  function wireSlotTrack(el) {
+    renderSlots(el, null); // initial all-available, until the snapshot lands
+    el.addEventListener("click", function (e) {
+      var pip = e.target && e.target.closest && e.target.closest(".pip");
+      if (!pip || !el.contains(pip)) return;
+      var lvl = parseInt(pip.getAttribute("data-lvl"), 10);
+      var max = _ints(el.getAttribute("data-max"));
+      var used = (el._used || []).slice();
+      // Click an available pip to spend a slot; a spent pip to restore one.
+      var delta = pip.classList.contains("on") ? 1 : -1;
+      used[lvl] = Math.max(0, Math.min((used[lvl] || 0) + delta, max[lvl] || 0));
+      renderSlots(el, used); // optimistic local render
+      send("spell_slots_used", el._used); // persist + broadcast (clamped vector)
+    });
   }
 
   // ── Vanity URL (mirror of the backend slugify) ──
@@ -182,6 +245,7 @@
   Object.keys(fields).forEach(function (f) {
     var el = fields[f];
     if (el.tagName === "IMG") return; // portrait uses upload, below
+    if (isSlotTrack(el)) return; // pip readout has its own click wiring (below)
     if (el.hasAttribute("data-editable") && !isFormField(el)) el.contentEditable = "true";
     el.addEventListener("input", function () {
       onEdit(el);
@@ -249,6 +313,7 @@
   // ── Boot ──
   buildStatus();
   wirePortrait();
+  document.querySelectorAll(".slot-track").forEach(wireSlotTrack);
   // Learn all character ids (vanity-slug collision guard), then settle the URL.
   fetch("/api/characters")
     .then(function (r) {

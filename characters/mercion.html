@@ -164,6 +164,15 @@
   .spell-table th, .spell-table td { padding: 3px 6px; border: 1px solid var(--faint); }
   .spell-table th { background: var(--accent); color: white; text-align: left; }
   .spell-lvl { font-weight: bold; white-space: nowrap; }
+  .slot-track { margin-top: 8px; }
+  .slot-track-h { font-size: 10px; text-transform: uppercase; color: #888; display: block; margin-bottom: 3px; }
+  .slot-rows { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .slot-row { display: flex; align-items: center; gap: 5px; font-size: 11px; }
+  .slot-lvl { color: #888; min-width: 18px; }
+  .slot-track .pips { letter-spacing: 2px; }
+  .slot-track .pip { cursor: pointer; color: #ccc; user-select: none; }
+  .slot-track .pip.on { color: var(--accent); }
+  .slot-num { color: #888; font-variant-numeric: tabular-nums; }
   .memo-grid { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 6px; }
   .memo-slot { border: 1px solid var(--faint); border-radius: 4px; padding: 5px 8px; background: var(--input-bg); }
   .memo-lvl { font-size: 10px; text-transform: uppercase; color: #888; display: block; margin-bottom: 3px; }
@@ -464,6 +473,7 @@
 </div>
 <h4>Daily Memorized Spells</h4>
       <div class="memo-grid"><div class="memo-slot"><span class="memo-lvl">Lvl 1</span><input type="text" class="memo-input" data-field="memo_1" placeholder="spell…"><input type="text" class="memo-input" data-field="memo_2" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 2</span><input type="text" class="memo-input" data-field="memo_3" placeholder="spell…"><input type="text" class="memo-input" data-field="memo_4" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 3</span><input type="text" class="memo-input" data-field="memo_5" placeholder="spell…"><input type="text" class="memo-input" data-field="memo_6" placeholder="spell…"></div><div class="memo-slot"><span class="memo-lvl">Lvl 4</span><input type="text" class="memo-input" data-field="memo_7" placeholder="spell…"></div></div>
+      <div class="slot-track" data-field="spell_slots_used" data-max="2,2,2,1" title="Daily spell slots remaining — click a pip to spend or restore one"><span class="slot-track-h">Slots left</span><div class="slot-rows"><div class="slot-row"><span class="slot-lvl">L1</span><span class="pips"><span class="pip on" data-lvl="0" data-k="0">●</span><span class="pip on" data-lvl="0" data-k="1">●</span></span><span class="slot-num">2/2</span></div><div class="slot-row"><span class="slot-lvl">L2</span><span class="pips"><span class="pip on" data-lvl="1" data-k="0">●</span><span class="pip on" data-lvl="1" data-k="1">●</span></span><span class="slot-num">2/2</span></div><div class="slot-row"><span class="slot-lvl">L3</span><span class="pips"><span class="pip on" data-lvl="2" data-k="0">●</span><span class="pip on" data-lvl="2" data-k="1">●</span></span><span class="slot-num">2/2</span></div><div class="slot-row"><span class="slot-lvl">L4</span><span class="pips"><span class="pip on" data-lvl="3" data-k="0">●</span></span><span class="slot-num">1/1</span></div></div></div>
     </section>
 
 

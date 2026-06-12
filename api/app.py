@@ -277,16 +277,37 @@ async def get_character_full(name: str):
     for n in range(1, inv_rows + 1):
         item = ov.get(f"inv_item_{n}")
         if item:
+            charges = _as_int(ov.get(f"inv_charges_{n}"), None)
             inventory.append({
                 "slot": n,
                 "item": item,
                 "qty": _as_int(ov.get(f"inv_qty_{n}"), 1),
                 "notes": ov.get(f"inv_notes_{n}", ""),
+                # Charges on a wand/rod/staff (None when the item isn't charged).
+                "charges": charges,
             })
 
     memo_slots = _as_int(base.get("memo_slots"), 0)
     memorized = {n: ov[f"memo_{n}"] for n in range(1, memo_slots + 1)
                  if f"memo_{n}" in ov}
+
+    # Daily spell-slot usage. `spell_slots` (from the manifest) is the per-level
+    # max/day; `spell_slots_used` is a same-length override list of how many have
+    # been expended today. Default to all-zero and clamp to the slot maxima so a
+    # stale override can't exceed the budget. `spell_slots_remaining` is derived
+    # for convenience (UI + the bot both consume it).
+    spell_slots = base.get("spell_slots")
+    spell_slots_used = None
+    spell_slots_remaining = None
+    if isinstance(spell_slots, list) and spell_slots:
+        raw = ov.get("spell_slots_used")
+        used = raw if isinstance(raw, list) else []
+        spell_slots_used = [
+            max(0, min(_as_int(used[i], 0) or 0, int(mx)))
+            if i < len(used) else 0
+            for i, mx in enumerate(spell_slots)
+        ]
+        spell_slots_remaining = [int(mx) - u for mx, u in zip(spell_slots, spell_slots_used)]
 
     def pick(field, default=None):
         v = ov.get(field)
@@ -316,6 +337,8 @@ async def get_character_full(name: str):
         "special": base.get("special", []),
         "spells": base.get("spells", {}),
         "spell_slots": base.get("spell_slots"),
+        "spell_slots_used": spell_slots_used,
+        "spell_slots_remaining": spell_slots_remaining,
         "thief_skills": base.get("thief_skills"),
         "backstab": base.get("backstab"),
         "sweep": base.get("sweep", 0),

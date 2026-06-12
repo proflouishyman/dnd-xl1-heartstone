@@ -180,6 +180,7 @@
   .inv-num { text-align: center; width: 28px; color: #aaa; font-size: 11px; }
   .inv-item  { width: 100%; font-size: 12px; border: none; background: var(--input-bg); padding: 3px; }
   .inv-qty   { width: 50px; text-align: center; font-size: 12px; border: none; background: var(--input-bg); padding: 3px; }
+  .inv-charges { width: 60px; text-align: center; font-size: 12px; border: none; background: var(--input-bg); padding: 3px; }
   .inv-notes { width: 100%; font-size: 11px; border: none; background: var(--input-bg); padding: 3px; color: #555; }
   input[type="text"], input[type="number"] { font-family: inherit; }
 
@@ -548,108 +549,129 @@
         <th style="width:28px;">#</th>
         <th>Item</th>
         <th style="width:60px;">Qty</th>
-        <th style="width:240px;">Notes</th>
+        <th style="width:70px;">Charges</th>
+        <th style="width:200px;">Notes</th>
       </tr>
     </thead>
     <tbody><tr>
           <td class="inv-num">1</td>
           <td><input type="text" class="inv-item" data-field="inv_item_1" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_1" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_1" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_1" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">2</td>
           <td><input type="text" class="inv-item" data-field="inv_item_2" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_2" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_2" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_2" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">3</td>
           <td><input type="text" class="inv-item" data-field="inv_item_3" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_3" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_3" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_3" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">4</td>
           <td><input type="text" class="inv-item" data-field="inv_item_4" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_4" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_4" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_4" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">5</td>
           <td><input type="text" class="inv-item" data-field="inv_item_5" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_5" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_5" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_5" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">6</td>
           <td><input type="text" class="inv-item" data-field="inv_item_6" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_6" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_6" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_6" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">7</td>
           <td><input type="text" class="inv-item" data-field="inv_item_7" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_7" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_7" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_7" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">8</td>
           <td><input type="text" class="inv-item" data-field="inv_item_8" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_8" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_8" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_8" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">9</td>
           <td><input type="text" class="inv-item" data-field="inv_item_9" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_9" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_9" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_9" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">10</td>
           <td><input type="text" class="inv-item" data-field="inv_item_10" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_10" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_10" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_10" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">11</td>
           <td><input type="text" class="inv-item" data-field="inv_item_11" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_11" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_11" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_11" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">12</td>
           <td><input type="text" class="inv-item" data-field="inv_item_12" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_12" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_12" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_12" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">13</td>
           <td><input type="text" class="inv-item" data-field="inv_item_13" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_13" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_13" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_13" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">14</td>
           <td><input type="text" class="inv-item" data-field="inv_item_14" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_14" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_14" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_14" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">15</td>
           <td><input type="text" class="inv-item" data-field="inv_item_15" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_15" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_15" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_15" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">16</td>
           <td><input type="text" class="inv-item" data-field="inv_item_16" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_16" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_16" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_16" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">17</td>
           <td><input type="text" class="inv-item" data-field="inv_item_17" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_17" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_17" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_17" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">18</td>
           <td><input type="text" class="inv-item" data-field="inv_item_18" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_18" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_18" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_18" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">19</td>
           <td><input type="text" class="inv-item" data-field="inv_item_19" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_19" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_19" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_19" placeholder="notes…"></td>
         </tr><tr>
           <td class="inv-num">20</td>
           <td><input type="text" class="inv-item" data-field="inv_item_20" placeholder="item name…"></td>
           <td><input type="number" class="inv-qty" data-field="inv_qty_20" placeholder="1" min="0"></td>
+          <td><input type="number" class="inv-charges" data-field="inv_charges_20" placeholder="—" min="0"></td>
           <td><input type="text" class="inv-notes" data-field="inv_notes_20" placeholder="notes…"></td>
         </tr></tbody>
   </table>

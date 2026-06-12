@@ -309,6 +309,46 @@ async def get_character_full(name: str):
         ]
         spell_slots_remaining = [int(mx) - u for mx, u in zip(spell_slots, spell_slots_used)]
 
+    # ── "Acquired" override sections (inject_acquired.py rows) ───────────────
+    # Learned/added spells: surfaced as a `learned` list AND merged into the spellbook
+    # (`spells`) under their level so the bot's _spell_level/casting just works. A row
+    # with no level is listed but not merged (uncastable until the level is set).
+    spells = {k: list(v) for k, v in (base.get("spells") or {}).items()}
+    learned = []
+    for n in range(1, _as_int(base.get("learn_rows"), 0) + 1):
+        nm = ov.get(f"learn_spell_{n}")
+        if not nm:
+            continue
+        lvl = _as_int(ov.get(f"learn_lvl_{n}"))
+        learned.append({"slot": n, "name": nm, "level": lvl})
+        if lvl:
+            row = spells.setdefault(str(lvl), [])
+            if nm not in row:
+                row.append(nm)
+
+    # Per-character magic items (name + description + optional charges).
+    magic_items = []
+    for n in range(1, _as_int(base.get("magic_rows"), 0) + 1):
+        nm = ov.get(f"magic_item_{n}")
+        if nm:
+            magic_items.append({
+                "slot": n, "name": nm,
+                "desc": ov.get(f"magic_item_desc_{n}", ""),
+                "charges": _as_int(ov.get(f"magic_item_charges_{n}")),
+            })
+
+    # Acquired weapons/armor appended onto the baked lists (never overwrite the base).
+    weapons = list(base.get("weapons", []))
+    for n in range(1, _as_int(base.get("weapon_rows"), 0) + 1):
+        wn = ov.get(f"weapon_{n}")
+        if wn:
+            weapons.append(wn)
+    armor = base.get("armor", "")
+    extra_armor = [ov[f"armor_{n}"] for n in range(1, _as_int(base.get("armor_rows"), 0) + 1)
+                   if ov.get(f"armor_{n}")]
+    if extra_armor:
+        armor = "; ".join(([armor] if armor else []) + extra_armor)
+
     def pick(field, default=None):
         v = ov.get(field)
         return v if v not in (None, "") else base.get(field, default)
@@ -328,14 +368,20 @@ async def get_character_full(name: str):
         "hp_current": _as_int(ov.get("hp_current"), hp_max),
         "mv": _as_int(ov.get("mv"), _as_int(base.get("mv"))),
         "attacks": _as_int(ov.get("attacks"), _as_int(base.get("attacks"))),
+        # XP: override if set, else the BECMI level floor from the manifest — so a
+        # clanker award accumulates from the real value instead of starting at 0.
+        "xp": _as_int(ov.get("xp"), _as_int(base.get("xp"), 0)),
+        "xp_next": _as_int(base.get("xp_next")),
         "thac0": base.get("thac0"),
         "saves": base.get("saves", {}),
         "to_hit": base.get("to_hit", {}),
         "save_note": base.get("save_note", ""),
-        "weapons": base.get("weapons", []),
-        "armor": base.get("armor", ""),
+        "weapons": weapons,
+        "armor": armor,
         "special": base.get("special", []),
-        "spells": base.get("spells", {}),
+        "spells": spells,
+        "learned": learned,
+        "magic_items": magic_items,
         "spell_slots": base.get("spell_slots"),
         "spell_slots_used": spell_slots_used,
         "spell_slots_remaining": spell_slots_remaining,
@@ -347,6 +393,11 @@ async def get_character_full(name: str):
         "memorized": memorized,
         "inv_rows": inv_rows,
         "memo_slots": memo_slots,
+        # "acquired" section sizes so the bot can find an empty row to write into
+        "learn_rows": _as_int(base.get("learn_rows"), 0),
+        "magic_rows": _as_int(base.get("magic_rows"), 0),
+        "weapon_rows": _as_int(base.get("weapon_rows"), 0),
+        "armor_rows": _as_int(base.get("armor_rows"), 0),
         "player": ov.get("player", ""),
         "overrides": ov,
     }

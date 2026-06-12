@@ -11,6 +11,8 @@
     "class": "fighter",
     "level": 8,
     "sweep": 8,
+    "xp": 120000,
+    "xp_next": 240000,
     "stats": {
       "STR": 13,
       "DEX": 12,
@@ -50,7 +52,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "elkhorn": {
     "id": "elkhorn",
@@ -64,6 +70,8 @@
     "class": "dwarf",
     "level": 6,
     "sweep": 6,
+    "xp": 35000,
+    "xp_next": 70000,
     "stats": {
       "STR": 9,
       "DEX": 13,
@@ -106,7 +114,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "mercion": {
     "id": "mercion",
@@ -120,6 +132,8 @@
     "class": "cleric",
     "level": 7,
     "sweep": 0,
+    "xp": 50000,
+    "xp_next": 100000,
     "stats": {
       "STR": 10,
       "DEX": 9,
@@ -185,7 +199,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 7
+    "memo_slots": 7,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "ringlerun": {
     "id": "ringlerun",
@@ -199,6 +217,8 @@
     "class": "mage",
     "level": 10,
     "sweep": 0,
+    "xp": 450000,
+    "xp_next": null,
     "stats": {
       "STR": 9,
       "DEX": 10,
@@ -267,7 +287,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 8
+    "memo_slots": 8,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "peralay": {
     "id": "peralay",
@@ -281,6 +305,8 @@
     "class": "elf",
     "level": 10,
     "sweep": 10,
+    "xp": 900000,
+    "xp_next": null,
     "stats": {
       "STR": 14,
       "DEX": 14,
@@ -360,7 +386,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 14
+    "memo_slots": 14,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "figgen": {
     "id": "figgen",
@@ -374,6 +404,8 @@
     "class": "halfling",
     "level": 5,
     "sweep": 5,
+    "xp": 16000,
+    "xp_next": 32000,
     "stats": {
       "STR": 13,
       "DEX": 13,
@@ -417,7 +449,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "molliver": {
     "id": "molliver",
@@ -431,6 +467,8 @@
     "class": "thief",
     "level": 8,
     "sweep": 0,
+    "xp": 80000,
+    "xp_next": 160000,
     "stats": {
       "STR": 9,
       "DEX": 16,
@@ -503,7 +541,11 @@
     ],
     "backstab": "×3",
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "hawkler": {
     "id": "hawkler",
@@ -517,6 +559,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 13,
       "DEX": 16,
@@ -558,7 +602,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "deeth": {
     "id": "deeth",
@@ -572,6 +620,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 12,
       "DEX": 13,
@@ -613,7 +663,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "bowmarc": {
     "id": "bowmarc",
@@ -627,6 +681,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 11,
       "DEX": 12,
@@ -668,7 +724,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "valkeer": {
     "id": "valkeer",
@@ -682,6 +742,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 16,
       "DEX": 16,
@@ -722,7 +784,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "grimsword": {
     "id": "grimsword",
@@ -736,6 +802,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 15,
       "DEX": 13,
@@ -775,7 +843,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "zargash": {
     "id": "zargash",
@@ -789,6 +861,8 @@
     "class": "cleric",
     "level": 7,
     "sweep": 0,
+    "xp": 50000,
+    "xp_next": 100000,
     "stats": {
       "STR": 8,
       "DEX": 10,
@@ -856,7 +930,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 7
+    "memo_slots": 7,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "kelek": {
     "id": "kelek",
@@ -870,6 +948,8 @@
     "class": "mage",
     "level": 7,
     "sweep": 0,
+    "xp": 75000,
+    "xp_next": 150000,
     "stats": {
       "STR": 15,
       "DEX": 10,
@@ -939,7 +1019,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 8
+    "memo_slots": 8,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "warduke": {
     "id": "warduke",
@@ -953,6 +1037,8 @@
     "class": "fighter",
     "level": 9,
     "sweep": 9,
+    "xp": 240000,
+    "xp_next": 360000,
     "stats": {
       "STR": 16,
       "DEX": 11,
@@ -995,7 +1081,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "skylla": {
     "id": "skylla",
@@ -1009,6 +1099,8 @@
     "class": "mage",
     "level": 6,
     "sweep": 0,
+    "xp": 40000,
+    "xp_next": 75000,
     "stats": {
       "STR": 9,
       "DEX": 11,
@@ -1070,7 +1162,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 6
+    "memo_slots": 6,
+    "learn_rows": 6,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "zorgar": {
     "id": "zorgar",
@@ -1084,6 +1180,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 18,
       "DEX": 13,
@@ -1123,7 +1221,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "drex": {
     "id": "drex",
@@ -1137,6 +1239,8 @@
     "class": "fighter",
     "level": 6,
     "sweep": 6,
+    "xp": 32000,
+    "xp_next": 64000,
     "stats": {
       "STR": 15,
       "DEX": 14,
@@ -1176,7 +1280,11 @@
     "thief_skills": null,
     "backstab": null,
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   },
   "zarak": {
     "id": "zarak",
@@ -1190,6 +1298,8 @@
     "class": "thief",
     "level": 5,
     "sweep": 0,
+    "xp": 9600,
+    "xp_next": 20000,
     "stats": {
       "STR": 13,
       "DEX": 12,
@@ -1261,6 +1371,10 @@
     ],
     "backstab": "×3",
     "inv_rows": 20,
-    "memo_slots": 0
+    "memo_slots": 0,
+    "learn_rows": 0,
+    "magic_rows": 8,
+    "weapon_rows": 4,
+    "armor_rows": 3
   }
 }

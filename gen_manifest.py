@@ -20,8 +20,10 @@ import json
 import os
 
 from generate_sheets import CHARACTERS
+from inject_acquired import ARMOR_ROWS, LEARN_ROWS, MAGIC_ROWS, WEAPON_ROWS
 from inject_combat_tables import COMBAT_TABLES
 from inject_class_tables import CHAR_INFO, SPELL_SLOTS, THIEF_SKILLS
+from set_xp import char_xp
 
 OUT = os.path.join("api", "manifest.json")
 
@@ -36,6 +38,7 @@ def main():
         info = CHAR_INFO.get(slug, {})
         thief = THIEF_SKILLS.get(slug, {})
         slots = SPELL_SLOTS.get(slug, {}).get("slots")
+        xp_floor, xp_next = char_xp(slug)       # BECMI level floor + next-level threshold
         manifest[slug] = {
             "id": slug,
             "name": c["name"].title(),          # display name; slug/id stays name.lower()
@@ -49,6 +52,10 @@ def main():
             "class": info.get("cls"),
             "level": info.get("level"),
             "sweep": info.get("sweep", 0),
+            # XP: the level's floor (so clanker awards accumulate from the real value,
+            # not 0) + the next-level threshold (for the web progress bar)
+            "xp": xp_floor,
+            "xp_next": xp_next,
             # base ability scores + combat values
             "stats": c.get("stats", {}),
             "ac": c.get("ac"),
@@ -72,6 +79,12 @@ def main():
             # sheet structure constants the bot needs to address fields
             "inv_rows": INV_ROWS,
             "memo_slots": sum(slots) if slots else 0,
+            # additive "acquired" override rows (inject_acquired.py): learned spells
+            # (casters only), magic items, and extra weapons/armor
+            "learn_rows": LEARN_ROWS if slots else 0,
+            "magic_rows": MAGIC_ROWS,
+            "weapon_rows": WEAPON_ROWS,
+            "armor_rows": ARMOR_ROWS,
         }
     with open(OUT, "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=2)

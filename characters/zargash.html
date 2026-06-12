@@ -81,6 +81,10 @@
     padding: 2px; background: #fff;
   }
   .hp-max { font-size: 13px; color: #555; }
+  .xp-bar { position: relative; width: 130px; height: 9px; margin: 3px 0 0 auto; background: rgba(0,0,0,.12); border-radius: 5px; overflow: hidden; }
+  .xp-bar .xp-fill { position: absolute; inset: 0 auto 0 0; width: 0; background: var(--accent, #4a8a5a); transition: width .3s ease; }
+  .xp-bar.maxed .xp-fill { width: 100%; }
+  .xp-bar-label { font-size: 9px; color: #888; text-align: right; margin-top: 1px; font-variant-numeric: tabular-nums; }
   .xp-block { margin-left: auto; text-align: right; }
   .xp-input {
     width: 90px; text-align: center; font-size: 13px;
@@ -135,6 +139,15 @@
   .ability-mod { font-size: 11px; color: #555; }
 
   /* ── Combat stats ── */
+  .conditions-section { margin: 0 0 12px; }
+  .conditions-track { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+  .conditions-h { font-size: 10px; text-transform: uppercase; color: #888; margin-right: 4px; }
+  .cond-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cond-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; padding: 2px 8px; border-radius: 10px; background: rgba(180,60,60,.16); color: var(--accent, #c44); white-space: nowrap; }
+  .cond-chip .cond-turns { color: #888; font-variant-numeric: tabular-nums; }
+  .cond-chip .cond-x { cursor: pointer; color: #888; font-weight: bold; user-select: none; }
+  .cond-chip .cond-x:hover { color: var(--accent, #c44); }
+  .cond-add { font-size: 11px; border: 1px dashed #ccc; border-radius: 10px; padding: 2px 8px; width: 96px; background: transparent; color: inherit; }
   .combat-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -356,7 +369,9 @@
       <span class="hp-max">/ 38 max</span>
       <div class="xp-block">
         <div style="font-size:10px; color:#888; text-transform:uppercase; margin-bottom:2px;">Experience</div>
-        <input type="number" class="xp-input" data-field="xp" placeholder="0 XP" value="50,000">
+        <input type="number" class="xp-input" data-field="xp" placeholder="0 XP" value="50000">
+        <div class="xp-bar" data-floor="50000" data-next="100000"><div class="xp-fill"></div></div>
+        <div class="xp-bar-label"></div>
       </div>
     </div>
   </div>
@@ -409,6 +424,14 @@
     <h4 style='margin-top:8px;'>Special Abilities</h4><ul class='equip-list'><li>Snake staff: acts as quarterstaff +1; once per day can be thrown to become a real snake (HD 3, AC 6, damage 1d4 + poison) for 1 turn</li></ul>
   </section>
 </div>
+
+<section class="conditions-section">
+  <div class="conditions-track" data-field="conditions" title="Active status effects — click ✕ to clear one, or type to add">
+    <span class="conditions-h">Conditions</span>
+    <div class="cond-chips"></div>
+    <input class="cond-add" type="text" placeholder="+ condition" aria-label="add condition">
+  </div>
+</section>
 
 <!-- ── SPELLS (if caster) ── -->
 
@@ -533,6 +556,21 @@
   <h3>Magic Items</h3>
 <div class="magic-item"><div class="magic-item-name">✦ Ring of Gaseous Form (1×/day)</div><div class="magic-item-desc">Once per day, the wearer can transform into a cloud of harmless gas at will, remaining in that state until they choose to return to normal. In gaseous form: cannot attack, cast spells, or carry objects, but can fly at 10'/round and pass through any gap a gas could — keyholes, under doors, through cracks in stone. Immune to all non-magical weapon damage while gaseous; vulnerable to wind-based attacks and area spells. AC becomes 11 (effectively unarmored and insubstantial). For Zargash, this is primarily an escape mechanism — a cleric with Cause Serious Wounds and a snake staff is dangerous, but fragile if cornered.</div></div>
 </div>
+<section class="acquired-section">
+  <h3>Learned / Added Spells</h3>
+  <table class="acquired-table"><thead><tr><th>Spell</th><th style="width:54px;">Level</th></tr></thead>
+  <tbody><tr><td><input type="text" data-field="learn_spell_1" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_1" min="1" max="9" placeholder="lvl"></td></tr><tr><td><input type="text" data-field="learn_spell_2" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_2" min="1" max="9" placeholder="lvl"></td></tr><tr><td><input type="text" data-field="learn_spell_3" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_3" min="1" max="9" placeholder="lvl"></td></tr><tr><td><input type="text" data-field="learn_spell_4" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_4" min="1" max="9" placeholder="lvl"></td></tr><tr><td><input type="text" data-field="learn_spell_5" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_5" min="1" max="9" placeholder="lvl"></td></tr><tr><td><input type="text" data-field="learn_spell_6" placeholder="spell…"></td><td><input type="number" data-field="learn_lvl_6" min="1" max="9" placeholder="lvl"></td></tr></tbody></table>
+</section>
+<section class="acquired-section">
+  <h3>Magic Items</h3>
+  <table class="acquired-table"><thead><tr><th style="width:30%;">Item</th><th>Description</th><th style="width:46px;">Chg</th></tr></thead>
+  <tbody><tr><td><input type="text" data-field="magic_item_1" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_1" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_1" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_2" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_2" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_2" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_3" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_3" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_3" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_4" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_4" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_4" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_5" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_5" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_5" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_6" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_6" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_6" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_7" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_7" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_7" min="0" placeholder="—"></td></tr><tr><td><input type="text" data-field="magic_item_8" placeholder="item…"></td><td><input type="text" data-field="magic_item_desc_8" placeholder="effect / description…"></td><td><input type="number" data-field="magic_item_charges_8" min="0" placeholder="—"></td></tr></tbody></table>
+</section>
+<section class="acquired-section">
+  <h3>Acquired Weapons &amp; Armor</h3>
+  <table class="acquired-table"><tbody><tr><td class="acq-kind">Weapon</td><td><input type="text" data-field="weapon_1" placeholder="weapon…"></td></tr><tr><td class="acq-kind">Weapon</td><td><input type="text" data-field="weapon_2" placeholder="weapon…"></td></tr><tr><td class="acq-kind">Weapon</td><td><input type="text" data-field="weapon_3" placeholder="weapon…"></td></tr><tr><td class="acq-kind">Weapon</td><td><input type="text" data-field="weapon_4" placeholder="weapon…"></td></tr><tr><td class="acq-kind">Armor</td><td><input type="text" data-field="armor_1" placeholder="armor…"></td></tr><tr><td class="acq-kind">Armor</td><td><input type="text" data-field="armor_2" placeholder="armor…"></td></tr><tr><td class="acq-kind">Armor</td><td><input type="text" data-field="armor_3" placeholder="armor…"></td></tr></tbody></table>
+</section>
+
 <!-- ── INVENTORY ── -->
 <section style="margin-bottom:12px;">
   <h3>Inventory</h3>

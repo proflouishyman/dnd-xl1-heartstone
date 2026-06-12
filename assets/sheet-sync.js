@@ -36,9 +36,18 @@
   function isSlotTrack(el) {
     return el && el.classList && el.classList.contains("slot-track");
   }
+  function isCondTrack(el) {
+    return el && el.classList && el.classList.contains("conditions-track");
+  }
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"]/g, function (ch) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch];
+    });
+  }
   function getValue(el) {
     if (el.tagName === "IMG") return el.getAttribute("src");
     if (isSlotTrack(el)) return el._used || [];
+    if (isCondTrack(el)) return el._conds || [];
     return isFormField(el) ? el.value : el.textContent;
   }
   // Programmatic sets here never fire 'input'/'change', so remote applies don't echo.
@@ -49,6 +58,10 @@
     }
     if (isSlotTrack(el)) {
       renderSlots(el, v);
+      return;
+    }
+    if (isCondTrack(el)) {
+      renderConditions(el, v);
       return;
     }
     if (isFormField(el)) el.value = v == null ? "" : v;
@@ -110,6 +123,100 @@
     });
   }
 
+  // ── Conditions chip readout (data-field="conditions") ──
+  // The bot writes a JSON list [{name, turns?, source?}] and counts timed ones down on
+  // /turn; render chips live and let a table-side ✕ (clear) or the add-input (add) edit
+  // the same persisted field. Sending null on the last clear deletes the override.
+  function _condList(v) {
+    if (Array.isArray(v)) return v;
+    if (typeof v === "string" && v) {
+      try {
+        var j = JSON.parse(v);
+        if (Array.isArray(j)) return j;
+      } catch (e) {}
+    }
+    return [];
+  }
+  function renderConditions(el, list) {
+    el._conds = _condList(list).filter(function (c) {
+      return c && c.name;
+    });
+    var box = el.querySelector(".cond-chips") || el;
+    var html = "";
+    for (var i = 0; i < el._conds.length; i++) {
+      var c = el._conds[i];
+      var t =
+        c.turns != null && c.turns !== ""
+          ? '<span class="cond-turns">' + escapeHtml(c.turns) + "t</span>"
+          : "";
+      html +=
+        '<span class="cond-chip">' +
+        escapeHtml(c.name) +
+        " " +
+        t +
+        '<span class="cond-x" data-i="' + i + '" title="clear">✕</span></span>';
+    }
+    box.innerHTML = html;
+  }
+  function wireCondTrack(el) {
+    renderConditions(el, []); // empty until the snapshot lands
+    el.addEventListener("click", function (e) {
+      var x = e.target && e.target.closest && e.target.closest(".cond-x");
+      if (!x || !el.contains(x)) return;
+      var i = parseInt(x.getAttribute("data-i"), 10);
+      var list = (el._conds || []).slice();
+      if (i >= 0 && i < list.length) {
+        list.splice(i, 1);
+        renderConditions(el, list); // optimistic
+        send("conditions", list.length ? list : null); // null deletes the override
+      }
+    });
+    var input = el.querySelector(".cond-add");
+    if (input) {
+      input.addEventListener("keydown", function (e) {
+        if (e.key !== "Enter") return;
+        var name = input.value.trim();
+        if (!name) return;
+        var list = (el._conds || []).slice();
+        list.push({ name: name });
+        input.value = "";
+        renderConditions(el, list);
+        send("conditions", list);
+      });
+    }
+  }
+
+  // ── XP → next-level progress bar (read-only; reads the synced `xp` scalar) ──
+  // Floor/next are baked per character (data-floor/data-next from the BECMI table);
+  // the live xp value comes from the `xp` field. remaining recomputes client-side.
+  function _xpNum(s) {
+    var n = parseInt(String(s == null ? "" : s).replace(/[^\d-]/g, ""), 10);
+    return isNaN(n) ? 0 : n;
+  }
+  function renderXpBar(bar) {
+    var floor = _xpNum(bar.getAttribute("data-floor"));
+    var nextAttr = bar.getAttribute("data-next");
+    var xpEl = fields["xp"];
+    var xp = xpEl ? _xpNum(getValue(xpEl)) : floor;
+    var fill = bar.querySelector(".xp-fill");
+    var label = bar.parentNode && bar.parentNode.querySelector(".xp-bar-label");
+    if (nextAttr == null || nextAttr === "") {
+      bar.classList.add("maxed");
+      if (fill) fill.style.width = "100%";
+      if (label) label.textContent = xp.toLocaleString() + " XP · max level";
+      return;
+    }
+    var next = _xpNum(nextAttr);
+    var span = next - floor;
+    var pct = span > 0 ? Math.max(0, Math.min(1, (xp - floor) / span)) : 0;
+    if (fill) fill.style.width = (pct * 100).toFixed(1) + "%";
+    if (label)
+      label.textContent = xp.toLocaleString() + " / " + next.toLocaleString();
+  }
+  function renderXpBars() {
+    document.querySelectorAll(".xp-bar").forEach(renderXpBar);
+  }
+
   // ── Vanity URL (mirror of the backend slugify) ──
   function slugify(s) {
     return String(s == null ? "" : s)
@@ -148,6 +255,7 @@
     }
     setValue(el, value);
     if (field === "name") reconcileURL();
+    if (field === "xp") renderXpBars();
   }
   function applySnapshot(data) {
     if (data)
@@ -246,6 +354,7 @@
     var el = fields[f];
     if (el.tagName === "IMG") return; // portrait uses upload, below
     if (isSlotTrack(el)) return; // pip readout has its own click wiring (below)
+    if (isCondTrack(el)) return; // conditions chips have their own wiring (below)
     if (el.hasAttribute("data-editable") && !isFormField(el)) el.contentEditable = "true";
     el.addEventListener("input", function () {
       onEdit(el);
@@ -314,6 +423,9 @@
   buildStatus();
   wirePortrait();
   document.querySelectorAll(".slot-track").forEach(wireSlotTrack);
+  document.querySelectorAll(".conditions-track").forEach(wireCondTrack);
+  if (fields["xp"]) fields["xp"].addEventListener("input", renderXpBars);
+  renderXpBars(); // initial paint from the baked value; snapshot refines it
   // Learn all character ids (vanity-slug collision guard), then settle the URL.
   fetch("/api/characters")
     .then(function (r) {

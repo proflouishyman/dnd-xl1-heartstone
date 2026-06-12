@@ -44,18 +44,50 @@ CHAR_INFO = {
 
 OLD = 'class="xp-input" placeholder="0 XP"'
 
-updated = 0
-for name, (cls, level) in CHAR_INFO.items():
-    xp = XP_TABLE[cls][level]
-    path = os.path.join(CHARS_DIR, f"{name}.html")
-    html = open(path, encoding="utf-8").read()
-    new = f'class="xp-input" placeholder="0 XP" value="{xp:,}"'
-    if OLD in html:
-        html = html.replace(OLD, new, 1)
-        open(path, "w", encoding="utf-8").write(html)
-        updated += 1
-        print(f"  {name:12s}  {cls:8s} L{level:2d}  →  {xp:>10,} XP")
-    else:
-        print(f"  SKIP {name} (XP already set or field not found)")
 
-print(f"\nUpdated {updated} / {len(CHAR_INFO)} sheets")
+def xp_for(cls, level):
+    """Minimum XP to be at `level` for `cls` (BECMI). Clamps to the table max; 0 if
+    the class is unknown."""
+    table = XP_TABLE.get(cls)
+    if not table:
+        return 0
+    return table[level] if level < len(table) else table[-1]
+
+
+def xp_next_for(cls, level):
+    """Minimum XP for the *next* level, or None at/above the table's max level."""
+    table = XP_TABLE.get(cls)
+    if not table or level + 1 >= len(table):
+        return None
+    return table[level + 1]
+
+
+def char_xp(slug):
+    """(xp_floor, xp_next) for a known character slug; (0, None) if unknown. Shared by
+    gen_manifest.py (base XP) and inject_xp_bar.py (the level-progress bar)."""
+    info = CHAR_INFO.get(slug)
+    if not info:
+        return 0, None
+    cls, level = info
+    return xp_for(cls, level), xp_next_for(cls, level)
+
+
+def main():
+    updated = 0
+    for name, (cls, level) in CHAR_INFO.items():
+        xp = XP_TABLE[cls][level]
+        path = os.path.join(CHARS_DIR, f"{name}.html")
+        html = open(path, encoding="utf-8").read()
+        new = f'class="xp-input" placeholder="0 XP" value="{xp:,}"'
+        if OLD in html:
+            html = html.replace(OLD, new, 1)
+            open(path, "w", encoding="utf-8").write(html)
+            updated += 1
+            print(f"  {name:12s}  {cls:8s} L{level:2d}  →  {xp:>10,} XP")
+        else:
+            print(f"  SKIP {name} (XP already set or field not found)")
+    print(f"\nUpdated {updated} / {len(CHAR_INFO)} sheets")
+
+
+if __name__ == "__main__":
+    main()

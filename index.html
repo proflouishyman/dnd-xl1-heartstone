@@ -195,6 +195,15 @@
   }
   .map-label strong { display: block; font-size: 13px; margin-bottom: 2px; }
   .map-label span { color: var(--muted); font-size: 11px; }
+  .map-card-wrap { position: relative; }
+  .dm-link {
+    position: absolute; top: 8px; right: 8px; z-index: 5;
+    padding: 3px 9px; font-size: 10px; letter-spacing: 1px; text-transform: uppercase;
+    border: 1px solid var(--gold); border-radius: 4px;
+    background: rgba(14,13,11,0.85); color: var(--gold);
+    text-decoration: none; font-family: Georgia, serif;
+  }
+  .dm-link:hover { background: var(--gold); color: var(--dark); }
 
   /* ── DM tools ── */
   .tools-grid {
@@ -325,63 +334,82 @@
   <section id="maps">
     <h2>Maps — Interactive Fog of War</h2>
     <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
-      Maps are DM-only. Open a map directly in your browser to run fog-of-war.
+      Click a map to watch the live fog-of-war — no link needed. DM: use the small
+      <strong style="color:var(--gold); font-style:normal;">DM</strong> badge on a map to host and draw the fog.
     </p>
     <div class="maps-grid">
 
-      <a class="map-card" href="maps/northern-marsh.html">
-        <div class="map-thumb" style="background: url('maps/northern-marsh.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 1 — Mists of the Northern Marsh</strong>
-          <span>Wilderness · Cave Openings 2a–2f · 18×24 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/northern-marsh.html">
+          <div class="map-thumb" style="background: url('maps/northern-marsh.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 1 — Mists of the Northern Marsh</strong>
+            <span>Wilderness · Cave Openings 2a–2f · 18×24 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/northern-marsh.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
-      <a class="map-card" href="maps/icewater-falls.html">
-        <div class="map-thumb" style="background: url('maps/icewater-falls.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 2 — Perils of the Icewater Falls</strong>
-          <span>Wilderness · Cliff Face · 16×22 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/icewater-falls.html">
+          <div class="map-thumb" style="background: url('maps/icewater-falls.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 2 — Perils of the Icewater Falls</strong>
+            <span>Wilderness · Cliff Face · 16×22 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/icewater-falls.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
-      <a class="map-card" href="maps/tunnels-of-death.html">
-        <div class="map-thumb" style="background: url('maps/tunnels-of-death.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 3 — The Tunnels of Death</strong>
-          <span>Dungeon Level I · 26×32 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/tunnels-of-death.html">
+          <div class="map-thumb" style="background: url('maps/tunnels-of-death.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 3 — The Tunnels of Death</strong>
+            <span>Dungeon Level I · 26×32 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/tunnels-of-death.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
-      <a class="map-card" href="maps/frost-giants-lair.html">
-        <div class="map-thumb" style="background: url('maps/frost-giants-lair.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 4 — Frost Giants' Lair</strong>
-          <span>Dungeon Level II · 20×26 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/frost-giants-lair.html">
+          <div class="map-thumb" style="background: url('maps/frost-giants-lair.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 4 — Frost Giants' Lair</strong>
+            <span>Dungeon Level II · 20×26 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/frost-giants-lair.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
-      <a class="map-card" href="maps/wizards-home.html">
-        <div class="map-thumb" style="background: url('maps/wizards-home.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 5 — The Wizard's Home</strong>
-          <span>Dungeon Level III · 22×30 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/wizards-home.html">
+          <div class="map-thumb" style="background: url('maps/wizards-home.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 5 — The Wizard's Home</strong>
+            <span>Dungeon Level III · 22×30 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/wizards-home.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
-      <a class="map-card" href="maps/home-of-heartstone.html">
-        <div class="map-thumb" style="background: url('maps/home-of-heartstone.jpg') center/cover no-repeat;">
-        </div>
-        <div class="map-label">
-          <strong>Map 6 — Home of the Heartstone</strong>
-          <span>Dungeon Level IV · 20×26 fog grid</span>
-        </div>
-      </a>
+      <div class="map-card-wrap">
+        <a class="map-card" href="maps/home-of-heartstone.html">
+          <div class="map-thumb" style="background: url('maps/home-of-heartstone.jpg') center/cover no-repeat;">
+          </div>
+          <div class="map-label">
+            <strong>Map 6 — Home of the Heartstone</strong>
+            <span>Dungeon Level IV · 20×26 fog grid</span>
+          </div>
+        </a>
+        <a class="dm-link" href="maps/home-of-heartstone.html?dm" title="Open as DM — draw fog">DM</a>
+      </div>
 
     </div>
   </section>
@@ -390,28 +418,28 @@
   <section id="figma">
     <h2>Live Shared Maps — Real-Time Fog</h2>
     <p style="font-size:13px; color:var(--muted); margin-bottom:20px; font-style:italic;">
-      All six maps have built-in real-time sync. Players see your reveals instantly in their browser — no Figma, no account, no install.
+      All six maps have built-in real-time sync — one always-on session per map, no link to share, no account, no install.
     </p>
     <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
 
       <div class="tool-card">
-        <h4>Step 1 — Open a map above</h4>
-        <p>Click any map in the grid above. You're in DM mode by default — fog tiles are clickable, state saves to your browser automatically.</p>
+        <h4>Players — just open a map</h4>
+        <p>Click any map in the grid above. You drop straight into the live, read-only view and see exactly what the DM reveals — nothing to find, no link to chase.</p>
       </div>
 
       <div class="tool-card">
-        <h4>Step 2 — Start a Live Session</h4>
-        <p>Click <strong>"Start Session"</strong> in the toolbar. A share link appears instantly. The link stays stable for that map so you can reuse it every session.</p>
-      </div>
-
-      <div class="tool-card">
-        <h4>Step 3 — Share the Link</h4>
-        <p>Click <strong>"Copy Link"</strong> and drop it in Discord. Players open it in their browser — they're in read-only mode and see exactly what you reveal, live.</p>
+        <h4>DM — open the map as host</h4>
+        <p>Click the small <strong>DM</strong> badge on a map (or add <code>?dm</code> to its URL). Hosting starts automatically — there's only ever one session per map, so players are already pointed at it.</p>
       </div>
 
       <div class="tool-card">
         <h4>During Play</h4>
-        <p>Click or drag tiles to reveal rooms. Players see each reveal the moment you click. Use <strong>Reset</strong> to re-fog everything between sessions. The player count shows who's connected.</p>
+        <p>Click or drag tiles to reveal rooms. Players see each reveal the moment you click. Use <strong>Reset</strong> to re-fog everything between sessions. The status bar shows how many players are connected.</p>
+      </div>
+
+      <div class="tool-card">
+        <h4>Reconnecting</h4>
+        <p>Your fog saves to the DM browser automatically and the session id never changes, so reload anytime. Players reconnect on their own — if a player opens before you, they wait and join the moment you host.</p>
       </div>
 
     </div>

@@ -2,9 +2,10 @@
 """
 Generate interactive fog-of-war HTML map pages with real-time peer-to-peer sync.
 
-DM opens the map, clicks "Start Live Session" → gets a share link.
-Players open the link → connect directly to DM's browser via WebRTC (PeerJS).
-DM reveals tiles → all connected players see it instantly. No server, no account.
+Each map has ONE fixed, link-free session. Players open the normal map URL and
+auto-join as read-only viewers; the DM opens the same URL with ?dm (the "DM" link
+on the hub) to host and draw fog. Reveals propagate to every viewer instantly over
+WebRTC (PeerJS via peer.haldo.org). No share link, no server, no account.
 """
 
 import os
@@ -59,10 +60,13 @@ TEMPLATE = """\
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- haldo-redirect -->
+<script>(function(){{if(location.hostname.endsWith('github.io')){{var p=location.pathname.replace(/^\\/dnd-xl1-heartstone/,'');location.replace('https://dnd.haldo.org'+p+location.search+location.hash);}}}})();</script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{title} — XL-1</title>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="/assets/vendor/peerjs.min.js"></script>
 <style>
   :root {{
     --gold:   #c9a84c;
@@ -112,8 +116,6 @@ TEMPLATE = """\
   button:hover  {{ border-color: var(--gold); background: #252010; color: var(--gold); }}
   button.danger {{ border-color: var(--red); color: var(--red); }}
   button.danger:hover {{ background: var(--red); color: #fff; }}
-  button.live-on {{ background: var(--green); border-color: var(--green); color: #fff; }}
-  button.live-on:hover {{ background: #1e8449; border-color: #1e8449; }}
   #reveal-count {{ font-size: 11px; color: var(--muted); }}
 
   /* ── Live session panel ── */
@@ -130,14 +132,6 @@ TEMPLATE = """\
   .live-dot.yellow {{ background: #f39c12; box-shadow: 0 0 6px #f39c12; }}
   .live-dot.red {{ background: var(--red); }}
   #live-status {{ color: var(--muted); font-size: 11px; }}
-  #share-url {{
-    flex: 1; min-width: 200px; max-width: 420px;
-    padding: 4px 8px; font-size: 11px;
-    border: 1px solid var(--border); border-radius: 4px;
-    background: #1f1c14; color: var(--text);
-    cursor: pointer;
-  }}
-  #share-url:focus {{ outline: 1px solid var(--gold); }}
   #conn-count {{ font-size: 11px; color: var(--muted); margin-left: 4px; }}
 
   /* ── Player banner ── */
@@ -177,6 +171,8 @@ TEMPLATE = """\
   .fog-tile:hover:not(.revealed) {{ background: rgba(40,30,10,0.7); }}
   /* In player mode: tiles aren't interactive */
   body.player-mode .fog-tile {{ cursor: default; pointer-events: none; }}
+  /* Player view: fully opaque fog so nothing bleeds through */
+  body.player-mode .fog-tile:not(.revealed) {{ background: rgba(12,11,9,1); }}
   /* DM mode hint on revealed tiles */
   body.dm-mode .fog-tile.revealed {{ border: 1px dashed rgba(200,160,76,0.15); }}
 </style>
@@ -196,26 +192,20 @@ TEMPLATE = """\
   <span class="tb-label">Fog:</span>
   <button onclick="revealAll()">Reveal All</button>
   <button class="danger" onclick="resetFog()">Reset</button>
-  <span style="width:1px; height:16px; background:var(--border); display:inline-block;"></span>
-  <span class="tb-label">Live:</span>
-  <button id="btn-live" onclick="toggleLive()">Start Session</button>
   <span id="reveal-count" style="margin-left:auto;"></span>
 </div>
 
-<!-- Live session bar (shown once session starts) -->
+<!-- DM session status (shown while hosting) -->
 <div class="live-bar" id="live-bar" style="display:none;">
   <div class="live-dot" id="live-dot"></div>
   <span id="live-status">Starting…</span>
-  <input id="share-url" type="text" readonly placeholder="Share link will appear here…"
-         onclick="this.select()" title="Click to select all">
-  <button onclick="copyLink()" style="flex-shrink:0;">Copy Link</button>
   <span id="conn-count"></span>
 </div>
 
 <!-- Player banner (shown in player mode) -->
 <div class="player-banner" id="player-banner">
   <div class="live-dot" id="player-dot"></div>
-  <span id="player-status">Connecting to DM…</span>
+  <span id="player-status">Connecting…</span>
   <span style="margin-left:auto; font-size:11px; color:var(--muted);">Player view — DM controls the fog</span>
 </div>
 
@@ -232,7 +222,7 @@ TEMPLATE = """\
   const ROWS  = {rows};
   const TOTAL = COLS * ROWS;
   const STORE = 'fog_' + SLUG;
-  const PEER_STORE = 'peer_id_' + SLUG;
+  const ROOM  = 'heartstone-fog-' + SLUG;   // one fixed, link-free session per map
 
   // ── State ──────────────────────────────────────────────────────────────────
   let revealed    = new Set();
@@ -241,29 +231,30 @@ TEMPLATE = """\
   let peer        = null;
   let connections = [];   // DM: player connections
   let dmConn      = null; // player: connection to DM
-  let liveActive  = false;
+  let retryTimer  = null; // player: pending reconnect
+  let pingTimer   = null; // DM: heartbeat interval
+  let lastSeen    = 0;    // player: time (ms) of last message from the DM
 
-  const params   = new URLSearchParams(location.search);
-  const ROOM_ID  = params.get('room');   // null → DM mode
-  const IS_PLAYER = !!ROOM_ID;
+  // ?dm → DM/host (draws fog); plain URL → player/viewer (auto-joins, read-only)
+  const IS_DM = new URLSearchParams(location.search).has('dm');
 
   // ── Init ───────────────────────────────────────────────────────────────────
   function init() {{
     loadState();
     buildGrid();
-    if (IS_PLAYER) enterPlayerMode();
+    if (IS_DM) hostSession(); else joinSession();
   }}
 
   // ── Fog state ──────────────────────────────────────────────────────────────
   function loadState() {{
-    if (IS_PLAYER) return; // players get state from DM
+    if (!IS_DM) return; // players get state from the DM
     try {{
       const s = JSON.parse(localStorage.getItem(STORE) || 'null');
       if (Array.isArray(s)) revealed = new Set(s);
     }} catch(e) {{}}
   }}
   function saveState() {{
-    if (!IS_PLAYER)
+    if (IS_DM)
       localStorage.setItem(STORE, JSON.stringify([...revealed]));
   }}
 
@@ -308,7 +299,7 @@ TEMPLATE = """\
   const grid = document.getElementById('fog-grid');
 
   grid.addEventListener('mousedown', e => {{
-    if (IS_PLAYER) return;
+    if (!IS_DM) return;
     const t = e.target.closest('.fog-tile'); if (!t) return;
     const i = +t.dataset.i;
     isDragging = true;
@@ -318,21 +309,21 @@ TEMPLATE = """\
     e.preventDefault();
   }});
   grid.addEventListener('mousemove', e => {{
-    if (!isDragging || IS_PLAYER) return;
+    if (!isDragging || !IS_DM) return;
     const t = e.target.closest('.fog-tile'); if (!t) return;
     setTileState(+t.dataset.i, dragReveal);
   }});
   window.addEventListener('mouseup', () => {{ if (isDragging) {{ isDragging = false; saveState(); }} }});
 
   grid.addEventListener('touchstart', e => {{
-    if (IS_PLAYER) return;
+    if (!IS_DM) return;
     const touch = e.touches[0];
     const t = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
     if (t) {{ const i = +t.dataset.i; dragReveal = !revealed.has(i); setTileState(i, dragReveal); saveState(); }}
     e.preventDefault();
   }}, {{ passive: false }});
   grid.addEventListener('touchmove', e => {{
-    if (IS_PLAYER) return;
+    if (!IS_DM) return;
     const touch = e.touches[0];
     const t = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.fog-tile');
     if (t) setTileState(+t.dataset.i, dragReveal);
@@ -356,34 +347,26 @@ TEMPLATE = """\
   }}
   function updateCount() {{
     document.getElementById('reveal-count').textContent =
-      revealed.size + ' / ' + TOTAL + ' revealed';
+      revealed.size + ' / ' + TOTAL + ' revealed';
   }}
 
-  // ── Live session (DM) ──────────────────────────────────────────────────────
-  function toggleLive() {{
-    liveActive ? stopLive() : startLive();
-  }}
-
-  function startLive() {{
-    liveActive = true;
-    document.getElementById('btn-live').textContent = 'End Session';
-    document.getElementById('btn-live').classList.add('live-on');
+  // ── Live session (DM hosts the one fixed room; no link to share) ────────────
+  function hostSession() {{
     document.getElementById('live-bar').style.display = 'flex';
-    setDot('yellow'); setStatus('Starting…');
+    setDot('yellow'); setStatus('Starting session…');
+    connectHost();
+  }}
 
-    // Reuse same peer ID per map so the link stays stable across sessions
-    const savedId = localStorage.getItem(PEER_STORE) || undefined;
-    peer = new Peer(savedId, {{
-      host: '0.peerjs.com', port: 443, path: '/', secure: true,
+  function connectHost() {{
+    peer = new Peer(ROOM, {{
+      host: 'peer.haldo.org', port: 443, path: '/', secure: true,
       debug: 0,
     }});
 
-    peer.on('open', id => {{
-      localStorage.setItem(PEER_STORE, id);
-      const url = location.origin + location.pathname + '?room=' + encodeURIComponent(id);
-      document.getElementById('share-url').value = url;
-      setDot('green'); setStatus('Session open');
+    peer.on('open', () => {{
+      setDot('green'); setStatus('Session live — players can join');
       updateConnCount();
+      if (!pingTimer) pingTimer = setInterval(pingAll, 5000);  // heartbeat so players detect drops
     }});
 
     peer.on('connection', conn => {{
@@ -403,28 +386,32 @@ TEMPLATE = """\
       }});
     }});
 
-    peer.on('error', err => {{
-      setDot('red'); setStatus('Error: ' + err.type);
-    }});
     peer.on('disconnected', () => {{
       setDot('yellow'); setStatus('Reconnecting…');
       peer.reconnect();
     }});
-  }}
 
-  function stopLive() {{
-    liveActive = false;
-    document.getElementById('btn-live').textContent = 'Start Session';
-    document.getElementById('btn-live').classList.remove('live-on');
-    document.getElementById('live-bar').style.display = 'none';
-    connections.forEach(c => {{ try {{ c.close(); }} catch(e) {{}} }});
-    connections = [];
-    if (peer) {{ peer.destroy(); peer = null; }}
+    peer.on('error', err => {{
+      if (err.type === 'unavailable-id') {{
+        // Another DM tab/instance still holds the room — wait for it to expire, then retry
+        setDot('yellow'); setStatus('Another DM session active — retrying…');
+        if (peer) {{ peer.destroy(); peer = null; }}
+        setTimeout(connectHost, 3000);
+      }} else {{
+        setDot('red'); setStatus('Error: ' + err.type);
+      }}
+    }});
   }}
 
   function broadcastTile(i, show) {{
     connections.forEach(c => {{
       try {{ c.send({{ type: 'tile', i, v: show }}); }} catch(e) {{}}
+    }});
+  }}
+
+  function pingAll() {{
+    connections.forEach(c => {{
+      try {{ c.send({{ type: 'ping' }}); }} catch(e) {{}}
     }});
   }}
 
@@ -440,58 +427,76 @@ TEMPLATE = """\
     document.getElementById('conn-count').textContent =
       n === 0 ? 'No players connected' : n + ' player' + (n === 1 ? '' : 's') + ' connected';
   }}
-  function copyLink() {{
-    const url = document.getElementById('share-url').value;
-    navigator.clipboard.writeText(url).then(() => {{
-      const btn = event.target;
-      const orig = btn.textContent;
-      btn.textContent = 'Copied!';
-      setTimeout(() => btn.textContent = orig, 1500);
-    }});
-  }}
 
-  // ── Player mode ────────────────────────────────────────────────────────────
-  function enterPlayerMode() {{
-    // Restyle for player
+  // ── Player mode (auto-join the fixed room; reconnect until the DM is live) ──
+  function joinSession() {{
     document.body.classList.replace('dm-mode', 'player-mode');
     document.getElementById('dm-toolbar').style.display  = 'none';
     document.getElementById('player-banner').style.display = 'flex';
 
-    const dot    = document.getElementById('player-dot');
-    const status = document.getElementById('player-status');
-
-    peer = new Peer({{ host: '0.peerjs.com', port: 443, path: '/', secure: true, debug: 0 }});
-    peer.on('open', () => {{
-      dot.className = 'live-dot yellow';
-      status.textContent = 'Connecting to DM…';
-      dmConn = peer.connect(ROOM_ID, {{ reliable: true }});
-
-      dmConn.on('open', () => {{
-        dot.className = 'live-dot green';
-        status.textContent = 'Connected — DM is revealing the map';
-      }});
-
-      dmConn.on('data', data => {{
-        if (data.type === 'state') {{
-          applyState(data.revealed);
-        }} else if (data.type === 'tile') {{
-          if (data.v) revealed.add(data.i); else revealed.delete(data.i);
-          const el = document.querySelector('[data-i="' + data.i + '"]');
-          if (el) el.classList.toggle('revealed', data.v);
-          updateCount();
-        }}
-      }});
-
-      dmConn.on('close', () => {{
-        dot.className = 'live-dot red';
-        status.textContent = 'DM disconnected';
-      }});
-    }});
-
+    setPlayerStatus('yellow', 'Connecting…');
+    peer = new Peer({{ host: 'peer.haldo.org', port: 443, path: '/', secure: true, debug: 0 }});
+    peer.on('open', () => connectToDM());
     peer.on('error', err => {{
-      dot.className = 'live-dot red';
-      status.textContent = 'Error: ' + err.type;
+      // peer-unavailable = the DM isn't hosting yet; keep trying
+      setPlayerStatus('yellow', 'Waiting for DM…');
+      scheduleRejoin();
     }});
+
+    // A DM reload/close often doesn't fire 'close' over WebRTC — detect it via the
+    // DM heartbeat: if we haven't heard a ping/update in a while, re-join.
+    setInterval(() => {{
+      if (lastSeen && Date.now() - lastSeen > 12000) {{
+        lastSeen = 0;
+        try {{ if (dmConn) dmConn.close(); }} catch(e) {{}}
+        setPlayerStatus('yellow', 'Waiting for DM…');
+        connectToDM();
+      }}
+    }}, 4000);
+  }}
+
+  function connectToDM() {{
+    setPlayerStatus('yellow', 'Connecting to DM…');
+    dmConn = peer.connect(ROOM, {{ reliable: true }});
+
+    dmConn.on('open', () => {{
+      lastSeen = Date.now();
+      setPlayerStatus('green', 'Connected — DM is revealing the map');
+    }});
+
+    dmConn.on('data', data => {{
+      lastSeen = Date.now();
+      if (data.type === 'state') {{
+        applyState(data.revealed);
+      }} else if (data.type === 'tile') {{
+        if (data.v) revealed.add(data.i); else revealed.delete(data.i);
+        const el = document.querySelector('[data-i="' + data.i + '"]');
+        if (el) el.classList.toggle('revealed', data.v);
+        updateCount();
+      }}
+    }});
+
+    dmConn.on('close', () => {{
+      setPlayerStatus('yellow', 'Waiting for DM…');
+      scheduleRejoin();
+    }});
+    dmConn.on('error', () => {{
+      setPlayerStatus('yellow', 'Waiting for DM…');
+      scheduleRejoin();
+    }});
+  }}
+
+  function scheduleRejoin() {{
+    if (retryTimer) return;            // don't stack timers
+    retryTimer = setTimeout(() => {{
+      retryTimer = null;
+      if (peer && !peer.destroyed) connectToDM();
+    }}, 3000);
+  }}
+
+  function setPlayerStatus(color, msg) {{
+    document.getElementById('player-dot').className = 'live-dot ' + color;
+    document.getElementById('player-status').textContent = msg;
   }}
 
   init();

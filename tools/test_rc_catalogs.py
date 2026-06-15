@@ -47,6 +47,24 @@ def test_magic_items_catalog():
     assert m["fire resistance"]["desc"]
 
 
+def test_general_equipment_catalog():
+    g = rc_catalogs.parse_general_equipment(RC)
+    assert g["rope (50')"]["enc"] == 50 and g["rope (50')"]["cost"] == "1 gp"
+    assert g["torch (one)"]["enc"] == 20 and g["torch (one)"]["cost"] == "2 sp"
+    assert g["oil (one flask)"]["enc"] == 10
+    assert g["backpack (capacity 400 cn)"]["enc"] == 20
+    # best-effort 'Key notes' description attached to the right item
+    assert "7,500 cn" in g["rope (50')"]["desc"]
+    # the heading anchor keeps weapons/ammunition/siege rows out, and no group/empty leak
+    assert "" not in g and "ballista" not in g and "arrow" not in g
+
+
+def test_clanker_filename_rename_map():
+    assert rc_catalogs.clanker_filename("weapons_catalog.json") == "rc_weapons.json"
+    assert rc_catalogs.clanker_filename("equipment_catalog.json") == "rc_equipment.json"
+    assert rc_catalogs.clanker_filename("magic_items_catalog.json") == "rc_magic_items.json"
+
+
 def test_coverage_no_gaps():
     """Every determination-subtable item has a description (Gemini RC conversion)."""
     m = rc_catalogs.parse_magic_items(RC)

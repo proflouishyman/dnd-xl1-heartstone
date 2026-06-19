@@ -72,3 +72,21 @@ def test_acquired_weapons_armor_appended_not_overwritten():
     assert "War Hammer +1" in data["weapons"]
     assert all(w in data["weapons"] for w in base_weapons)   # base preserved
     assert "Cloak of Protection" in data["armor"]
+
+
+def test_roster_url_avoids_static_id_collision():
+    """A character renamed so its name-slug equals ANOTHER character's id must link
+    to its OWN id page, not the colliding static sheet. This is the homepage-link
+    bug where ringlerun renamed "Kelek" (slug "kelek") linked to /characters/kelek.html
+    — the real `kelek` character (Dr. BRULE) — instead of /characters/ringlerun.html."""
+    client.patch("/characters/ringlerun", json={"name": "Kelek"})   # slug "kelek" == kelek's id
+    url = {c["id"]: c["url"] for c in client.get("/characters").json()["characters"]}
+    assert url["ringlerun"] == "/characters/ringlerun.html"
+    assert url["kelek"] != "/characters/ringlerun.html"             # the real kelek is unaffected
+
+
+def test_roster_url_keeps_vanity_slug_when_no_collision():
+    """A rename whose slug is NOT another character's id keeps its pretty vanity URL."""
+    client.patch("/characters/bowmarc", json={"name": "Sir Bowmarc"})
+    url = {c["id"]: c["url"] for c in client.get("/characters").json()["characters"]}
+    assert url["bowmarc"] == "/characters/sir-bowmarc.html"

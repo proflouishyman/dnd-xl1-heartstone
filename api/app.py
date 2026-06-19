@@ -107,6 +107,19 @@ def _resolve_id(slug: str):
     return _name_index.get(slug)
 
 
+def _card_slug(name, cid: str) -> str:
+    """Homepage roster link target for a character. Use the pretty vanity slug of
+    `name`, UNLESS that slug collides with ANOTHER character's id — a character
+    renamed e.g. "Kelek" (slug "kelek") must link to its OWN /characters/<id>.html,
+    not /characters/kelek.html, which nginx serves as the real `kelek` character's
+    static sheet (bypassing the vanity resolver). Falls back to the id, whose static
+    page always resolves correctly. Mirrors sheet-sync.js's vanity-collision guard."""
+    slug = slugify(name)
+    if not slug or (slug in MANIFEST and slug != cid):
+        return cid
+    return slug
+
+
 def _overrides(name: str) -> dict:
     """Return the live overrides dict for a character, loading from disk once."""
     if name not in _loaded:
@@ -215,7 +228,7 @@ async def list_characters():
             "race": val("race"),
             "alignment": val("alignment"),
             "player": ov.get("player") or "",
-            "url": f"/characters/{slugify(name) or cid}.html",
+            "url": f"/characters/{_card_slug(name, cid)}.html",
         })
     return {"characters": out}
 

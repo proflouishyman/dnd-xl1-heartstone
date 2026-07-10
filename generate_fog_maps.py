@@ -234,9 +234,27 @@ TEMPLATE = """\
   let retryTimer  = null; // player: pending reconnect
   let pingTimer   = null; // DM: heartbeat interval
   let lastSeen    = 0;    // player: time (ms) of last message from the DM
+  let hostRetry   = null; // DM: pending host reconnect
+  let playerRetry = null; // player: pending peer rebuild
 
   // ?dm → DM/host (draws fog); plain URL → player/viewer (auto-joins, read-only)
   const IS_DM = new URLSearchParams(location.search).has('dm');
+
+  // PeerJS options for both roles. Besides our signaling server (peer.haldo.org)
+  // we give WebRTC several STUN servers + a public TURN relay, so players behind
+  // strict/symmetric NAT or CGNAT (common on home & mobile networks) can still
+  // reach the DM. Without a relay those peers hang forever on "Connecting to DM…".
+  const PEER_OPTS = {{
+    host: 'peer.haldo.org', port: 443, path: '/', secure: true, debug: 0,
+    config: {{ iceServers: [
+      {{ urls: 'stun:stun.l.google.com:19302' }},
+      {{ urls: 'stun:stun1.l.google.com:19302' }},
+      {{ urls: 'stun:stun2.l.google.com:19302' }},
+      {{ urls: 'turn:openrelay.metered.ca:80',                username: 'openrelayproject', credential: 'openrelayproject' }},
+      {{ urls: 'turn:openrelay.metered.ca:443',               username: 'openrelayproject', credential: 'openrelayproject' }},
+      {{ urls: 'turn:openrelay.metered.ca:443?transport=tcp', username: 'openrelayproject', credential: 'openrelayproject' }},
+    ] }},
+  }};
 
   // ── Init ───────────────────────────────────────────────────────────────────
   function init() {{
@@ -358,10 +376,8 @@ TEMPLATE = """\
   }}
 
   function connectHost() {{
-    peer = new Peer(ROOM, {{
-      host: 'peer.haldo.org', port: 443, path: '/', secure: true,
-      debug: 0,
-    }});
+    if (hostRetry) {{ clearTimeout(hostRetry); hostRetry = null; }}
+    peer = new Peer(ROOM, PEER_OPTS);
 
     peer.on('open', () => {{
       setDot('green'); setStatus('Session live — players can join');
@@ -388,19 +404,31 @@ TEMPLATE = """\
 
     peer.on('disconnected', () => {{
       setDot('yellow'); setStatus('Reconnecting…');
-      peer.reconnect();
+      try {{ peer.reconnect(); }} catch(e) {{ scheduleReconnectHost(2000); }}
     }});
 
     peer.on('error', err => {{
-      if (err.type === 'unavailable-id') {{
-        // Another DM tab/instance still holds the room — wait for it to expire, then retry
-        setDot('yellow'); setStatus('Another DM session active — retrying…');
-        if (peer) {{ peer.destroy(); peer = null; }}
-        setTimeout(connectHost, 3000);
+      var t = err && err.type;
+      if (t === 'unavailable-id') {{
+        // The room id is still held (a stale or other DM tab). Wait, then reclaim it.
+        setDot('yellow'); setStatus('Reclaiming session…');
+        scheduleReconnectHost(3000);
+      }} else if (t === 'network' || t === 'server-error' || t === 'socket-error' || t === 'socket-closed') {{
+        // Lost the signaling server (blip / restart) — rebuild and reclaim the room.
+        setDot('yellow'); setStatus('Reconnecting…');
+        scheduleReconnectHost(2000);
       }} else {{
-        setDot('red'); setStatus('Error: ' + err.type);
+        // Non-fatal (e.g. a player dropped mid-handshake) — keep the session up.
+        updateConnCount();
       }}
     }});
+  }}
+
+  // Tear down the current peer and re-host after a delay (single pending retry).
+  function scheduleReconnectHost(delay) {{
+    if (peer) {{ try {{ peer.destroy(); }} catch(e) {{}} peer = null; }}
+    if (hostRetry) return;
+    hostRetry = setTimeout(() => {{ hostRetry = null; connectHost(); }}, delay);
   }}
 
   function broadcastTile(i, show) {{
@@ -434,25 +462,51 @@ TEMPLATE = """\
     document.getElementById('dm-toolbar').style.display  = 'none';
     document.getElementById('player-banner').style.display = 'flex';
 
-    setPlayerStatus('yellow', 'Connecting…');
-    peer = new Peer({{ host: 'peer.haldo.org', port: 443, path: '/', secure: true, debug: 0 }});
-    peer.on('open', () => connectToDM());
-    peer.on('error', err => {{
-      // peer-unavailable = the DM isn't hosting yet; keep trying
-      setPlayerStatus('yellow', 'Waiting for DM…');
-      scheduleRejoin();
-    }});
+    createPlayerPeer();
 
     // A DM reload/close often doesn't fire 'close' over WebRTC — detect it via the
-    // DM heartbeat: if we haven't heard a ping/update in a while, re-join.
+    // DM heartbeat: if we haven't heard a ping/update in a while, re-join. If our
+    // own peer died too, rebuild it from scratch.
     setInterval(() => {{
       if (lastSeen && Date.now() - lastSeen > 12000) {{
         lastSeen = 0;
         try {{ if (dmConn) dmConn.close(); }} catch(e) {{}}
         setPlayerStatus('yellow', 'Waiting for DM…');
-        connectToDM();
+        if (peer && !peer.destroyed && peer.open) connectToDM();
+        else schedulePlayerRecreate();
       }}
     }}, 4000);
+  }}
+
+  // (Re)create the player peer + wire its handlers. Called on load and whenever
+  // the signaling connection is lost, so a server blip/restart self-heals.
+  function createPlayerPeer() {{
+    if (playerRetry) {{ clearTimeout(playerRetry); playerRetry = null; }}
+    setPlayerStatus('yellow', 'Connecting…');
+    try {{ if (peer) peer.destroy(); }} catch(e) {{}}
+    peer = new Peer(PEER_OPTS);
+    peer.on('open', () => connectToDM());
+    peer.on('disconnected', () => {{
+      setPlayerStatus('yellow', 'Reconnecting…');
+      try {{ peer.reconnect(); }} catch(e) {{ schedulePlayerRecreate(); }}
+    }});
+    peer.on('error', err => {{
+      var t = err && err.type;
+      if (t === 'network' || t === 'server-error' || t === 'socket-error' || t === 'socket-closed') {{
+        // Lost the signaling server — rebuild the peer.
+        setPlayerStatus('yellow', 'Reconnecting…');
+        schedulePlayerRecreate();
+      }} else {{
+        // peer-unavailable = the DM isn't hosting yet; keep retrying the data conn.
+        setPlayerStatus('yellow', 'Waiting for DM…');
+        scheduleRejoin();
+      }}
+    }});
+  }}
+
+  function schedulePlayerRecreate() {{
+    if (playerRetry) return;
+    playerRetry = setTimeout(() => {{ playerRetry = null; createPlayerPeer(); }}, 3000);
   }}
 
   function connectToDM() {{
